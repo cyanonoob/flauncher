@@ -110,8 +110,8 @@ void main() {
     verify(appsService.openSettings());
   });
 
-
-  testWidgets("'Use 24-hour time format' toggle calls SettingsService", (tester) async {
+  testWidgets("'Use 24-hour time format' toggle calls SettingsService",
+      (tester) async {
     final appsService = MockAppsService();
     when(appsService.categoriesWithApps).thenReturn([]);
     when(appsService.applications).thenReturn([]);
@@ -148,7 +148,8 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets("'Analytics Reporting' toggle calls SettingsService", (tester) async {
+  testWidgets("'Analytics Reporting' toggle calls SettingsService",
+      (tester) async {
     final settingsService = MockSettingsService();
     final appsService = MockAppsService();
     when(appsService.categoriesWithApps).thenReturn([]);
@@ -207,9 +208,12 @@ Future<void> _pumpWidgetWithProviders(
       ],
       builder: (_, __) => MaterialApp(
         routes: {
-          LauncherSectionsPanelPage.routeName: (_) => Container(key: Key("CategoriesPanelPage")),
-          WallpaperPanelPage.routeName: (_) => Container(key: Key("WallpaperPanelPage")),
-          ApplicationsPanelPage.routeName: (_) => Container(key: Key("ApplicationsPanelPage")),
+          LauncherSectionsPanelPage.routeName: (_) =>
+              Container(key: Key("CategoriesPanelPage")),
+          WallpaperPanelPage.routeName: (_) =>
+              Container(key: Key("WallpaperPanelPage")),
+          ApplicationsPanelPage.routeName: (_) =>
+              Container(key: Key("ApplicationsPanelPage")),
         },
         home: Material(child: SettingsPanelPage()),
       ),
@@ -218,11 +222,13 @@ Future<void> _pumpWidgetWithProviders(
   await tester.pumpAndSettle();
 }
 
-class _MockPackageInfoPlatform with MockPlatformInterfaceMixin implements PackageInfoPlatform {
+class _MockPackageInfoPlatform
+    with MockPlatformInterfaceMixin
+    implements PackageInfoPlatform {
   @override
   Future<PackageInfoData> getAll({String? baseUrl}) async => PackageInfoData(
         appName: "FLauncher",
-        packageName: "me.efesser.flauncher",
+        packageName: "com.geert.flauncher",
         version: "1.0.0",
         buildNumber: "1",
         buildSignature: "",

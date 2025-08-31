@@ -40,7 +40,7 @@ void main() {
   testWidgets("'Open' calls launchApp on AppsService", (tester) async {
     final appsService = MockAppsService();
     final app = fakeApp(
-      packageName: "me.efesser.flauncher",
+      packageName: "com.geert.flauncher",
       name: "FLauncher",
       version: "1.0.0",
     );
@@ -57,7 +57,7 @@ void main() {
     final appsService = MockAppsService();
     final category = fakeCategory(name: "Category 1", order: 0);
     final app = fakeApp(
-      packageName: "me.efesser.flauncher",
+      packageName: "com.geert.flauncher",
       name: "FLauncher",
       version: "1.0.0",
     );
@@ -78,7 +78,7 @@ void main() {
     final appsService = MockAppsService();
     final category = fakeCategory(name: "Category 1", order: 0);
     final app = fakeApp(
-      packageName: "me.efesser.flauncher",
+      packageName: "com.geert.flauncher",
       name: "FLauncher",
       version: "1.0.0",
     );
@@ -100,7 +100,7 @@ void main() {
     final appsService = MockAppsService();
     final category = fakeCategory(name: "Category 1", order: 0);
     final app = fakeApp(
-      packageName: "me.efesser.flauncher",
+      packageName: "com.geert.flauncher",
       name: "FLauncher",
       version: "1.0.0",
     );
@@ -123,7 +123,7 @@ void main() {
     final appsService = MockAppsService();
     final category = fakeCategory(name: "Category 1", order: 0);
     final app = fakeApp(
-      packageName: "me.efesser.flauncher",
+      packageName: "com.geert.flauncher",
       name: "FLauncher",
       version: "1.0.0",
     );

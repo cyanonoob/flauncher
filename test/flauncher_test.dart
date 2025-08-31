@@ -40,7 +40,6 @@ import 'helpers.dart';
 import 'mocks.dart';
 import 'mocks.mocks.dart';
 
-
 void main() {
   setUpAll(() async {
     final binding = TestWidgetsFlutterBinding.ensureInitialized();
@@ -52,19 +51,20 @@ void main() {
 
   testWidgets("Home page shows categories with apps", (tester) async {
     final appsService = mkAppService();
-    final favoritesCategory = fakeCategory(name: "Favorites", order: 0, type: CategoryType.row);
+    final favoritesCategory =
+        fakeCategory(name: "Favorites", order: 0, type: CategoryType.row);
     final applicationsCategory = fakeCategory(name: "Applications", order: 1);
     when(appsService.categoriesWithApps).thenReturn([
       CategoryWithApps(favoritesCategory, [
         fakeApp(
-          packageName: "me.efesser.flauncher.1",
+          packageName: "com.geert.flauncher.1",
           name: "FLauncher 1",
           version: "1.0.0",
         )
       ]),
       CategoryWithApps(applicationsCategory, [
         fakeApp(
-          packageName: "me.efesser.flauncher.2",
+          packageName: "com.geert.flauncher.2",
           name: "FLauncher 2",
           version: "2.0.0",
         )
@@ -76,19 +76,22 @@ void main() {
     expect(find.text("Applications"), findsOneWidget);
     expect(find.text("Favorites"), findsOneWidget);
     expect(find.byType(AppsGrid), findsOneWidget);
-    expect(find.byKey(Key("${applicationsCategory.id}-me.efesser.flauncher.2")), findsOneWidget);
+    expect(find.byKey(Key("${applicationsCategory.id}-com.geert.flauncher.2")),
+        findsOneWidget);
     expect(find.byType(CategoryRow), findsOneWidget);
-    expect(find.byKey(Key("${favoritesCategory.id}-me.efesser.flauncher.1")), findsOneWidget);
+    expect(find.byKey(Key("${favoritesCategory.id}-com.geert.flauncher.1")),
+        findsOneWidget);
 
     // This was changed by how the the image is made, I don't know what it now should be
     //expect(tester.widget(find.byKey(Key("background"))), isA<Container>());
-
   });
 
   testWidgets("Home page shows category empty-state", (tester) async {
     final appsService = mkAppService();
-    final applicationsCategory = fakeCategory(name: "Applications", order: 0, type: CategoryType.grid);
-    final favoritesCategory = fakeCategory(name: "Favorites", order: 1, type: CategoryType.row);
+    final applicationsCategory =
+        fakeCategory(name: "Applications", order: 0, type: CategoryType.grid);
+    final favoritesCategory =
+        fakeCategory(name: "Favorites", order: 1, type: CategoryType.row);
     when(appsService.categoriesWithApps).thenReturn([
       CategoryWithApps(applicationsCategory, []),
       CategoryWithApps(favoritesCategory, []),
@@ -116,12 +119,14 @@ void main() {
     final appsService = mkAppService();
     when(appsService.categoriesWithApps).thenReturn([]);
 
-    await _pumpWidgetWithProviders(tester, mkWallpaperService(false), appsService, mkSettingsService());
+    await _pumpWidgetWithProviders(
+        tester, mkWallpaperService(false), appsService, mkSettingsService());
 
     expect(tester.widget(find.byKey(Key("background"))), isA<Container>());
   });
 
-  testWidgets("Pressing select on settings icon opens SettingsPanel", (tester) async {
+  testWidgets("Pressing select on settings icon opens SettingsPanel",
+      (tester) async {
     final appsService = mkAppService();
     when(appsService.categoriesWithApps).thenReturn([
       CategoryWithApps(fakeCategory(name: "Favorites", order: 0), []),
@@ -138,10 +143,11 @@ void main() {
     expect(find.byType(SettingsPanelPage), findsOneWidget);
   });
 
-  testWidgets("Pressing select on app opens ApplicationInfoPanel", (tester) async {
+  testWidgets("Pressing select on app opens ApplicationInfoPanel",
+      (tester) async {
     final appsService = mkAppService();
     final app = fakeApp(
-      packageName: "me.efesser.flauncher",
+      packageName: "com.geert.flauncher",
       name: "FLauncher",
       version: "1.0.0",
     );
@@ -157,14 +163,15 @@ void main() {
     verify(appsService.launchApp(app));
   });
 
-  testWidgets("Long pressing on app opens ApplicationInfoPanel", (tester) async {
+  testWidgets("Long pressing on app opens ApplicationInfoPanel",
+      (tester) async {
     final appsService = mkAppService();
     final applicationsCategory = fakeCategory(name: "Applications", order: 1);
     when(appsService.categoriesWithApps).thenReturn([
       CategoryWithApps(fakeCategory(name: "Favorites", order: 0), []),
       CategoryWithApps(applicationsCategory, [
         fakeApp(
-          packageName: "me.efesser.flauncher",
+          packageName: "com.geert.flauncher",
           name: "FLauncher",
           version: "1.0.0",
         )
@@ -172,7 +179,8 @@ void main() {
     ]);
     await _pumpWidgetWith(tester, appsService);
 
-    await tester.longPress(find.byKey(Key("${applicationsCategory.id}-me.efesser.flauncher")));
+    await tester.longPress(
+        find.byKey(Key("${applicationsCategory.id}-com.geert.flauncher")));
     await tester.pump();
 
     expect(find.byType(ApplicationInfoPanel), findsOneWidget);
@@ -180,17 +188,18 @@ void main() {
 
   testWidgets("AppCard moves in grid", (tester) async {
     final appsService = mkAppService();
-    final applicationsCategory = fakeCategory(name: "Applications", order: 1, type: CategoryType.grid);
+    final applicationsCategory =
+        fakeCategory(name: "Applications", order: 1, type: CategoryType.grid);
     when(appsService.categoriesWithApps).thenReturn([
       CategoryWithApps(fakeCategory(name: "Favorites", order: 0), []),
       CategoryWithApps(applicationsCategory, [
         fakeApp(
-          packageName: "me.efesser.flauncher",
+          packageName: "com.geert.flauncher",
           name: "FLauncher",
           version: "1.0.0",
         ),
         fakeApp(
-          packageName: "me.efesser.flauncher.2",
+          packageName: "com.geert.flauncher.2",
           name: "FLauncher 2",
           version: "1.0.0",
         )
@@ -198,7 +207,8 @@ void main() {
     ]);
     await _pumpWidgetWith(tester, appsService);
 
-    await tester.longPress(find.byKey(Key("${applicationsCategory.id}-me.efesser.flauncher")));
+    await tester.longPress(
+        find.byKey(Key("${applicationsCategory.id}-com.geert.flauncher")));
     await tester.pump();
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
@@ -214,17 +224,18 @@ void main() {
 
   testWidgets("AppCard moves in row", (tester) async {
     final appsService = mkAppService();
-    final applicationsCategory = fakeCategory(name: "Applications", order: 1, type: CategoryType.row);
+    final applicationsCategory =
+        fakeCategory(name: "Applications", order: 1, type: CategoryType.row);
     when(appsService.categoriesWithApps).thenReturn([
       CategoryWithApps(fakeCategory(name: "Favorites", order: 0), []),
       CategoryWithApps(applicationsCategory, [
         fakeApp(
-          packageName: "me.efesser.flauncher",
+          packageName: "com.geert.flauncher",
           name: "FLauncher",
           version: "1.0.0",
         ),
         fakeApp(
-          packageName: "me.efesser.flauncher.2",
+          packageName: "com.geert.flauncher.2",
           name: "FLauncher 2",
           version: "1.0.0",
         )
@@ -232,7 +243,8 @@ void main() {
     ]);
     await _pumpWidgetWith(tester, appsService);
 
-    await tester.longPress(find.byKey(Key("${applicationsCategory.id}-me.efesser.flauncher")));
+    await tester.longPress(
+        find.byKey(Key("${applicationsCategory.id}-com.geert.flauncher")));
     await tester.pump();
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
@@ -317,7 +329,8 @@ void main() {
     Element? music2 = findAppCardByPackageName(tester, "me.efesser.music2");
     expect(music2, isNotNull);
     expect(Focus.of(tv1!).hasFocus, isFalse);
-    expect(Focus.of(music2!).hasFocus, isTrue); // this is new, before it was going straight to the third row
+    expect(Focus.of(music2!).hasFocus,
+        isTrue); // this is new, before it was going straight to the third row
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
     Element? game2 = findAppCardByPackageName(tester, "me.efesser.game2");
@@ -488,7 +501,6 @@ void main() {
     // No idea why I had to add another arrowRight
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
 
-
     Element? settingsIcon = findSettingsIcon(tester);
     expect(settingsIcon, isNotNull);
     expect(Focus.of(tv1).hasFocus, isFalse);
@@ -514,8 +526,10 @@ void main() {
 
 SettingsService mkSettingsService() {
   final settingsService = MockSettingsService();
-  when(settingsService.dateFormat).thenReturn(SettingsService.defaultDateFormat);
-  when(settingsService.timeFormat).thenReturn(SettingsService.defaultTimeFormat);
+  when(settingsService.dateFormat)
+      .thenReturn(SettingsService.defaultDateFormat);
+  when(settingsService.timeFormat)
+      .thenReturn(SettingsService.defaultTimeFormat);
   when(settingsService.appHighlightAnimationEnabled).thenReturn(true);
   return settingsService;
 }
@@ -523,7 +537,8 @@ SettingsService mkSettingsService() {
 WallpaperService mkWallpaperService([bool wallpaper = true]) {
   final wallpaperService = MockWallpaperService();
   when(wallpaperService.gradient).thenReturn(FLauncherGradients.greatWhale);
-  when(wallpaperService.wallpaper).thenReturn(wallpaper ? Image.asset('assets/logo.png').image : null);
+  when(wallpaperService.wallpaper)
+      .thenReturn(wallpaper ? Image.asset('assets/logo.png').image : null);
   return wallpaperService;
 }
 
@@ -533,12 +548,12 @@ AppsService mkAppService() {
   return appsService;
 }
 
-
 Future<void> _pumpWidgetWith(
   WidgetTester tester,
   AppsService appsService,
-  ) async {
-  return _pumpWidgetWithProviders(tester, mkWallpaperService(), appsService, mkSettingsService());
+) async {
+  return _pumpWidgetWithProviders(
+      tester, mkWallpaperService(), appsService, mkSettingsService());
 }
 
 Future<void> _pumpWidgetWithProviders(
@@ -554,7 +569,8 @@ Future<void> _pumpWidgetWithProviders(
         ChangeNotifierProvider<AppsService>.value(value: appsService),
         ChangeNotifierProvider<SettingsService>.value(value: settingsService),
         ChangeNotifierProvider(create: (_) => LauncherState()),
-        ChangeNotifierProvider(create: (_) => NetworkService(FLauncherChannel())),
+        ChangeNotifierProvider(
+            create: (_) => NetworkService(FLauncherChannel())),
       ],
       builder: (_, __) => MaterialApp(
         home: FLauncher(),

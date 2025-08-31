@@ -1,4 +1,4 @@
-package me.efesser.flauncher;
+package com.geert.flauncher;
 
 import android.telephony.PhoneStateListener;
 

@@ -1,4 +1,4 @@
-package me.efesser.flauncher;
+package com.geert.flauncher;
 
 import android.content.Context;
 import android.content.IntentFilter;
@@ -167,5 +167,3 @@ public class NetworkEventStreamHandler implements EventChannel.StreamHandler
         }
     }
 }
-
-

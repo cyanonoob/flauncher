@@ -43,7 +43,7 @@ void main() {
     final appsService = MockAppsService();
     when(appsService.applications).thenReturn([
       fakeApp(
-        packageName: "me.efesser.flauncher",
+        packageName: "com.geert.flauncher",
         name: "FLauncher",
         sideloaded: false,
         hidden: false,
@@ -60,7 +60,7 @@ void main() {
     final appsService = MockAppsService();
     when(appsService.applications).thenReturn([
       fakeApp(
-        packageName: "me.efesser.flauncher",
+        packageName: "com.geert.flauncher",
         name: "FLauncher",
         sideloaded: true,
         hidden: false,
@@ -82,7 +82,7 @@ void main() {
     final appsService = MockAppsService();
     when(appsService.applications).thenReturn([
       fakeApp(
-        packageName: "me.efesser.flauncher",
+        packageName: "com.geert.flauncher",
         name: "FLauncher",
         sideloaded: false,
         hidden: true,
@@ -104,12 +104,13 @@ void main() {
   testWidgets("'Add' opens AddToCategoryDialog", (tester) async {
     final appsService = MockAppsService();
     final application = fakeApp(
-      packageName: "me.efesser.flauncher",
+      packageName: "com.geert.flauncher",
       name: "FLauncher",
       version: "1.0.0",
     );
     when(appsService.applications).thenReturn([application]);
-    when(appsService.categoriesWithApps).thenReturn([CategoryWithApps(fakeCategory(), [])]);
+    when(appsService.categoriesWithApps)
+        .thenReturn([CategoryWithApps(fakeCategory(), [])]);
 
     await _pumpWidgetWithProviders(tester, appsService);
 
@@ -123,12 +124,13 @@ void main() {
   testWidgets("'Info' opens ApplicationInfoPanel", (tester) async {
     final appsService = MockAppsService();
     final application = fakeApp(
-      packageName: "me.efesser.flauncher",
+      packageName: "com.geert.flauncher",
       name: "FLauncher",
       version: "1.0.0",
     );
     when(appsService.applications).thenReturn([application]);
-    when(appsService.categoriesWithApps).thenReturn([CategoryWithApps(fakeCategory(), [])]);
+    when(appsService.categoriesWithApps)
+        .thenReturn([CategoryWithApps(fakeCategory(), [])]);
 
     await _pumpWidgetWithProviders(tester, appsService);
 
@@ -141,7 +143,8 @@ void main() {
   });
 }
 
-Future<void> _pumpWidgetWithProviders(WidgetTester tester, AppsService appsService) async {
+Future<void> _pumpWidgetWithProviders(
+    WidgetTester tester, AppsService appsService) async {
   await tester.pumpWidget(
     MultiProvider(
       providers: [

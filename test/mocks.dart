@@ -27,7 +27,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/annotations.dart';
 
-
 @GenerateMocks([
   FLauncherChannel,
   WallpaperService,
@@ -41,7 +40,7 @@ import 'package:mockito/annotations.dart';
 void main() {}
 
 App fakeApp({
-  String packageName = "me.efesser.flauncher",
+  String packageName = "com.geert.flauncher",
   String name = "FLauncher",
   String version = "1.0.0",
   bool hidden = false,

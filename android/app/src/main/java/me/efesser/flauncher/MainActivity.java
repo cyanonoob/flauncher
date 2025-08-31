@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.efesser.flauncher;
+package com.geert.flauncher;
 
 import android.content.Context;
 import android.content.Intent;
@@ -54,9 +54,9 @@ import java.util.concurrent.Future;
 
 public class MainActivity extends FlutterActivity
 {
-    private final String METHOD_CHANNEL = "me.efesser.flauncher/method";
-    private final String APPS_EVENT_CHANNEL = "me.efesser.flauncher/event_apps";
-    private final String NETWORK_EVENT_CHANNEL = "me.efesser.flauncher/event_network";
+    private final String METHOD_CHANNEL = "com.geert.flauncher/method";
+    private final String APPS_EVENT_CHANNEL = "com.geert.flauncher/event_apps";
+    private final String NETWORK_EVENT_CHANNEL = "com.geert.flauncher/event_network";
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine)

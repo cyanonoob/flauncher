@@ -32,13 +32,13 @@ void main() {
       final database = MockFLauncherDatabase();
       when(channel.getApplications()).thenAnswer((_) => Future.value([
             {
-              'packageName': 'me.efesser.flauncher',
+              'packageName': 'com.geert.flauncher',
               'name': 'FLauncher',
               'version': null,
               'sideloaded': false
             },
             {
-              'packageName': 'me.efesser.flauncher.2',
+              'packageName': 'com.geert.flauncher.2',
               'name': 'FLauncher 2',
               'version': '2.0.0',
               'sideloaded': true
@@ -46,26 +46,30 @@ void main() {
           ]));
       when(database.listApplications()).thenAnswer((_) => Future.value([
             fakeApp(
-              packageName: "me.efesser.flauncher",
+              packageName: "com.geert.flauncher",
               name: "FLauncher",
               version: "1.0.0",
               sideloaded: false,
             ),
             fakeApp(
-              packageName: "me.efesser.flauncher.2",
+              packageName: "com.geert.flauncher.2",
               name: "FLauncher 2",
               version: "2.0.0",
               sideloaded: true,
             ),
           ]));
       final tvApplicationsCategory = fakeCategory(name: "TV Applications");
-      final nonTvApplicationsCategory = fakeCategory(name: "Non-TV Applications");
-      when(database.listCategoriesWithVisibleApps()).thenAnswer((_) => Future.value([
-            CategoryWithApps(tvApplicationsCategory, []),
-            CategoryWithApps(nonTvApplicationsCategory, []),
-          ]));
-      when(database.nextAppCategoryOrder(any)).thenAnswer((_) => Future.value(0));
-      when(database.transaction(any)).thenAnswer((realInvocation) => realInvocation.positionalArguments[0]());
+      final nonTvApplicationsCategory =
+          fakeCategory(name: "Non-TV Applications");
+      when(database.listCategoriesWithVisibleApps())
+          .thenAnswer((_) => Future.value([
+                CategoryWithApps(tvApplicationsCategory, []),
+                CategoryWithApps(nonTvApplicationsCategory, []),
+              ]));
+      when(database.nextAppCategoryOrder(any))
+          .thenAnswer((_) => Future.value(0));
+      when(database.transaction(any)).thenAnswer(
+          (realInvocation) => realInvocation.positionalArguments[0]());
       when(database.wasCreated).thenReturn(true);
       AppsService(channel, database);
       await untilCalled(channel.addAppsChangedListener(any));
@@ -74,13 +78,13 @@ void main() {
         database.listApplications(),
         database.persistApps([
           AppsCompanion.insert(
-            packageName: "me.efesser.flauncher",
+            packageName: "com.geert.flauncher",
             name: "FLauncher",
             version: "(unknown)",
             sideloaded: Value(false),
           ),
           AppsCompanion.insert(
-            packageName: "me.efesser.flauncher.2",
+            packageName: "com.geert.flauncher.2",
             name: "FLauncher 2",
             version: "2.0.0",
             sideloaded: Value(true),
@@ -99,7 +103,7 @@ void main() {
         database.insertAppsCategories([
           AppsCategoriesCompanion.insert(
             categoryId: tvApplicationsCategory.id,
-            appPackageName: "me.efesser.flauncher",
+            appPackageName: "com.geert.flauncher",
             order: 0,
           )
         ]),
@@ -109,7 +113,7 @@ void main() {
         database.insertAppsCategories([
           AppsCategoriesCompanion.insert(
             categoryId: nonTvApplicationsCategory.id,
-            appPackageName: "me.efesser.flauncher.2",
+            appPackageName: "com.geert.flauncher.2",
             order: 0,
           )
         ]),
@@ -122,27 +126,40 @@ void main() {
       final database = MockFLauncherDatabase();
       when(channel.getApplications()).thenAnswer((_) => Future.value([
             {
-              'packageName': 'me.efesser.flauncher',
+              'packageName': 'com.geert.flauncher',
               'name': 'FLauncher',
               'version': '2.0.0',
               'sideloaded': false,
             },
             {
-              'packageName': 'me.efesser.flauncher.2',
+              'packageName': 'com.geert.flauncher.2',
               'name': 'FLauncher 2',
               'version': '1.0.0',
               'sideloaded': false,
             }
           ]));
-      when(channel.applicationExists("uninstalled.app")).thenAnswer((_) => Future.value(false));
-      when(channel.applicationExists("not.uninstalled.app")).thenAnswer((_) => Future.value(true));
+      when(channel.applicationExists("uninstalled.app"))
+          .thenAnswer((_) => Future.value(false));
+      when(channel.applicationExists("not.uninstalled.app"))
+          .thenAnswer((_) => Future.value(true));
       when(database.listApplications()).thenAnswer((_) => Future.value([
-            fakeApp(packageName: "me.efesser.flauncher", name: "FLauncher", version: "1.0.0"),
-            fakeApp(packageName: "uninstalled.app", name: "Uninstalled Application", version: "1.0.0"),
-            fakeApp(packageName: "not.uninstalled.app", name: "Not Uninstalled Application", version: "1.0.0")
+            fakeApp(
+                packageName: "com.geert.flauncher",
+                name: "FLauncher",
+                version: "1.0.0"),
+            fakeApp(
+                packageName: "uninstalled.app",
+                name: "Uninstalled Application",
+                version: "1.0.0"),
+            fakeApp(
+                packageName: "not.uninstalled.app",
+                name: "Not Uninstalled Application",
+                version: "1.0.0")
           ]));
-      when(database.listCategoriesWithVisibleApps()).thenAnswer((_) => Future.value([]));
-      when(database.transaction(any)).thenAnswer((realInvocation) => realInvocation.positionalArguments[0]());
+      when(database.listCategoriesWithVisibleApps())
+          .thenAnswer((_) => Future.value([]));
+      when(database.transaction(any)).thenAnswer(
+          (realInvocation) => realInvocation.positionalArguments[0]());
       when(database.wasCreated).thenReturn(false);
       AppsService(channel, database);
       await untilCalled(channel.addAppsChangedListener(any));
@@ -151,13 +168,13 @@ void main() {
         database.listApplications(),
         database.persistApps([
           AppsCompanion.insert(
-            packageName: "me.efesser.flauncher",
+            packageName: "com.geert.flauncher",
             name: "FLauncher",
             version: "2.0.0",
             sideloaded: Value(false),
           ),
           AppsCompanion.insert(
-            packageName: "me.efesser.flauncher.2",
+            packageName: "com.geert.flauncher.2",
             name: "FLauncher 2",
             version: "1.0.0",
             sideloaded: Value(false),
@@ -173,7 +190,8 @@ void main() {
   test("launchApp calls channel", () async {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
-    final appsService = await _buildInitialisedAppsService(channel, database, []);
+    final appsService =
+        await _buildInitialisedAppsService(channel, database, []);
     final app = fakeApp();
 
     await appsService.launchApp(app);
@@ -182,7 +200,8 @@ void main() {
   test("openAppInfo calls channel", () async {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
-    final appsService = await _buildInitialisedAppsService(channel, database, []);
+    final appsService =
+        await _buildInitialisedAppsService(channel, database, []);
     final app = fakeApp();
 
     await appsService.openAppInfo(app);
@@ -193,7 +212,8 @@ void main() {
   test("uninstallApp calls channel", () async {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
-    final appsService = await _buildInitialisedAppsService(channel, database, []);
+    final appsService =
+        await _buildInitialisedAppsService(channel, database, []);
     final app = fakeApp();
 
     await appsService.uninstallApp(app);
@@ -204,7 +224,8 @@ void main() {
   test("openSettings calls channel", () async {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
-    final appsService = await _buildInitialisedAppsService(channel, database, []);
+    final appsService =
+        await _buildInitialisedAppsService(channel, database, []);
 
     await appsService.openSettings();
 
@@ -215,7 +236,8 @@ void main() {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
     when(channel.isDefaultLauncher()).thenAnswer((_) => Future.value(true));
-    final appsService = await _buildInitialisedAppsService(channel, database, []);
+    final appsService =
+        await _buildInitialisedAppsService(channel, database, []);
 
     final isDefaultLauncher = await appsService.isDefaultLauncher();
 
@@ -226,7 +248,8 @@ void main() {
   test("startAmbientMode calls channel", () async {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
-    final appsService = await _buildInitialisedAppsService(channel, database, []);
+    final appsService =
+        await _buildInitialisedAppsService(channel, database, []);
 
     await appsService.startAmbientMode();
 
@@ -236,21 +259,27 @@ void main() {
   test("addToCategory adds app to category", () async {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
-    final appsService = await _buildInitialisedAppsService(channel, database, []);
+    final appsService =
+        await _buildInitialisedAppsService(channel, database, []);
     final category = fakeCategory(name: "Category");
-    when(database.nextAppCategoryOrder(category.id)).thenAnswer((_) => Future.value(1));
+    when(database.nextAppCategoryOrder(category.id))
+        .thenAnswer((_) => Future.value(1));
 
-    await appsService.addToCategory(fakeApp(packageName: "app.to.be.added"), category);
+    await appsService.addToCategory(
+        fakeApp(packageName: "app.to.be.added"), category);
 
-    verify(database.insertAppsCategories(
-        [AppsCategoriesCompanion.insert(categoryId: category.id, appPackageName: "app.to.be.added", order: 1)]));
+    verify(database.insertAppsCategories([
+      AppsCategoriesCompanion.insert(
+          categoryId: category.id, appPackageName: "app.to.be.added", order: 1)
+    ]));
     verify(database.listCategoriesWithVisibleApps());
   });
 
   test("removeFromCategory removes app from category", () async {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
-    final appsService = await _buildInitialisedAppsService(channel, database, []);
+    final appsService =
+        await _buildInitialisedAppsService(channel, database, []);
     final app = fakeApp(packageName: "app.to.be.added");
     final category = fakeCategory(name: "Category");
 
@@ -260,19 +289,23 @@ void main() {
     verify(database.listCategoriesWithVisibleApps());
   });
 
-  test("saveOrderInCategory persists apps order from memory to database", () async {
+  test("saveOrderInCategory persists apps order from memory to database",
+      () async {
     final channel = MockFLauncherChannel();
     final database = MockFLauncherDatabase();
     final category = fakeCategory(name: "Category");
     final appsService = await _buildInitialisedAppsService(channel, database, [
-      CategoryWithApps(category, [fakeApp(packageName: "app.1"), fakeApp(packageName: "app.2")])
+      CategoryWithApps(category,
+          [fakeApp(packageName: "app.1"), fakeApp(packageName: "app.2")])
     ]);
 
     await appsService.saveApplicationOrderInCategory(category);
 
     verify(database.replaceAppsCategories([
-      AppsCategoriesCompanion.insert(categoryId: category.id, appPackageName: "app.1", order: 0),
-      AppsCategoriesCompanion.insert(categoryId: category.id, appPackageName: "app.2", order: 1)
+      AppsCategoriesCompanion.insert(
+          categoryId: category.id, appPackageName: "app.1", order: 0),
+      AppsCategoriesCompanion.insert(
+          categoryId: category.id, appPackageName: "app.2", order: 1)
     ]));
     verify(database.listCategoriesWithVisibleApps());
   });
@@ -282,13 +315,16 @@ void main() {
     final database = MockFLauncherDatabase();
     final category = fakeCategory(name: "Category");
     final appsService = await _buildInitialisedAppsService(channel, database, [
-      CategoryWithApps(category, [fakeApp(packageName: "app.1"), fakeApp(packageName: "app.2")])
+      CategoryWithApps(category,
+          [fakeApp(packageName: "app.1"), fakeApp(packageName: "app.2")])
     ]);
 
     appsService.reorderApplication(category, 1, 0);
 
-    expect(appsService.categoriesWithApps[0].applications[0].packageName, "app.2");
-    expect(appsService.categoriesWithApps[0].applications[1].packageName, "app.1");
+    expect(
+        appsService.categoriesWithApps[0].applications[0].packageName, "app.2");
+    expect(
+        appsService.categoriesWithApps[0].applications[1].packageName, "app.1");
   });
 
   test("addCategory adds category at index 0 and moves others", () async {
@@ -303,8 +339,11 @@ void main() {
 
     await appsService.addCategory("New Category");
 
-    verify(database.insertCategory(CategoriesCompanion.insert(name: "New Category", order: 0)));
-    verify(database.updateCategories([CategoriesCompanion(id: Value(existingCategory.id), order: Value(1))]));
+    verify(database.insertCategory(
+        CategoriesCompanion.insert(name: "New Category", order: 0)));
+    verify(database.updateCategories([
+      CategoriesCompanion(id: Value(existingCategory.id), order: Value(1))
+    ]));
     verify(database.listCategoriesWithVisibleApps());
   });
 
@@ -320,7 +359,8 @@ void main() {
 
     await appsService.renameCategory(category, "New name");
 
-    verify(database.updateCategory(category.id, CategoriesCompanion(name: Value("New name"))));
+    verify(database.updateCategory(
+        category.id, CategoriesCompanion(name: Value("New name"))));
     verify(database.listCategoriesWithVisibleApps());
   });
 
@@ -331,13 +371,15 @@ void main() {
     final categoryToDelete = fakeCategory(name: "Delete Me", order: 1);
     final appInDefaultCategory = fakeApp();
     final appInCategoryToDelete = fakeApp(packageName: "app.to.be.moved.1");
-    final hiddenAppInCategoryToDelete = fakeApp(packageName: "app.to.be.moved.2", hidden: true);
+    final hiddenAppInCategoryToDelete =
+        fakeApp(packageName: "app.to.be.moved.2", hidden: true);
     final appsService = await _buildInitialisedAppsService(
       channel,
       database,
       [
         CategoryWithApps(defaultCategory, [appInDefaultCategory]),
-        CategoryWithApps(categoryToDelete, [appInCategoryToDelete, hiddenAppInCategoryToDelete])
+        CategoryWithApps(categoryToDelete,
+            [appInCategoryToDelete, hiddenAppInCategoryToDelete])
       ],
     );
 
@@ -355,9 +397,13 @@ void main() {
     final appsService = await _buildInitialisedAppsService(
       channel,
       database,
-      [CategoryWithApps(applicationsCategory, []), CategoryWithApps(favoritesCategory, [])],
+      [
+        CategoryWithApps(applicationsCategory, []),
+        CategoryWithApps(favoritesCategory, [])
+      ],
     );
-    when(database.nextAppCategoryOrder(applicationsCategory.id)).thenAnswer((_) => Future.value(1));
+    when(database.nextAppCategoryOrder(applicationsCategory.id))
+        .thenAnswer((_) => Future.value(1));
 
     await appsService.moveCategory(1, 0);
 
@@ -373,12 +419,15 @@ void main() {
   test("hideApplication hides application", () async {
     final database = MockFLauncherDatabase();
     final application = fakeApp();
-    final appsService = await _buildInitialisedAppsService(MockFLauncherChannel(), database, []);
-    when(database.listApplications()).thenAnswer((_) => Future.value([application]));
+    final appsService = await _buildInitialisedAppsService(
+        MockFLauncherChannel(), database, []);
+    when(database.listApplications())
+        .thenAnswer((_) => Future.value([application]));
 
     await appsService.hideApplication(application);
 
-    verify(database.updateApp(application.packageName, AppsCompanion(hidden: Value(true))));
+    verify(database.updateApp(
+        application.packageName, AppsCompanion(hidden: Value(true))));
     verify(database.listCategoriesWithVisibleApps());
     verify(database.listApplications());
     expect(appsService.applications, [application]);
@@ -387,11 +436,13 @@ void main() {
   test("unHideApplication hides application", () async {
     final database = MockFLauncherDatabase();
     final application = fakeApp();
-    final appsService = await _buildInitialisedAppsService(MockFLauncherChannel(), database, []);
+    final appsService = await _buildInitialisedAppsService(
+        MockFLauncherChannel(), database, []);
 
     await appsService.unHideApplication(application);
 
-    verify(database.updateApp(application.packageName, AppsCompanion(hidden: Value(false))));
+    verify(database.updateApp(
+        application.packageName, AppsCompanion(hidden: Value(false))));
     verify(database.listCategoriesWithVisibleApps());
     verify(database.listApplications());
   });
@@ -399,44 +450,52 @@ void main() {
   test("setCategoryType persists change in database", () async {
     final database = MockFLauncherDatabase();
     final category = fakeCategory(type: CategoryType.row);
-    final appsService = await _buildInitialisedAppsService(MockFLauncherChannel(), database, []);
+    final appsService = await _buildInitialisedAppsService(
+        MockFLauncherChannel(), database, []);
 
     await appsService.setCategoryType(category, CategoryType.grid);
 
-    verify(database.updateCategory(category.id, CategoriesCompanion(type: Value(CategoryType.grid))));
+    verify(database.updateCategory(
+        category.id, CategoriesCompanion(type: Value(CategoryType.grid))));
     verify(database.listCategoriesWithVisibleApps());
   });
 
   test("setCategorySort persists change in database", () async {
     final database = MockFLauncherDatabase();
     final category = fakeCategory(sort: CategorySort.manual);
-    final appsService = await _buildInitialisedAppsService(MockFLauncherChannel(), database, []);
+    final appsService = await _buildInitialisedAppsService(
+        MockFLauncherChannel(), database, []);
 
     await appsService.setCategorySort(category, CategorySort.alphabetical);
 
-    verify(database.updateCategory(category.id, CategoriesCompanion(sort: Value(CategorySort.alphabetical))));
+    verify(database.updateCategory(category.id,
+        CategoriesCompanion(sort: Value(CategorySort.alphabetical))));
     verify(database.listCategoriesWithVisibleApps());
   });
 
   test("setCategoryColumnsCount persists change in database", () async {
     final database = MockFLauncherDatabase();
     final category = fakeCategory(columnsCount: 6);
-    final appsService = await _buildInitialisedAppsService(MockFLauncherChannel(), database, []);
+    final appsService = await _buildInitialisedAppsService(
+        MockFLauncherChannel(), database, []);
 
     await appsService.setCategoryColumnsCount(category, 8);
 
-    verify(database.updateCategory(category.id, CategoriesCompanion(columnsCount: Value(8))));
+    verify(database.updateCategory(
+        category.id, CategoriesCompanion(columnsCount: Value(8))));
     verify(database.listCategoriesWithVisibleApps());
   });
 
   test("setCategoryRowHeight persists change in database", () async {
     final database = MockFLauncherDatabase();
     final category = fakeCategory(rowHeight: 110);
-    final appsService = await _buildInitialisedAppsService(MockFLauncherChannel(), database, []);
+    final appsService = await _buildInitialisedAppsService(
+        MockFLauncherChannel(), database, []);
 
     await appsService.setCategoryRowHeight(category, 120);
 
-    verify(database.updateCategory(category.id, CategoriesCompanion(rowHeight: Value(120))));
+    verify(database.updateCategory(
+        category.id, CategoriesCompanion(rowHeight: Value(120))));
     verify(database.listCategoriesWithVisibleApps());
   });
 }
@@ -448,8 +507,10 @@ Future<AppsService> _buildInitialisedAppsService(
 ) async {
   when(channel.getApplications()).thenAnswer((_) => Future.value([]));
   when(database.listApplications()).thenAnswer((_) => Future.value([]));
-  when(database.listCategoriesWithVisibleApps()).thenAnswer((_) => Future.value(categoriesWithApps));
-  when(database.transaction(any)).thenAnswer((realInvocation) => realInvocation.positionalArguments[0]());
+  when(database.listCategoriesWithVisibleApps())
+      .thenAnswer((_) => Future.value(categoriesWithApps));
+  when(database.transaction(any))
+      .thenAnswer((realInvocation) => realInvocation.positionalArguments[0]());
   when(database.wasCreated).thenReturn(false);
   final appsService = AppsService(channel, database);
   await untilCalled(channel.addAppsChangedListener(any));

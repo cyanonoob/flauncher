@@ -32,9 +32,7 @@
     "@formattedDate": {
         "placeholders": {
             "dateString": {
-                "type": {
-                    "type": "String"
-                }
+                "type": "String"
             }
         }
     },
@@ -42,9 +40,7 @@
     "@formattedTime": {
         "placeholders": {
             "timeString": {
-                "type": {
-                    "type": "String"
-                }
+                "type": "String"
             }
         }
     },
