@@ -2,3 +2,9 @@
 flutter = "3.24.5"
 java = "zulu-23.32.11"
 kotlin = "1.8.20"
+
+[tasks]
+"run:dev" = "flutter run --flavor development"
+"clean:dev" = "adb uninstall com.geert.flauncher.dev"
+"build" = "flutter build apk --flavor production"
+"run:prod" = "adb install build/app/outputs/flutter-apk/app-production-release.apk"
