@@ -1,0 +1,118 @@
+{
+    "aboutFlauncher": "Over FLauncher",
+    "dateFormatSpecifier_d": "[d] Dag in maand (10)",
+    "dateFormatSpecifier_E": "[E] Afgekorte dag van de week (di)",
+    "dateFormatSpecifier_EEEE": "[EEEE] Dag van de week (dinsdag)",
+    "dateFormatSpecifier_D": "[D] Dag in jaar (189)",
+    "dateFormatSpecifier_M": "[M] Maand in jaar (07)",
+    "dateFormatSpecifier_MMM": "[MMM] Afgekorte maand in jaar (jul)",
+    "dateFormatSpecifier_MMMM": "[MMMM] Maand in jaar (juli)",
+    "dateFormatSpecifier_y": "[y] Jaar (1996)",
+    "timeFormatSpecifier_h": "[h] Uur in am/pm (1~12)",
+    "timeFormatSpecifier_H": "[H] Uur in dag (0~23)",
+    "timeFormatSpecifier_m": "[m] Minuut in uur (30)",
+    "timeFormatSpecifier_s": "[s] Seconde in minuut (55)",
+    "timeFormatSpecifier_a": "[a] am/pm aanduiding (PM)",
+    "timeFormatSpecifier_k": "[k] Uur in dag (1~24)",
+    "timeFormatSpecifier_K": "[K] Uur in am/pm (0~11)",
+    "addCategory": "Categorie toevoegen",
+    "addSection": "Sectie toevoegen",
+    "alphabetical": "Alfabetisch",
+    "appCardHighlightAnimation": "App-kaart highlight animatie",
+    "appInfo": "Applicatie-informatie",
+    "appKeyClick": "Klikgeluid bij toetsdruk",
+    "applications": "Applicaties",
+    "autoHideAppBar": "Statusbalk automatisch verbergen",
+    "backButtonAction": "Actie terug-knop",
+    "category": "Categorie",
+    "categories": "Categorieën",
+    "columnCount": "Aantal kolommen",
+    "date": "Datum",
+    "dateAndTimeFormat": "Datum- en tijdformaat",
+    "delete": "Verwijderen",
+    "dialogOptionBackButtonActionDoNothing": "Niets doen",
+    "dialogOptionBackButtonActionShowScreensaver": "Screensaver tonen",
+    "dialogOptionBackButtonActionShowClock": "Klok tonen",
+    "dialogTextNoFileExplorer": "Installeer een bestandsverkenner om een afbeelding te kiezen.",
+    "dialogTitleBackButtonAction": "Kies de actie voor de terug-knop",
+    "disambiguateCategoryTitle": "{title} (Categorie)",
+    "@disambiguateCategoryTitle": {
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "formattedDate": "Opgemaakte datum: {dateString}",
+    "@formattedDate": {
+        "placeholders": {
+            "dateString": {
+                "type": "String"
+            }
+        }
+    },
+    "formattedTime": "Opgemaakte tijd: {timeString}",
+    "@formattedTime": {
+        "placeholders": {
+            "timeString": {
+                "type": "String"
+            }
+        }
+    },
+    "gradient": "Gradient",
+    "grid": "Raster",
+    "height": "Hoogte",
+    "hide": "Verbergen",
+    "hiddenApplications": "Verborgen applicaties",
+    "launcherSections": "Secties",
+    "layout": "Indeling",
+    "loading": "Laden",
+    "manual": "Handmatig",
+    "modifySection": "Sectie wijzigen",
+    "mustNotBeEmpty": "Mag niet leeg zijn",
+    "name": "Naam",
+    "newSection": "Nieuwe sectie",
+    "noDateFormatSpecified": "Geen datumformaat opgegeven",
+    "noTimeFormatSpecified": "Geen tijdformaat opgegeven",
+    "nonTvApplications": "Niet-TV applicaties",
+    "open": "Openen",
+    "orSelectFormatSpecifiers": "Of selecteer formaat-specificaties",
+    "picture": "Afbeelding",
+    "removeFrom": "Verwijderen uit {name}",
+    "@removeFrom": {
+        "placeholders": {
+            "name": { "type": "String" }
+        }
+    },
+    "renameCategory": "Categorie hernoemen",
+    "reorder": "Herschikken",
+    "row": "Rij",
+    "rowHeight": "Rijhoogte",
+    "save": "Opslaan",
+    "spacer": "Ruimte",
+    "spacerMaxHeightRequirement": "Moet groter zijn dan 0 en kleiner of gelijk aan 500",
+    "statusBar": "Statusbalk",
+    "settings": "Instellingen",
+    "show": "Tonen",
+    "showCategoryTitles": "Categorietitels tonen",
+    "sort": "Sorteren",
+    "systemSettings": "Systeeminstellingen",
+    "textAboutDialog": "FLauncher is een open-source alternatieve launcher voor Android TV.\nBroncode beschikbaar op {repoUrl}.\n\nLogo door Katie (@fureturoe), ontwerp door @FXCostanzo.",
+    "@textAboutDialog": {
+        "placeholders": {
+            "repoUrl": {
+                "type": "String"
+            }
+        }
+    },
+    "textEmptyCategory": "Deze categorie is leeg.",
+    "time": "Tijd",
+    "titleStatusBarSettingsPage": "Kies wat er in de statusbalk wordt weergegeven",
+    "tvApplications": "TV-applicaties",
+    "type": "Type",
+    "typeInTheDateFormat": "Typ het datumformaat in",
+    "typeInTheHourFormat": "Typ het tijdformaat in",
+    "uninstall": "Verwijderen",
+    "wallpaper": "Achtergrond",
+    "withEllipsisAddTo": "Toevoegen aan..."
+}
