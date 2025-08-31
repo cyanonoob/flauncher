@@ -67,9 +67,9 @@ if (envFile.exists()) {
 android {
     defaultConfig {
         applicationId "com.geert.flauncher"
-        compileSdk 35
+        compileSdk 36
         minSdkVersion flutter.minSdkVersion
-        targetSdk 35
+        targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
