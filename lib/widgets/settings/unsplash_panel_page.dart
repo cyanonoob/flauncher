@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flauncher/providers/settings_service.dart';
+import 'package:flutter/services.dart';
 
 class UnsplashPanelPage extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
   final FocusNode _queryFocusNode = FocusNode();
   final FocusNode _unsplashButtonFocusNode = FocusNode();
   bool _isLoading = false;
+  bool _ignoreTextFieldKeyEvent = false;
 
   @override
   void initState() {
@@ -23,6 +25,33 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
       final settings = Provider.of<SettingsService>(context, listen: false);
       _queryController.text = settings.unsplashQuery ?? '';
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final FocusScopeNode focusScopeNode = FocusScope.of(context);
+    focusScopeNode.onKeyEvent = (node, keyEvent) {
+      if (_queryFocusNode.hasFocus &&
+          (keyEvent.logicalKey == LogicalKeyboardKey.arrowUp ||
+              keyEvent.logicalKey == LogicalKeyboardKey.arrowDown)) {
+        if (!_ignoreTextFieldKeyEvent) {
+          if (keyEvent.logicalKey == LogicalKeyboardKey.arrowUp) {
+            _queryFocusNode.previousFocus();
+          }
+          if (keyEvent.logicalKey == LogicalKeyboardKey.arrowDown) {
+            _queryFocusNode.nextFocus();
+          }
+        }
+
+        _ignoreTextFieldKeyEvent = false;
+      } else {
+        _ignoreTextFieldKeyEvent = true;
+      }
+
+      return KeyEventResult.ignored;
+    };
   }
 
   @override
