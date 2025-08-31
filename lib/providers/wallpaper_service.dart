@@ -25,6 +25,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WallpaperService extends ChangeNotifier {
   final FLauncherChannel _fLauncherChannel;
@@ -34,16 +37,15 @@ class WallpaperService extends ChangeNotifier {
 
   ImageProvider? _wallpaper;
 
-  ImageProvider?  get wallpaper     => _wallpaper;
+  ImageProvider? get wallpaper => _wallpaper;
 
   FLauncherGradient get gradient => FLauncherGradients.all.firstWhere(
         (gradient) => gradient.uuid == _settingsService.gradientUuid,
         orElse: () => FLauncherGradients.greatWhale,
       );
 
-  WallpaperService(this._fLauncherChannel, this._settingsService) :
-    _wallpaper = null
-  {
+  WallpaperService(this._fLauncherChannel, this._settingsService)
+      : _wallpaper = null {
     _init();
   }
 
@@ -79,6 +81,35 @@ class WallpaperService extends ChangeNotifier {
 
     _settingsService.setGradientUuid(fLauncherGradient.uuid);
     notifyListeners();
+  }
+
+  Future<void> fetchUnsplashWallpaper({String? query}) async {
+    final accessKey = dotenv.env['UNSPLASH_ACCESS_KEY'];
+    if (accessKey == null)
+      throw Exception("Unsplash API key not found in .env");
+
+    final url = Uri.parse(
+        "https://api.unsplash.com/photos/random?${query != null ? 'query=$query&' : ''}client_id=$accessKey");
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final imageUrl = data['urls']?['regular'];
+      if (imageUrl == null)
+        throw Exception("No image URL found in Unsplash response.");
+
+      final imageResponse = await http.get(Uri.parse(imageUrl));
+      if (imageResponse.statusCode == 200) {
+        Uint8List bytes = imageResponse.bodyBytes;
+        await _wallpaperFile.writeAsBytes(bytes);
+        _wallpaper = MemoryImage(bytes);
+        notifyListeners();
+      } else {
+        throw Exception("Failed to download Unsplash image.");
+      }
+    } else {
+      throw Exception("Failed to fetch Unsplash image: ${response.body}");
+    }
   }
 }
 

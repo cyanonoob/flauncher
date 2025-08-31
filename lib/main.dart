@@ -31,6 +31,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'flauncher_app.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,22 +41,18 @@ Future<void> main() async {
   final fLauncherChannel = FLauncherChannel();
   final fLauncherDatabase = FLauncherDatabase(connect());
 
-  runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (_) => SettingsService(sharedPreferences),
-            lazy: false),
-        ChangeNotifierProvider(create: (_) => AppsService(fLauncherChannel, fLauncherDatabase)),
-        ChangeNotifierProvider(create: (_) => LauncherState()),
-        ChangeNotifierProvider(create: (_) => NetworkService(fLauncherChannel)),
-        ChangeNotifierProvider(
-            create: (context) {
-              SettingsService settingsService = Provider.of(context, listen: false);
-              return WallpaperService(fLauncherChannel, settingsService);
-            }
-        ),
-      ],
-      child: FLauncherApp()
-    )
-  );
+  await dotenv.load(fileName: ".env");
+
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+        create: (_) => SettingsService(sharedPreferences), lazy: false),
+    ChangeNotifierProvider(
+        create: (_) => AppsService(fLauncherChannel, fLauncherDatabase)),
+    ChangeNotifierProvider(create: (_) => LauncherState()),
+    ChangeNotifierProvider(create: (_) => NetworkService(fLauncherChannel)),
+    ChangeNotifierProvider(create: (context) {
+      SettingsService settingsService = Provider.of(context, listen: false);
+      return WallpaperService(fLauncherChannel, settingsService);
+    }),
+  ], child: FLauncherApp()));
 }
