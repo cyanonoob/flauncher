@@ -119,7 +119,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dialogOptionBackButtonActionShowClock => 'Show clock';
 
   @override
-  String get dialogTextNoFileExplorer => 'Please install a file explorer in order to pick a picture.';
+  String get dialogTextNoFileExplorer =>
+      'Please install a file explorer in order to pick a picture.';
 
   @override
   String get dialogTitleBackButtonAction => 'Choose the back button action';
@@ -220,7 +221,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spacer => 'Spacer';
 
   @override
-  String get spacerMaxHeightRequirement => 'Must be greater than 0 and less than or equal to 500';
+  String get spacerMaxHeightRequirement =>
+      'Must be greater than 0 and less than or equal to 500';
 
   @override
   String get statusBar => 'Status bar';
@@ -252,7 +254,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get time => 'Time';
 
   @override
-  String get titleStatusBarSettingsPage => 'Choose what to display in the status bar';
+  String get titleStatusBarSettingsPage =>
+      'Choose what to display in the status bar';
 
   @override
   String get tvApplications => 'TV applications';

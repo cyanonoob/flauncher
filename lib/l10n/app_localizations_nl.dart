@@ -119,7 +119,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get dialogOptionBackButtonActionShowClock => 'Klok tonen';
 
   @override
-  String get dialogTextNoFileExplorer => 'Installeer een bestandsverkenner om een afbeelding te kiezen.';
+  String get dialogTextNoFileExplorer =>
+      'Installeer een bestandsverkenner om een afbeelding te kiezen.';
 
   @override
   String get dialogTitleBackButtonAction => 'Kies de actie voor de terug-knop';
@@ -220,7 +221,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get spacer => 'Ruimte';
 
   @override
-  String get spacerMaxHeightRequirement => 'Moet groter zijn dan 0 en kleiner of gelijk aan 500';
+  String get spacerMaxHeightRequirement =>
+      'Moet groter zijn dan 0 en kleiner of gelijk aan 500';
 
   @override
   String get statusBar => 'Statusbalk';
@@ -252,7 +254,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get time => 'Tijd';
 
   @override
-  String get titleStatusBarSettingsPage => 'Kies wat er in de statusbalk wordt weergegeven';
+  String get titleStatusBarSettingsPage =>
+      'Kies wat er in de statusbalk wordt weergegeven';
 
   @override
   String get tvApplications => 'TV-applicaties';
