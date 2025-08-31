@@ -74,6 +74,18 @@ android {
         versionName flutterVersionName
     }
 
+    flavorDimensions "app"
+    productFlavors {
+        development {
+            dimension "app"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+        production {
+            dimension "app"
+        }
+    }
+
     signingConfigs {
         debug {}
         release {
