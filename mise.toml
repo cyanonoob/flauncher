@@ -1,5 +1,5 @@
 [tools]
-flutter = "3.24.5"
+flutter = "3.27.4"
 java = "zulu-23.32.11"
 kotlin = "1.8.20"
 
