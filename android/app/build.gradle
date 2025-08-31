@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
+
 plugins {
     id "com.android.application"
     id "dev.flutter.flutter-gradle-plugin"
@@ -39,10 +41,28 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def secretProperties = new Properties()
-secretProperties.setProperty("signing_keystore_password", "testtest")
-secretProperties.setProperty("signing_key_password", "testtest")
-secretProperties.setProperty("signing_key_alias", "localonly")
+
+
+def envProperties = new Properties()
+def envFile = rootProject.file('.env')
+if (envFile.exists()) {
+    envFile.withReader('UTF-8') { reader ->
+        reader.eachLine { line ->
+            if (line && !line.startsWith('#')) {
+                def idx = line.indexOf('=')
+                if (idx > 0) {
+                    def key = line.substring(0, idx).trim()
+                    def value = line.substring(idx + 1).trim()
+                    // Remove quotes if present
+                    if (value.startsWith('"') && value.endsWith('"')) {
+                        value = value.substring(1, value.length() - 1)
+                    }
+                    envProperties.setProperty(key, value)
+                }
+            }
+        }
+    }
+}
 
 android {
     defaultConfig {
@@ -58,9 +78,9 @@ android {
         debug {}
         release {
             storeFile file("upload-keystore.jks")
-            storePassword "${secretProperties['signing_keystore_password']}"
-            keyAlias "${secretProperties['signing_key_alias']}"
-            keyPassword "${secretProperties['signing_key_password']}"
+            storePassword envProperties.getProperty("FLAUNCHER_KEYSTORE_PASSWORD")
+            keyAlias envProperties.getProperty("FLAUNCHER_SIGNING_KEY_ALIAS")
+            keyPassword envProperties.getProperty("FLAUNCHER_SIGNING_KEY_PASSWORD")
         }
     }
 
