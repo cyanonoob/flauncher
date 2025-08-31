@@ -29,15 +29,37 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+enum WallpaperOption { gradient, image, unsplash }
+
 class WallpaperService extends ChangeNotifier {
   final FLauncherChannel _fLauncherChannel;
   final SettingsService _settingsService;
 
   late File _wallpaperFile;
+  late File _unsplashFile;
+
+  WallpaperOption _selectedOption = WallpaperOption.gradient;
 
   ImageProvider? _wallpaper;
+  ImageProvider? _unsplash;
 
-  ImageProvider? get wallpaper => _wallpaper;
+  WallpaperOption get selectedOption => _selectedOption;
+
+  ImageProvider? get wallpaper {
+    switch (_selectedOption) {
+      case WallpaperOption.image:
+        return _wallpaper;
+      case WallpaperOption.unsplash:
+        return _unsplash;
+      default:
+        return null;
+    }
+  }
+
+  void setSelectedOption(WallpaperOption option) {
+    _selectedOption = option;
+    notifyListeners();
+  }
 
   FLauncherGradient get gradient => FLauncherGradients.all.firstWhere(
         (gradient) => gradient.uuid == _settingsService.gradientUuid,
@@ -52,10 +74,17 @@ class WallpaperService extends ChangeNotifier {
   Future<void> _init() async {
     final directory = await getApplicationDocumentsDirectory();
     _wallpaperFile = File("${directory.path}/wallpaper");
+    _unsplashFile = File("${directory.path}/unsplash_wallpaper");
+
     if (await _wallpaperFile.exists()) {
       _wallpaper = FileImage(_wallpaperFile);
-      notifyListeners();
     }
+
+    if (await _unsplashFile.exists()) {
+      _wallpaper = FileImage(_unsplashFile);
+    }
+
+    notifyListeners();
   }
 
   Future<void> pickWallpaper() async {
@@ -65,6 +94,7 @@ class WallpaperService extends ChangeNotifier {
 
     final imagePicker = ImagePicker();
     final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
       Uint8List bytes = await pickedFile.readAsBytes();
       await _wallpaperFile.writeAsBytes(bytes);
@@ -101,8 +131,8 @@ class WallpaperService extends ChangeNotifier {
       final imageResponse = await http.get(Uri.parse(imageUrl));
       if (imageResponse.statusCode == 200) {
         Uint8List bytes = imageResponse.bodyBytes;
-        await _wallpaperFile.writeAsBytes(bytes);
-        _wallpaper = MemoryImage(bytes);
+        await _unsplashFile.writeAsBytes(bytes);
+        _unsplash = MemoryImage(bytes);
         notifyListeners();
       } else {
         throw Exception("Failed to download Unsplash image.");

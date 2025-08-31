@@ -1,13 +1,9 @@
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flauncher/widgets/settings/gradient_panel_page.dart';
+import 'package:flauncher/widgets/settings/unsplash_panel_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-// You need to create this page!
-import 'unsplash_panel_page.dart';
-
-enum WallpaperOption { gradient, image, unsplash }
 
 class WallpaperPanelPage extends StatefulWidget {
   static const String routeName = "wallpaper_panel";
@@ -17,9 +13,16 @@ class WallpaperPanelPage extends StatefulWidget {
 }
 
 class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
-  WallpaperOption? _selectedOption = WallpaperOption.gradient;
+  WallpaperService? _wallpaperService;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _wallpaperService ??= Provider.of<WallpaperService>(context);
+  }
 
   void _openOptionScreen(BuildContext context, WallpaperOption option) {
+    _wallpaperService?.setSelectedOption(option);
     switch (option) {
       case WallpaperOption.gradient:
         Navigator.of(context).pushNamed(GradientPanelPage.routeName);
@@ -57,6 +60,7 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
+    final wallpaperService = Provider.of<WallpaperService>(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,45 +71,39 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
         ListTile(
           leading: Radio<WallpaperOption>(
             value: WallpaperOption.gradient,
-            groupValue: _selectedOption,
+            groupValue: wallpaperService.selectedOption,
             onChanged: (value) {
-              setState(() => _selectedOption = value);
               _openOptionScreen(context, WallpaperOption.gradient);
             },
           ),
           title: Text(localizations.gradient),
           onTap: () {
-            setState(() => _selectedOption = WallpaperOption.gradient);
             _openOptionScreen(context, WallpaperOption.gradient);
           },
         ),
         ListTile(
           leading: Radio<WallpaperOption>(
             value: WallpaperOption.image,
-            groupValue: _selectedOption,
+            groupValue: wallpaperService.selectedOption,
             onChanged: (value) {
-              setState(() => _selectedOption = value);
               _openOptionScreen(context, WallpaperOption.image);
             },
           ),
           title: Text(localizations.picture),
           onTap: () {
-            setState(() => _selectedOption = WallpaperOption.image);
             _openOptionScreen(context, WallpaperOption.image);
           },
         ),
         ListTile(
           leading: Radio<WallpaperOption>(
             value: WallpaperOption.unsplash,
-            groupValue: _selectedOption,
+            groupValue: wallpaperService.selectedOption,
             onChanged: (value) {
-              setState(() => _selectedOption = value);
               _openOptionScreen(context, WallpaperOption.unsplash);
             },
           ),
           title: Text("Unsplash"),
           onTap: () {
-            setState(() => _selectedOption = WallpaperOption.unsplash);
             _openOptionScreen(context, WallpaperOption.unsplash);
           },
         ),
