@@ -78,7 +78,7 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
           ),
           title: Text(localizations.gradient),
           trailing: ElevatedButton(
-            child: Text("Select"),
+            child: Text(localizations.pick),
             onPressed: () {
               _openOptionScreen(context, WallpaperOption.gradient);
             },
@@ -94,7 +94,7 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
           ),
           title: Text(localizations.picture),
           trailing: ElevatedButton(
-            child: Text("Select"),
+            child: Text(localizations.pick),
             onPressed: () {
               _openOptionScreen(context, WallpaperOption.image);
             },
@@ -110,7 +110,7 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
           ),
           title: Text("Unsplash"),
           trailing: ElevatedButton(
-            child: Text("Select"),
+            child: Text(localizations.pick),
             onPressed: () {
               _openOptionScreen(context, WallpaperOption.unsplash);
             },

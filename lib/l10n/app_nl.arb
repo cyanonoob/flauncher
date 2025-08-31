@@ -114,5 +114,16 @@
     "typeInTheHourFormat": "Typ het tijdformaat in",
     "uninstall": "Verwijderen",
     "wallpaper": "Achtergrond",
-    "withEllipsisAddTo": "Toevoegen aan..."
+    "withEllipsisAddTo": "Toevoegen aan...",
+    "pick": "Kies",
+    "unsplashQueryLabel": "Unsplash zoekopdracht (bijv. natuur, bergen)",
+    "unsplashErrorMessage": "Kon Unsplash-achtergrond niet ophalen: {error}",
+    "@unsplashErrorMessage": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "apply": "Toepassen"
 }

@@ -114,5 +114,16 @@
     "typeInTheHourFormat": "Escriba el formato de hora",
     "uninstall": "Desinstalar",
     "wallpaper": "Fondo de pantalla",
-    "withEllipsisAddTo": "Añadir a..."
+    "withEllipsisAddTo": "Añadir a...",
+    "pick": "Elegir",
+    "unsplashQueryLabel": "Consulta de Unsplash (ej. naturaleza, montañas)",
+    "unsplashErrorMessage": "No se pudo obtener el fondo de Unsplash: {error}",
+    "@unsplashErrorMessage": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "apply": "Aplicar"
 }

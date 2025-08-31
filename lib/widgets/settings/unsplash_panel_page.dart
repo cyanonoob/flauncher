@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UnsplashPanelPage extends StatefulWidget {
   @override
@@ -24,6 +24,8 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         Text("Unsplash", style: Theme.of(context).textTheme.titleLarge),
@@ -40,7 +42,7 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
                       controller: _queryController,
                       focusNode: _queryFocusNode,
                       decoration: InputDecoration(
-                        labelText: "Unsplash Query (e.g. nature, mountains)",
+                        labelText: localizations.unsplashQueryLabel,
                         border: OutlineInputBorder(),
                       ),
                       onEditingComplete: () {
@@ -56,7 +58,7 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
                       focusNode: _unsplashButtonFocusNode,
                       child: _isLoading
                           ? CircularProgressIndicator()
-                          : Text("Get Unsplash Wallpaper"),
+                          : Text(localizations.apply),
                       onPressed: _isLoading
                           ? null
                           : () async {
@@ -69,13 +71,13 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
                                           _queryController.text.trim().isEmpty
                                               ? null
                                               : _queryController.text.trim(),
-                                    );
+                                              R   );
                                 Navigator.of(context).pop();
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(
-                                        "Failed to fetch Unsplash wallpaper: $e"),
+                                    content: Text(localizations
+                                        .unsplashErrorMessage(e.toString())),
                                   ),
                                 );
                               } finally {

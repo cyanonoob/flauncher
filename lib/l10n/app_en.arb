@@ -1,5 +1,14 @@
 {
     "aboutFlauncher": "About FLauncher",
+    "unsplashQueryLabel": "Unsplash Query (e.g. nature, mountains)",
+    "unsplashErrorMessage": "Failed to fetch Unsplash wallpaper: {error}",
+    "@unsplashErrorMessage": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
     "dateFormatSpecifier_d": "[d] Day in month (10)",
     "dateFormatSpecifier_E": "[E] Abbreviated day of week (Tue)",
     "dateFormatSpecifier_EEEE": "[EEEE] Day of week (Tuesday)",
@@ -114,5 +123,7 @@
     "typeInTheHourFormat": "Type in the hour format",
     "uninstall": "Uninstall",
     "wallpaper": "Wallpaper",
-    "withEllipsisAddTo": "Add to..."
+    "withEllipsisAddTo": "Add to...",
+    "pick": "Pick",
+    "apply": "Apply"
 }
