@@ -23,17 +23,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'flauncher.dart';
 
-class FLauncherApp extends StatelessWidget
-{
-  static const PrioritizedIntents _backIntents = PrioritizedIntents(orderedIntents: [
-    DismissIntent(),
-    BackIntent()
-  ]);
+class FLauncherApp extends StatelessWidget {
+  static const PrioritizedIntents _backIntents =
+      PrioritizedIntents(orderedIntents: [DismissIntent(), BackIntent()]);
 
   static const MaterialColor _swatch = MaterialColor(0xFF011526, <int, Color>{
     50: Color(0xFF36A0FA),
@@ -83,11 +80,14 @@ class FLauncherApp extends StatelessWidget
         canvasColor: _swatch[300],
         dialogBackgroundColor: _swatch[400],
         scaffoldBackgroundColor: _swatch[400],
-        textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: Colors.white)),
-        appBarTheme: const AppBarTheme(elevation: 0, backgroundColor: Colors.transparent),
+        textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(foregroundColor: Colors.white)),
+        appBarTheme: const AppBarTheme(
+            elevation: 0, backgroundColor: Colors.transparent),
         typography: Typography.material2018(),
         inputDecorationTheme: InputDecorationTheme(
-          focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white)),
           labelStyle: Typography.material2018().white.bodyMedium,
         ),
         textSelectionTheme: TextSelectionThemeData(
@@ -97,15 +97,13 @@ class FLauncherApp extends StatelessWidget
         ),
       ),
       home: Builder(
-        builder: (context) => PopScope(
-          canPop: false,
-          child: FLauncher(),
-          onPopInvoked: (didPop) {
-            LauncherState launcherState = context.read<LauncherState>();
-            launcherState.handleBackNavigation(context);
-          }
-        )
-      ),
+          builder: (context) => PopScope(
+              canPop: false,
+              child: FLauncher(),
+              onPopInvoked: (didPop) {
+                LauncherState launcherState = context.read<LauncherState>();
+                launcherState.handleBackNavigation(context);
+              })),
     );
   }
 }

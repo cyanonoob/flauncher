@@ -18,7 +18,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '/l10n/app_localizations.dart';
 
 class FLauncherAboutDialog extends StatelessWidget {
   final PackageInfo packageInfo;
@@ -39,7 +39,8 @@ class FLauncherAboutDialog extends StatelessWidget {
       applicationLegalese: "© 2024 Oscar Rojas",
       children: [
         SizedBox(height: 24),
-        Text(localizations.textAboutDialog("https://github.com/osrosal/flauncher"))
+        Text(localizations
+            .textAboutDialog("https://github.com/osrosal/flauncher"))
       ],
     );
   }

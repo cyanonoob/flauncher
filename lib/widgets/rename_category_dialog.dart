@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '/l10n/app_localizations.dart';
 
 class AddCategoryDialog extends StatelessWidget {
   final String initialValue;
@@ -39,7 +39,8 @@ class AddCategoryDialog extends StatelessWidget {
           autofocus: true,
           initialValue: initialValue,
           decoration: InputDecoration(labelText: localizations.name),
-          validator: (value) => value!.trim().isEmpty ? localizations.mustNotBeEmpty : null,
+          validator: (value) =>
+              value!.trim().isEmpty ? localizations.mustNotBeEmpty : null,
           autovalidateMode: AutovalidateMode.always,
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.sentences,

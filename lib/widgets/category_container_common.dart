@@ -1,8 +1,7 @@
 import 'package:flauncher/widgets/settings/launcher_sections_panel_page.dart';
 import 'package:flauncher/widgets/settings/settings_panel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import '/l10n/app_localizations.dart';
 import 'ensure_visible.dart';
 
 Widget categoryContainerEmptyState(BuildContext context) {
@@ -26,11 +25,13 @@ Widget categoryContainerEmptyState(BuildContext context) {
             aspectRatio: 16 / 9,
             child: Card(
               clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
               child: InkWell(
                 onTap: () => showDialog(
                   context: context,
-                  builder: (_) => SettingsPanel(initialRoute: LauncherSectionsPanelPage.routeName),
+                  builder: (_) => SettingsPanel(
+                      initialRoute: LauncherSectionsPanelPage.routeName),
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(8),
