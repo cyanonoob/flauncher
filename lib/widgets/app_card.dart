@@ -17,6 +17,7 @@
  */
 
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flauncher/app_image_type.dart';
 import 'package:flauncher/providers/apps_service.dart';
@@ -57,6 +58,10 @@ class AppCard extends StatefulWidget {
   State<AppCard> createState() => _AppCardState();
 }
 
+const int animationDuration = 2400;
+const int animationMidStop = 200;
+const int animationEndStop = 1200;
+
 class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   bool _moving = false;
 
@@ -64,10 +69,15 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   late final AnimationController _animation = AnimationController(
     vsync: this,
     lowerBound: 0,
-    upperBound: 255,
+    upperBound: 1,
     duration: const Duration(
-      milliseconds: 1600,
+      milliseconds: animationDuration,
     ),
+  );
+
+  late final Animation<double> _curvedAnimation = CurvedAnimation(
+    parent: _animation,
+    curve: Curves.easeInOutSine,
   );
 
   @override
@@ -145,8 +155,26 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                           settingsService.appHighlightAnimationEnabled &&
                           shouldHighlight,
                       builder: (context, highlight, _) {
+                        bool _highlightAnimating = false;
+
+                        void _startHighlightAnimation() async {
+                          if (!_highlightAnimating) {
+                            _highlightAnimating = true;
+
+                            while (mounted && _shouldHighlight(context)) {
+                              await _animation.forward();
+                              await Future.delayed(const Duration(
+                                  milliseconds: animationMidStop));
+                              await _animation.reverse();
+                              await Future.delayed(const Duration(
+                                  milliseconds: animationEndStop));
+                            }
+                          }
+                        }
+
                         if (highlight) {
-                          _animation.repeat(reverse: true);
+                          // _animation.repeat(reverse: true);
+                          _startHighlightAnimation();
 
                           return AnimatedBuilder(
                             animation: _animation,
@@ -156,15 +184,17 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withAlpha(
-                                          255 - _animation.value.round()),
+                                          (_curvedAnimation.value * 51)
+                                              .round()),
                                       blurRadius: 48,
                                       spreadRadius: 2,
                                     ),
                                   ],
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                      color: Colors.white
-                                          .withAlpha(_animation.value.round()),
+                                      color: Colors.white.withAlpha(
+                                          (55 + (_curvedAnimation.value * 200))
+                                              .round()),
                                       width: 3),
                                 ),
                               ),
@@ -173,6 +203,8 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                         }
 
                         _animation.stop();
+                        _highlightAnimating = false;
+
                         return const SizedBox();
                       },
                     ),
