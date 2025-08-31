@@ -3,29 +3,21 @@
 
 FLauncher is an open-source alternative launcher for Android TV, built with [Flutter](https://flutter.dev).
 
-## Download
-Get the latest build from the [releases](https://github.com/osrosal/flauncher/releases) page, you can look for older builds on the [actions](https://github.com/CocoCR300/flauncher/actions) tab, where they are uploaded as artifacts.
-
 ## Features
-For a list of the changes introduced by this fork from the original, see the [CHANGELOG](CHANGELOG.md) file.
+Changes compared to osrosal/flauncher:
+- Upgraded to Flutter 3.35 and latest Android build tools
+- Improved localization (Dutch, date formats)
+- Enhanced wallpaper/Unsplash integration and settings persistence
+- UI polish: status bar, animations, dialogs, panel focus
+- Switched to mise for dependency management and added build flavors
+- Addressed TODOs, minor code cleanup, some minor bugfixes
+- Renamed package, renamed app label to GLauncher to easily distinguish when both are installed
 
-- [x] No ads
-- [x] Customizable categories
-- [x] Manually reorder apps within categories
-- [x] Wallpaper support
-- [x] Open "Android Settings"
-- [x] Open "App info"
-- [x] Uninstall app
-- [x] Clock
-- [x] Switch between row and grid for categories
-- [x] Support for non-TV (sideloaded) apps
-- [x] Navigation sound feedback
-- [ ] Force stop app
 
-## Screenshots
+<!--## Screenshots
 |  |  |  |
 |--|--|--|
-| ![](screenshots/Screenshot_1624378896.png) | ![](screenshots/Screenshot_1624378921.png) | ![](screenshots/Screenshot_1624378938.png) |
+| ![](screenshots/Screenshot_1624378896.png) | ![](screenshots/Screenshot_1624378921.png) | ![](screenshots/Screenshot_1624378938.png) |-->
 
 ## Set FLauncher as default launcher
 
