@@ -73,39 +73,48 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
             value: WallpaperOption.gradient,
             groupValue: wallpaperService.selectedOption,
             onChanged: (value) {
-              _openOptionScreen(context, WallpaperOption.gradient);
+              wallpaperService.setSelectedOption(WallpaperOption.gradient);
             },
           ),
           title: Text(localizations.gradient),
-          onTap: () {
-            _openOptionScreen(context, WallpaperOption.gradient);
-          },
+          trailing: ElevatedButton(
+            child: Text("Select"),
+            onPressed: () {
+              _openOptionScreen(context, WallpaperOption.gradient);
+            },
+          ),
         ),
         ListTile(
           leading: Radio<WallpaperOption>(
             value: WallpaperOption.image,
             groupValue: wallpaperService.selectedOption,
             onChanged: (value) {
-              _openOptionScreen(context, WallpaperOption.image);
+              wallpaperService.setSelectedOption(WallpaperOption.image);
             },
           ),
           title: Text(localizations.picture),
-          onTap: () {
-            _openOptionScreen(context, WallpaperOption.image);
-          },
+          trailing: ElevatedButton(
+            child: Text("Select"),
+            onPressed: () {
+              _openOptionScreen(context, WallpaperOption.image);
+            },
+          ),
         ),
         ListTile(
           leading: Radio<WallpaperOption>(
             value: WallpaperOption.unsplash,
             groupValue: wallpaperService.selectedOption,
             onChanged: (value) {
-              _openOptionScreen(context, WallpaperOption.unsplash);
+              wallpaperService.setSelectedOption(WallpaperOption.unsplash);
             },
           ),
           title: Text("Unsplash"),
-          onTap: () {
-            _openOptionScreen(context, WallpaperOption.unsplash);
-          },
+          trailing: ElevatedButton(
+            child: Text("Select"),
+            onPressed: () {
+              _openOptionScreen(context, WallpaperOption.unsplash);
+            },
+          ),
         ),
       ],
     );
