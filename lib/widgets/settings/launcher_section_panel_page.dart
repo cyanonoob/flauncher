@@ -206,6 +206,8 @@ class LauncherSectionPanelPage extends StatelessWidget {
                               if (state.onSave != null) {
                                 state.onSave!();
                               }
+
+                              Navigator.of(context).pop();
                             };
                           }
 
