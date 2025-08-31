@@ -116,8 +116,8 @@
     "wallpaper": "Fondo de pantalla",
     "withEllipsisAddTo": "Añadir a...",
     "pick": "Elegir",
-    "unsplashQueryLabel": "Consulta de Unsplash (ej. naturaleza, montañas)",
-    "unsplashErrorMessage": "No se pudo obtener el fondo de Unsplash: {error}",
+    "unsplashQueryLabel": "Buscar (ej. naturaleza)",
+    "unsplashErrorMessage": "No se pudo obtener el fondo {error}",
     "@unsplashErrorMessage": {
         "placeholders": {
             "error": {

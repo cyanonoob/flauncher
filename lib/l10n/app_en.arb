@@ -1,7 +1,7 @@
 {
     "aboutFlauncher": "About FLauncher",
-    "unsplashQueryLabel": "Unsplash Query (e.g. nature, mountains)",
-    "unsplashErrorMessage": "Failed to fetch Unsplash wallpaper: {error}",
+    "unsplashQueryLabel": "Search (e.g. nature)",
+    "unsplashErrorMessage": "Failed to fetch wallpaper: {error}",
     "@unsplashErrorMessage": {
         "placeholders": {
             "error": {

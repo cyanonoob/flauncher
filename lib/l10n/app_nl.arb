@@ -116,8 +116,8 @@
     "wallpaper": "Achtergrond",
     "withEllipsisAddTo": "Toevoegen aan...",
     "pick": "Kies",
-    "unsplashQueryLabel": "Unsplash zoekopdracht (bijv. natuur, bergen)",
-    "unsplashErrorMessage": "Kon Unsplash-achtergrond niet ophalen: {error}",
+    "unsplashQueryLabel": "Zoekterm (bijv. natuur)",
+    "unsplashErrorMessage": "Kon achtergrond niet ophalen: {error}",
     "@unsplashErrorMessage": {
         "placeholders": {
             "error": {
