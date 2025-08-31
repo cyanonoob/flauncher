@@ -32,6 +32,7 @@ const _showCategoryTitles = "show_category_titles";
 const _showDateInStatusBar = "show_date_in_status_bar";
 const _showTimeInStatusBar = "show_time_in_status_bar";
 const _timeFormat = "time_format";
+const _unsplashQueryKey = "unsplash_query";
 
 class SettingsService extends ChangeNotifier {
   static final defaultDateFormat = "EEEE d MMMM";
@@ -69,6 +70,13 @@ class SettingsService extends ChangeNotifier {
       _sharedPreferences.getString(_timeFormat) ?? defaultTimeFormat;
 
   SettingsService(this._sharedPreferences);
+
+  String? get unsplashQuery => _sharedPreferences.getString(_unsplashQueryKey);
+
+  Future<void> setUnsplashQuery(String value) async {
+    await _sharedPreferences.setString(_unsplashQueryKey, value);
+    notifyListeners();
+  }
 
   int? getInt(String key) => _sharedPreferences.getInt(key);
 

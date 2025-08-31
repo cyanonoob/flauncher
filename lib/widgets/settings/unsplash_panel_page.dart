@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flauncher/providers/settings_service.dart';
 
 class UnsplashPanelPage extends StatefulWidget {
   @override
@@ -13,6 +14,16 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
   final FocusNode _queryFocusNode = FocusNode();
   final FocusNode _unsplashButtonFocusNode = FocusNode();
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Restore persisted query
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final settings = Provider.of<SettingsService>(context, listen: false);
+      _queryController.text = settings.unsplashQuery ?? '';
+    });
+  }
 
   @override
   void dispose() {
@@ -45,6 +56,10 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
                         labelText: localizations.unsplashQueryLabel,
                         border: OutlineInputBorder(),
                       ),
+                      onChanged: (value) {
+                        Provider.of<SettingsService>(context, listen: false)
+                            .setUnsplashQuery(value);
+                      },
                       onEditingComplete: () {
                         FocusScope.of(context)
                             .requestFocus(_unsplashButtonFocusNode);
@@ -63,15 +78,16 @@ class _UnsplashPanelPageState extends State<UnsplashPanelPage> {
                           ? null
                           : () async {
                               setState(() => _isLoading = true);
+                              final query = _queryController.text.trim();
+                              await Provider.of<SettingsService>(context,
+                                      listen: false)
+                                  .setUnsplashQuery(query);
                               try {
                                 await context
                                     .read<WallpaperService>()
                                     .fetchUnsplashWallpaper(
-                                      query:
-                                          _queryController.text.trim().isEmpty
-                                              ? null
-                                              : _queryController.text.trim(),
-                                              R   );
+                                      query: query.isEmpty ? null : query,
+                                    );
                                 Navigator.of(context).pop();
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
