@@ -77,7 +77,7 @@ android {
     signingConfigs {
         debug {}
         release {
-            storeFile file("upload-keystore.jks")
+            storeFile file("upload-keystore.keystore")
             storePassword envProperties.getProperty("FLAUNCHER_KEYSTORE_PASSWORD")
             keyAlias envProperties.getProperty("FLAUNCHER_SIGNING_KEY_ALIAS")
             keyPassword envProperties.getProperty("FLAUNCHER_SIGNING_KEY_PASSWORD")
