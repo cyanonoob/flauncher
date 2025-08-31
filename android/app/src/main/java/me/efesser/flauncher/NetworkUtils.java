@@ -50,16 +50,9 @@ public class NetworkUtils
             networkType = NETWORK_TYPE_CELLULAR;
         }
         else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-            WifiManager wifiManager = (WifiManager) context
-                    .getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
-                    && capabilities.getTransportInfo() instanceof WifiInfo wifiInfo) {
+            // minSdkVersion is 29+, so we can always use getTransportInfo()
+            if (capabilities.getTransportInfo() instanceof WifiInfo wifiInfo) {
                 wirelessNetworkSignalLevel = getWifiSignalLevel(wifiInfo);
-            }
-            else {
-                // TODO: Will this give the correct information?
-                wirelessNetworkSignalLevel = getWifiSignalLevel(wifiManager.getConnectionInfo());
             }
 
             networkType = NETWORK_TYPE_WIFI;

@@ -85,14 +85,12 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                   timeFormat: service.timeFormat
                 ),
                 builder: (context, dateTimeSettings, _) {
-                  // TODO: Disabling the "show date" option while both are enabled causes the *time* to disappear,
-                  // then re-enabling that same option causes the time to appear twice.
-                  // A restart (or just changing to the full screen clock) fixes the issue, but why does this happen?
                   return Row(mainAxisSize: MainAxisSize.min, children: [
                     if (dateTimeSettings.showDateInStatusBar)
                       Flexible(
                           child: DateTimeWidget(
                         dateTimeSettings.dateFormat,
+                        key: const ValueKey('date'),
                         updateInterval: const Duration(minutes: 1),
                         textStyle:
                             Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -110,6 +108,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                     if (dateTimeSettings.showTimeInStatusBar)
                       Flexible(
                           child: DateTimeWidget(dateTimeSettings.timeFormat,
+                              key: const ValueKey('time'),
                               textStyle: Theme.of(context)
                                   .textTheme
                                   .titleLarge!

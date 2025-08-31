@@ -68,7 +68,7 @@ android {
     defaultConfig {
         applicationId "com.geert.flauncher"
         compileSdk 36
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 29
         targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

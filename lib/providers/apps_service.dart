@@ -171,7 +171,7 @@ class AppsService extends ChangeNotifier {
     for (App app in appsRemovedFromSystem) {
       String packageName = app.packageName;
 
-      // TODO: Is this really necessary? Can't we get this information from the getApplications method?
+      // Haven't noticed this being needed, but edge case might be possible. No huge performance impact.
       bool appExists = await _fLauncherChannel.applicationExists(packageName);
       if (!appExists) {
         uninstalledApplications.add(packageName);
