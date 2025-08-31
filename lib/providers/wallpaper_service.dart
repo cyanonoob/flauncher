@@ -38,6 +38,7 @@ class WallpaperService extends ChangeNotifier {
   late File _wallpaperFile;
   late File _unsplashFile;
 
+  static const String _selectedOptionKey = 'selected_wallpaper_option';
   WallpaperOption _selectedOption = WallpaperOption.gradient;
 
   ImageProvider? _wallpaper;
@@ -58,6 +59,7 @@ class WallpaperService extends ChangeNotifier {
 
   void setSelectedOption(WallpaperOption option) {
     _selectedOption = option;
+    _settingsService.setInt(_selectedOptionKey, option.index);
     notifyListeners();
   }
 
@@ -76,14 +78,21 @@ class WallpaperService extends ChangeNotifier {
     _wallpaperFile = File("${directory.path}/wallpaper");
     _unsplashFile = File("${directory.path}/unsplash_wallpaper");
 
+    // Restore selected option from settings
+    final optionIndex = _settingsService.getInt(_selectedOptionKey);
+    if (optionIndex != null &&
+        optionIndex >= 0 &&
+        optionIndex < WallpaperOption.values.length) {
+      _selectedOption = WallpaperOption.values[optionIndex];
+    }
+
     if (await _wallpaperFile.exists()) {
       _wallpaper = FileImage(_wallpaperFile);
     }
 
     if (await _unsplashFile.exists()) {
-      _wallpaper = FileImage(_unsplashFile);
+      _unsplash = FileImage(_unsplashFile);
     }
-
     notifyListeners();
   }
 
@@ -99,7 +108,7 @@ class WallpaperService extends ChangeNotifier {
       Uint8List bytes = await pickedFile.readAsBytes();
       await _wallpaperFile.writeAsBytes(bytes);
 
-      _wallpaper = MemoryImage(bytes);
+      _unsplash = MemoryImage(bytes);
       notifyListeners();
     }
   }

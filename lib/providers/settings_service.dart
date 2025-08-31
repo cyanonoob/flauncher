@@ -70,6 +70,13 @@ class SettingsService extends ChangeNotifier {
 
   SettingsService(this._sharedPreferences);
 
+  int? getInt(String key) => _sharedPreferences.getInt(key);
+
+  Future<void> setInt(String key, int value) async {
+    await _sharedPreferences.setInt(key, value);
+    notifyListeners();
+  }
+
   Future<void> set(String key, bool value) async {
     await _sharedPreferences.setBool(key, value);
     notifyListeners();
