@@ -31,15 +31,16 @@ class RightPanelDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Dialog(
         backgroundColor: Theme.of(context).primaryColor,
-        insetPadding: EdgeInsets.only(left: MediaQuery.of(context).size.width - width),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.horizontal(left: Radius.circular(28))
-        ),
+        insetPadding:
+            EdgeInsets.only(left: MediaQuery.of(context).size.width - width),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
         child: Align(
           alignment: Alignment.centerRight,
           child: Container(
             padding: EdgeInsets.all(16),
-            child: Actions(actions: { BackIntent: BackAction(context) }, child: child),
+            child: Actions(
+                actions: {BackIntent: BackAction(context)}, child: child),
           ),
         ),
       );

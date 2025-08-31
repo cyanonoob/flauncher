@@ -63,10 +63,13 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
     final wallpaperService = Provider.of<WallpaperService>(context);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(localizations.wallpaper,
-            style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          localizations.wallpaper,
+          style: Theme.of(context).textTheme.titleLarge,
+          textAlign: TextAlign.center,
+        ),
         Divider(),
         ListTile(
           leading: Radio<WallpaperOption>(

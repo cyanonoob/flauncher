@@ -40,37 +40,49 @@ class _SettingsPanelState extends State<SettingsPanel> {
 
   @override
   Widget build(BuildContext context) => WillPopScope(
-    onWillPop: () async => !await _navigatorKey.currentState!.maybePop(),
-    child: Scaffold(
-      backgroundColor: Colors.transparent,
-      body: RightPanelDialog(
-        width: 350,
-        child: Navigator(
-          key: _navigatorKey,
-          initialRoute: widget.initialRoute ?? SettingsPanelPage.routeName,
-          onGenerateRoute: (settings) {
-            switch (settings.name) {
-              case SettingsPanelPage.routeName:
-                return MaterialPageRoute(builder: (_) => SettingsPanelPage());
-              case WallpaperPanelPage.routeName:
-                return MaterialPageRoute(builder: (_) => WallpaperPanelPage());
-              case StatusBarPanelPage.routeName:
-                return MaterialPageRoute(builder: (_) => StatusBarPanelPage());
-              case GradientPanelPage.routeName:
-                return MaterialPageRoute(builder: (_) => GradientPanelPage());
-              case ApplicationsPanelPage.routeName:
-                return MaterialPageRoute(builder: (_) => ApplicationsPanelPage());
-              case LauncherSectionsPanelPage.routeName:
-                return MaterialPageRoute(builder: (_) => LauncherSectionsPanelPage());
-              case LauncherSectionPanelPage.routeName:
-                return MaterialPageRoute(
-                    builder: (_) => LauncherSectionPanelPage(sectionIndex: settings.arguments as int?));
-              default:
-                throw ArgumentError.value(settings.name, "settings.name", "Route not supported.");
-            }
-          },
+        onWillPop: () async => !await _navigatorKey.currentState!.maybePop(),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RightPanelDialog(
+              width: 350,
+              child: Navigator(
+                key: _navigatorKey,
+                initialRoute:
+                    widget.initialRoute ?? SettingsPanelPage.routeName,
+                onGenerateRoute: (settings) {
+                  switch (settings.name) {
+                    case SettingsPanelPage.routeName:
+                      return MaterialPageRoute(
+                          builder: (_) => SettingsPanelPage());
+                    case WallpaperPanelPage.routeName:
+                      return MaterialPageRoute(
+                          builder: (_) => WallpaperPanelPage());
+                    case StatusBarPanelPage.routeName:
+                      return MaterialPageRoute(
+                          builder: (_) => StatusBarPanelPage());
+                    case GradientPanelPage.routeName:
+                      return MaterialPageRoute(
+                          builder: (_) => GradientPanelPage());
+                    case ApplicationsPanelPage.routeName:
+                      return MaterialPageRoute(
+                          builder: (_) => ApplicationsPanelPage());
+                    case LauncherSectionsPanelPage.routeName:
+                      return MaterialPageRoute(
+                          builder: (_) => LauncherSectionsPanelPage());
+                    case LauncherSectionPanelPage.routeName:
+                      return MaterialPageRoute(
+                          builder: (_) => LauncherSectionPanelPage(
+                              sectionIndex: settings.arguments as int?));
+                    default:
+                      throw ArgumentError.value(settings.name, "settings.name",
+                          "Route not supported.");
+                  }
+                },
+              ),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
