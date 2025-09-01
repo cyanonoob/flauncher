@@ -26,6 +26,8 @@ class FLauncherChannel {
       EventChannel('com.geert.flauncher/event_apps');
   static const _networkEventChannel =
       EventChannel('com.geert.flauncher/event_network');
+  static const _mediaEventChannel =
+      EventChannel('com.geert.flauncher/event_media');
 
   Future<List<Map<dynamic, dynamic>>> getApplications() async {
     List<Map<dynamic, dynamic>>? applications =
@@ -78,6 +80,35 @@ class FLauncherChannel {
   Future<void> startAmbientMode() async =>
       await _methodChannel.invokeMethod("startAmbientMode");
 
+  // Media Session methods
+  Future<Map<String, dynamic>?> getCurrentMediaSession() async {
+    try {
+      Map<dynamic, dynamic>? result =
+          await _methodChannel.invokeMethod("getCurrentMediaSession");
+      return result?.cast<String, dynamic>();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> sendMediaAction(String action) async =>
+      await _methodChannel.invokeMethod("sendMediaAction", action);
+
+  Future<void> sendPlayPause() async =>
+      await _methodChannel.invokeMethod("sendPlayPause");
+
+  Future<void> sendPlay() async =>
+      await _methodChannel.invokeMethod("sendPlay");
+
+  Future<void> sendPause() async =>
+      await _methodChannel.invokeMethod("sendPause");
+
+  Future<void> sendSkipToNext() async =>
+      await _methodChannel.invokeMethod("sendSkipToNext");
+
+  Future<void> sendSkipToPrevious() async =>
+      await _methodChannel.invokeMethod("sendSkipToPrevious");
+
   void addAppsChangedListener(void Function(Map<String, dynamic>) listener) =>
       _appsEventChannel.receiveBroadcastStream().listen((event) {
         Map<dynamic, dynamic> eventMap = event;
@@ -87,6 +118,12 @@ class FLauncherChannel {
   void addNetworkChangedListener(
           void Function(Map<String, dynamic>) listener) =>
       _networkEventChannel.receiveBroadcastStream().listen((event) {
+        Map<dynamic, dynamic> eventMap = event;
+        listener(eventMap.cast<String, dynamic>());
+      });
+
+  void addMediaSessionListener(void Function(Map<String, dynamic>) listener) =>
+      _mediaEventChannel.receiveBroadcastStream().listen((event) {
         Map<dynamic, dynamic> eventMap = event;
         listener(eventMap.cast<String, dynamic>());
       });
