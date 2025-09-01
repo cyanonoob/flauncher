@@ -17,7 +17,6 @@
  */
 
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flauncher/app_image_type.dart';
 import 'package:flauncher/providers/apps_service.dart';
