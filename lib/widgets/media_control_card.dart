@@ -413,33 +413,6 @@ class _MediaControlCardState extends State<MediaControlCard>
   }
 }
 
-// TODO: Android MediaSession Integration
-// The following Android-side implementation is required for full functionality:
-//
-// 1. Add to MainActivity.java:
-//    - Import MediaSessionManager, MediaController, MediaMetadata
-//    - Add media session listener registration
-//    - Implement getCurrentMediaSession() method
-//    - Implement sendPlayPause(), sendPlay(), sendPause() methods
-//    - Implement sendSkipToNext(), sendSkipToPrevious() methods
-//    - Add media event channel for real-time updates
-//
-// 2. Required Android permissions in AndroidManifest.xml:
-//    - <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-//    - <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
-//
-// 3. MediaSession data structure should include:
-//    - packageName: String (source app package)
-//    - appName: String (human readable app name)
-//    - title: String (track title)
-//    - artist: String (track artist)
-//    - album: String (album name)
-//    - isPlaying: boolean (playback state)
-//    - hasActiveSession: boolean (session availability)
-//    - position: long (current position in ms)
-//    - duration: long (track duration in ms)
-//    - availableActions: List<String> (supported media actions)
-//
 // TODO: Render this media control card on the home screen
 // - Should render before all currently displayed apps in a new row
 // - Should not have move controls and other options that categorized app cards have
