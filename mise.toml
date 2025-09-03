@@ -6,5 +6,7 @@ kotlin = "1.9.0"
 [tasks]
 "run:dev" = "flutter run --flavor development"
 "clean:dev" = "adb uninstall com.geert.flauncher.dev"
-"build" = "flutter build apk --flavor production"
+"build:dev" = "flutter build apk --flavor development"
 "run:prod" = "adb install build/app/outputs/flutter-apk/app-production-release.apk"
+"clean:prod" = "adb uninstall com.geert.flauncher"
+"build:prod" = "flutter build apk --flavor production"
