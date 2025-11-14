@@ -70,7 +70,7 @@ class NetworkWidget extends StatelessWidget {
       }
 
       return Icon(iconData,
-          color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.white,
+          color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.white,
           shadows: const [
             Shadow(color: Colors.black54, offset: Offset(0, 2), blurRadius: 8)
           ]);

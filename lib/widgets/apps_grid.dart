@@ -136,6 +136,7 @@ class AppsGrid extends StatelessWidget
   SliverGridDelegate _buildSliverGridDelegate() => SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: category.columnsCount,
         childAspectRatio: 16 / 9,
+        mainAxisExtent: category.rowHeight.toDouble(),
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
       );

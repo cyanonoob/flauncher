@@ -76,7 +76,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
 
   late final Animation<double> _curvedAnimation = CurvedAnimation(
     parent: _animation,
-    curve: Curves.easeInOutSine,
+    curve: Curves.easeInOutCubic,
   );
 
   @override
@@ -107,15 +107,15 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
           return AspectRatio(
             aspectRatio: 16 / 9,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeOutBack,
               transformAlignment: Alignment.center,
               transform: _scaleTransform(context),
               child: Material(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 clipBehavior: Clip.antiAlias,
-                elevation: shouldHighlight ? 16 : 0,
-                shadowColor: Colors.black,
+                elevation: shouldHighlight ? 16 : 4,
+                shadowColor: Colors.black87,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -136,17 +136,17 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                             // scrolling from the app bar. How it relates to this,
                             // I don't know
                             alignment: 0.5,
-                            curve: Curves.easeInOut,
-                            duration: Duration(milliseconds: 100));
+                            curve: Curves.easeOutCubic,
+                            duration: Duration(milliseconds: 75));
                       },
                     ),
                     if (_moving) ..._arrows(),
                     IgnorePointer(
                       child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                        opacity: shouldHighlight ? 0 : 0.10,
-                        child: Container(color: Colors.black),
+                        duration: const Duration(milliseconds: 150),
+                        curve: Curves.easeOutCubic,
+                        opacity: shouldHighlight ? 0 : 0.08,
+                        child: Container(color: Colors.black87),
                       ),
                     ),
                     Selector<SettingsService, bool>(
@@ -185,16 +185,30 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                       color: Colors.black.withAlpha(
                                           (_curvedAnimation.value * 51)
                                               .round()),
-                                      blurRadius: 48,
+                                      blurRadius: 32,
                                       spreadRadius: 2,
                                     ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                      color: Colors.white.withAlpha(
-                                          (55 + (_curvedAnimation.value * 200))
+                                    BoxShadow(
+                                      color: Theme.of(context).primaryColor.withAlpha(
+                                          (_curvedAnimation.value * 25)
                                               .round()),
-                                      width: 3),
+                                      blurRadius: 16,
+                                      spreadRadius: 0,
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(12),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.white.withAlpha(
+                                          (25 + (_curvedAnimation.value * 76))
+                                              .round()),
+                                      Colors.white.withAlpha(
+                                          (13 + (_curvedAnimation.value * 51))
+                                              .round()),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -309,7 +323,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   Matrix4 _scaleTransform(BuildContext context) {
     double scale = 1.0;
     if (!_moving && _shouldHighlight(context)) {
-      scale = 1.1;
+      scale = 1.08;
     }
     return Matrix4.diagonal3Values(scale, scale, 1.0);
   }

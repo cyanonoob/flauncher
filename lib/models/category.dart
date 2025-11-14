@@ -53,7 +53,7 @@ class LauncherSection
 class Category extends LauncherSection
 {
   static const int          ColumnsCount  = 6;
-  static const int          RowHeight     = 110;
+  static const int          RowHeight     = 130;
   static const CategorySort Sort          = CategorySort.manual;
   static const CategoryType Type          = CategoryType.row;
 

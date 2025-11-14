@@ -48,7 +48,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
               constraints: const BoxConstraints(),
               splashRadius: 20,
               color:
-                  Theme.of(context).textTheme.titleLarge?.color ?? Colors.white,
+                  Theme.of(context).textTheme.titleMedium?.color ?? Colors.white,
 
               icon: const Icon(
                 Icons.settings_outlined,
@@ -93,7 +93,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                         key: const ValueKey('date'),
                         updateInterval: const Duration(minutes: 1),
                         textStyle:
-                            Theme.of(context).textTheme.titleLarge!.copyWith(
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
                           shadows: [
                             const Shadow(
                                 color: Colors.black54,
@@ -111,7 +111,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                               key: const ValueKey('time'),
                               textStyle: Theme.of(context)
                                   .textTheme
-                                  .titleLarge!
+                                  .titleMedium!
                                   .copyWith(
                                 shadows: [
                                   const Shadow(

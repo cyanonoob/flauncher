@@ -32,17 +32,20 @@ class FLauncherApp extends StatelessWidget {
       PrioritizedIntents(orderedIntents: [DismissIntent(), BackIntent()]);
 
   static const MaterialColor _swatch = MaterialColor(0xFF011526, <int, Color>{
-    50: Color(0xFF36A0FA),
-    100: Color(0xFF067BDE),
-    200: Color(0xFF045CA7),
-    300: Color(0xFF033662),
-    400: Color(0xFF022544),
+    50: Color(0xFF4A9FFF),
+    100: Color(0xFF1A7FE8),
+    200: Color(0xFF0F5FC7),
+    300: Color(0xFF08407A),
+    400: Color(0xFF042A4F),
     500: Color(0xFF011526),
-    600: Color(0xFF000508),
-    700: Color(0xFF000000),
+    600: Color(0xFF000A12),
+    700: Color(0xFF000508),
     800: Color(0xFF000000),
     900: Color(0xFF000000),
   });
+
+  static const Color _accentColor = Color(0xFF4A9FFF);
+  static const Color _highlightColor = Color(0xFF6BB6FF);
 
   const FLauncherApp();
 
@@ -75,15 +78,39 @@ class FLauncherApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
         primarySwatch: _swatch,
-        cardColor: _swatch[300],
-        canvasColor: _swatch[300],
-        dialogBackgroundColor: _swatch[400],
+        cardColor: _swatch[500],
+        canvasColor: _swatch[500],
+        dialogBackgroundColor: _swatch[500],
         scaffoldBackgroundColor: _swatch[400],
+        colorScheme: ColorScheme.dark(
+          primary: _accentColor,
+          secondary: _highlightColor,
+          surface: _swatch[500]!,
+          background: _swatch[400]!,
+        ),
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(foregroundColor: Colors.white)),
         appBarTheme: const AppBarTheme(
             elevation: 0, backgroundColor: Colors.transparent),
-        typography: Typography.material2018(),
+        typography: Typography.material2018().copyWith(
+          white: Typography.material2018().white.copyWith(
+            displayLarge: const TextStyle(fontFamily: 'Poppins'),
+            displayMedium: const TextStyle(fontFamily: 'Poppins'),
+            displaySmall: const TextStyle(fontFamily: 'Poppins'),
+            headlineLarge: const TextStyle(fontFamily: 'Poppins'),
+            headlineMedium: const TextStyle(fontFamily: 'Poppins'),
+            headlineSmall: const TextStyle(fontFamily: 'Poppins'),
+            titleLarge: const TextStyle(fontFamily: 'Poppins'),
+            titleMedium: const TextStyle(fontFamily: 'Poppins'),
+            titleSmall: const TextStyle(fontFamily: 'Poppins'),
+            bodyLarge: const TextStyle(fontFamily: 'Poppins'),
+            bodyMedium: const TextStyle(fontFamily: 'Poppins'),
+            bodySmall: const TextStyle(fontFamily: 'Poppins'),
+            labelLarge: const TextStyle(fontFamily: 'Poppins'),
+            labelMedium: const TextStyle(fontFamily: 'Poppins'),
+            labelSmall: const TextStyle(fontFamily: 'Poppins'),
+          ),
+        ),
         inputDecorationTheme: InputDecorationTheme(
           focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white)),
@@ -93,6 +120,14 @@ class FLauncherApp extends StatelessWidget {
           cursorColor: Colors.white,
           selectionColor: _swatch[200],
           selectionHandleColor: _swatch[200],
+        ),
+        cardTheme: CardThemeData(
+          color: _swatch[500],
+          elevation: 0,
+        ),
+        listTileTheme: ListTileThemeData(
+          tileColor: _swatch[500],
+          selectedTileColor: _swatch[400],
         ),
       ),
       home: Builder(

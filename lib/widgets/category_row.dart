@@ -46,22 +46,36 @@ class CategoryRow extends StatelessWidget
     else {
       categoryContent = SizedBox(
         height: category.rowHeight.toDouble(),
-        child: ListView.custom(
-          padding: const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 32),
-          scrollDirection: Axis.horizontal,
-          childrenDelegate: SliverChildBuilderDelegate(
-            childCount: applications.length,
-            findChildIndexCallback: _findChildIndex,
-            (context, index) => Padding(
-                key: Key(applications[index].packageName),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: AppCard(
-                  category: category,
-                  application: applications[index],
-                  autofocus: index == 0,
-                  onMove: (direction) => _onMove(context, direction, index),
-                  onMoveEnd: () => _onMoveEnd(context)
-                )
+        child: ShaderMask(
+          shaderCallback: (rect) => LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            stops: [0.0, 0.08, 0.92, 1.0],
+            colors: [
+              Colors.white.withOpacity(0.0),  // Left edge: Transparent
+              Colors.white,                    // Start content: Full opacity
+              Colors.white,                    // End content: Full opacity
+              Colors.white.withOpacity(0.0),  // Right edge: Transparent
+            ],
+          ).createShader(rect),
+          blendMode: BlendMode.modulate,
+          child: ListView.custom(
+            padding: const EdgeInsets.only(left: 32, top: 8, right: 16, bottom: 40),
+            scrollDirection: Axis.horizontal,
+            childrenDelegate: SliverChildBuilderDelegate(
+              childCount: applications.length,
+              findChildIndexCallback: _findChildIndex,
+              (context, index) => Padding(
+                  key: Key(applications[index].packageName),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: AppCard(
+                    category: category,
+                    application: applications[index],
+                    autofocus: index == 0,
+                    onMove: (direction) => _onMove(context, direction, index),
+                    onMoveEnd: () => _onMoveEnd(context)
+                  )
+              )
             )
           )
         )

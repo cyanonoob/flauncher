@@ -44,6 +44,8 @@ class AddToCategoryDialog extends StatelessWidget {
                 .map(
                   (category) => Card(
                     clipBehavior: Clip.antiAlias,
+                    color: const Color(0xFF011526),
+                    elevation: 0,
                     child: ListTile(
                       onTap: () async {
                         await context
