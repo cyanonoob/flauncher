@@ -92,6 +92,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backButtonAction => 'Back button action';
 
   @override
+  String get backgroundAnimation => 'Background animation';
+
+  @override
   String get category => 'Category';
 
   @override

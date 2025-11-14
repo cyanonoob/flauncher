@@ -20,3 +20,11 @@ Element? findSettingsIcon(WidgetTester tester) {
   }
   return null;
 }
+
+bool hasPrimaryFocus(Element? element) {
+  if (element == null) return false;
+  
+  // Get the Focus widget from this element
+  final focusNode = Focus.of(element);
+  return focusNode.hasFocus;
+}

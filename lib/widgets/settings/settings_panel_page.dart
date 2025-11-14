@@ -144,6 +144,14 @@ class SettingsPanelPage extends StatelessWidget {
                   secondary: Icon(Icons.filter_center_focus),
                 ),
                 RoundedSwitchListTile(
+                  value: settingsService.backgroundAnimationEnabled,
+                  onChanged: (value) =>
+                      settingsService.setBackgroundAnimationEnabled(value),
+                  title: Text(localizations.backgroundAnimation,
+                      style: Theme.of(context).textTheme.bodyMedium),
+                  secondary: Icon(Icons.gradient),
+                ),
+                RoundedSwitchListTile(
                   value: settingsService.appKeyClickEnabled,
                   onChanged: (value) =>
                       settingsService.setAppKeyClickEnabled(value),

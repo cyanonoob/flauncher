@@ -92,6 +92,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get backButtonAction => 'Acción del botón \'Atrás\'';
 
   @override
+  String get backgroundAnimation => 'Animación de fondo';
+
+  @override
   String get category => 'Categoría';
 
   @override

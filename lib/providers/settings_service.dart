@@ -25,6 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _appHighlightAnimationEnabledKey = "app_highlight_animation_enabled";
 const _appKeyClickEnabledKey = "app_key_click_enabled";
 const _autoHideAppBar = "auto_hide_app_bar";
+const _backgroundAnimationEnabledKey = "background_animation_enabled";
 const _gradientUuidKey = "gradient_uuid";
 const _backButtonAction = "back_button_action";
 const _dateFormat = "date_format";
@@ -44,6 +45,9 @@ class SettingsService extends ChangeNotifier {
 
   bool get appKeyClickEnabled =>
       _sharedPreferences.getBool(_appKeyClickEnabledKey) ?? true;
+
+  bool get backgroundAnimationEnabled =>
+      _sharedPreferences.getBool(_backgroundAnimationEnabledKey) ?? true;
 
   bool get autoHideAppBarEnabled =>
       _sharedPreferences.getBool(_autoHideAppBar) ?? false;
@@ -96,6 +100,10 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> setAppKeyClickEnabled(bool value) async {
     return set(_appKeyClickEnabledKey, value);
+  }
+
+  Future<void> setBackgroundAnimationEnabled(bool value) async {
+    return set(_backgroundAnimationEnabledKey, value);
   }
 
   Future<void> setAutoHideAppBarEnabled(bool value) async {

@@ -33,6 +33,7 @@
     "applications": "Applications",
     "autoHideAppBar": "Automatically hide status bar",
     "backButtonAction": "Back button action",
+    "backgroundAnimation": "Background animation",
     "category": "Category",
     "categories": "Categories",
     "columnCount": "Column count",

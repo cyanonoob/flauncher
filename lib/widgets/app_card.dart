@@ -57,9 +57,9 @@ class AppCard extends StatefulWidget {
   State<AppCard> createState() => _AppCardState();
 }
 
-const int animationDuration = 2400;
-const int animationMidStop = 200;
-const int animationEndStop = 1200;
+const int animationDuration = 1500;
+const int animationMidStop = 150;
+const int animationEndStop = 800;
 
 class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   bool _moving = false;
@@ -76,7 +76,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
 
   late final Animation<double> _curvedAnimation = CurvedAnimation(
     parent: _animation,
-    curve: Curves.easeInOutCubic,
+    curve: Curves.easeInOut,
   );
 
   @override
@@ -104,124 +104,134 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
         builder: (context) {
           final bool shouldHighlight = _shouldHighlight(context);
 
-          return AspectRatio(
-            aspectRatio: 16 / 9,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.easeOutBack,
-              transformAlignment: Alignment.center,
-              transform: _scaleTransform(context),
-              child: Material(
-                borderRadius: BorderRadius.circular(12),
-                clipBehavior: Clip.antiAlias,
-                elevation: shouldHighlight ? 16 : 4,
-                shadowColor: Colors.black87,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    InkWell(
-                      autofocus: widget.autofocus,
-                      focusColor: Colors.transparent,
-                      child: _appImage(),
-                      onTap: () =>
-                          _onPressed(context, LogicalKeyboardKey.enter),
-                      onLongPress: () =>
-                          _onLongPress(context, LogicalKeyboardKey.enter),
-                      onFocusChange: (focused) {
-                        Scrollable.ensureVisible(context,
-                            // This specific alignment value is not only
-                            // to center the focused card in the row while
-                            // scrolling, but to prevent the topmost category
-                            // title to be hidden by the content above it when
-                            // scrolling from the app bar. How it relates to this,
-                            // I don't know
-                            alignment: 0.5,
-                            curve: Curves.easeOutCubic,
-                            duration: Duration(milliseconds: 75));
-                      },
-                    ),
-                    if (_moving) ..._arrows(),
-                    IgnorePointer(
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 150),
-                        curve: Curves.easeOutCubic,
-                        opacity: shouldHighlight ? 0 : 0.08,
-                        child: Container(color: Colors.black87),
-                      ),
-                    ),
-                    Selector<SettingsService, bool>(
-                      selector: (_, settingsService) =>
-                          settingsService.appHighlightAnimationEnabled &&
-                          shouldHighlight,
-                      builder: (context, highlight, _) {
-                        bool _highlightAnimating = false;
-
-                        void _startHighlightAnimation() async {
-                          if (!_highlightAnimating) {
-                            _highlightAnimating = true;
-
-                            while (mounted && _shouldHighlight(context)) {
-                              await _animation.forward();
-                              await Future.delayed(const Duration(
-                                  milliseconds: animationMidStop));
-                              await _animation.reverse();
-                              await Future.delayed(const Duration(
-                                  milliseconds: animationEndStop));
-                            }
-                          }
-                        }
-
-                        if (highlight) {
-                          // _animation.repeat(reverse: true);
-                          _startHighlightAnimation();
-
-                          return AnimatedBuilder(
-                            animation: _animation,
-                            builder: (context, child) => IgnorePointer(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withAlpha(
-                                          (_curvedAnimation.value * 51)
-                                              .round()),
-                                      blurRadius: 32,
-                                      spreadRadius: 2,
-                                    ),
-                                    BoxShadow(
-                                      color: Theme.of(context).primaryColor.withAlpha(
-                                          (_curvedAnimation.value * 25)
-                                              .round()),
-                                      blurRadius: 16,
-                                      spreadRadius: 0,
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(12),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Colors.white.withAlpha(
-                                          (25 + (_curvedAnimation.value * 76))
-                                              .round()),
-                                      Colors.white.withAlpha(
-                                          (13 + (_curvedAnimation.value * 51))
-                                              .round()),
-                                    ],
-                                  ),
-                                ),
+          return RepaintBoundary(
+            child: AnimatedPadding(
+              padding: EdgeInsets.symmetric(horizontal: shouldHighlight ? 16 : 6),
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic,
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Transform.scale(
+                  scale: shouldHighlight ? 1.12 : 1.0,
+                  child: PhysicalModel(
+                    color: Colors.transparent,
+                    shadowColor: Colors.black87,
+                    elevation: shouldHighlight ? 12 : 4,
+                    borderRadius: BorderRadius.circular(12),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            InkWell(
+                              autofocus: widget.autofocus,
+                              focusColor: Colors.transparent,
+                              child: _appImage(),
+                              onTap: () =>
+                                  _onPressed(context, LogicalKeyboardKey.enter),
+                              onLongPress: () =>
+                                  _onLongPress(context, LogicalKeyboardKey.enter),
+                              onFocusChange: (focused) {
+                                Scrollable.ensureVisible(context,
+                                    // This specific alignment value is not only
+                                    // to center the focused card in the row while
+                                    // scrolling, but to prevent the topmost category
+                                    // title to be hidden by the content above it when
+                                    // scrolling from the app bar. How it relates to this,
+                                    // I don't know
+                                    alignment: 0.5,
+                                    curve: Curves.easeOutCubic,
+                                    duration: Duration(milliseconds: 250));
+                              },
+                            ),
+                            if (_moving) ..._arrows(),
+                            IgnorePointer(
+                              child: AnimatedOpacity(
+                                duration: const Duration(milliseconds: 250),
+                                curve: Curves.easeOutCubic,
+                                opacity: shouldHighlight ? 0 : 0.06,
+                                child: Container(color: Colors.black87),
                               ),
                             ),
-                          );
-                        }
+                            Selector<SettingsService, bool>(
+                              selector: (_, settingsService) =>
+                                  settingsService.appHighlightAnimationEnabled &&
+                                  shouldHighlight,
+                              builder: (context, highlight, _) {
+                                bool _highlightAnimating = false;
 
-                        _animation.stop();
-                        _highlightAnimating = false;
+                                void _startHighlightAnimation() async {
+                                  if (!_highlightAnimating) {
+                                    _highlightAnimating = true;
 
-                        return const SizedBox();
-                      },
+                                    while (mounted && _shouldHighlight(context)) {
+                                      await _animation.forward();
+                                      await Future.delayed(const Duration(
+                                          milliseconds: animationMidStop));
+                                      await _animation.reverse();
+                                      await Future.delayed(const Duration(
+                                          milliseconds: animationEndStop));
+                                    }
+                                  }
+                                }
+
+                                if (highlight) {
+                                  // _animation.repeat(reverse: true);
+                                  _startHighlightAnimation();
+
+                                  return AnimatedBuilder(
+                                    animation: _animation,
+                                    builder: (context, child) => IgnorePointer(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withAlpha(
+                                                  (_curvedAnimation.value * 30)
+                                                      .round()),
+                                              blurRadius: 20,
+                                              spreadRadius: 1,
+                                            ),
+                                            BoxShadow(
+                                              color: Theme.of(context).primaryColor.withAlpha(
+                                                  (_curvedAnimation.value * 15)
+                                                      .round()),
+                                              blurRadius: 10,
+                                              spreadRadius: 0,
+                                            ),
+                                          ],
+                                          borderRadius: BorderRadius.circular(12),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              Colors.white.withAlpha(
+                                                  (15 + (_curvedAnimation.value * 45))
+                                                      .round()),
+                                              Colors.white.withAlpha(
+                                                  (8 + (_curvedAnimation.value * 30))
+                                                      .round()),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                _animation.stop();
+                                _highlightAnimating = false;
+
+                                return const SizedBox();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -295,14 +305,15 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
               )),
             );
           } else {
-            return const Padding(
-              padding: EdgeInsets.all(8),
+            return Padding(
+              padding: const EdgeInsets.all(8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 0, width: 16),
-                  Text("Loading")
+                  const CircularProgressIndicator(),
+                  const SizedBox(width: 8),
+                  const Flexible(child: Text("Loading"))
                 ],
               ),
             );
@@ -320,13 +331,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
         Focus.of(context).hasFocus;
   }
 
-  Matrix4 _scaleTransform(BuildContext context) {
-    double scale = 1.0;
-    if (!_moving && _shouldHighlight(context)) {
-      scale = 1.08;
-    }
-    return Matrix4.diagonal3Values(scale, scale, 1.0);
-  }
+  
 
   List<Widget> _arrows() => [
         _arrow(Alignment.centerLeft, Icons.keyboard_arrow_left, () {
@@ -363,8 +368,8 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
       WidgetsBinding.instance.addPostFrameCallback((_) =>
           Scrollable.ensureVisible(context,
               alignment: 0.1,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeInOut));
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic));
       if (key == LogicalKeyboardKey.arrowLeft) {
         widget.onMove(AxisDirection.left);
       } else if (key == LogicalKeyboardKey.arrowUp) {

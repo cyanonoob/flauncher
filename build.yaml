@@ -17,3 +17,7 @@ targets:
         enabled: false
       drift_dev|preparing_builder:
         enabled: false
+      mockito|mockBuilder:
+        enabled: false
+      build_resolvers|transitive_digests:
+        enabled: false

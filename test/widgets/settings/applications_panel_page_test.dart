@@ -27,6 +27,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../../../lib/models/category.dart';
 import '../../mocks.dart';
 import '../../mocks.mocks.dart';
 
@@ -45,7 +46,6 @@ void main() {
       fakeApp(
         packageName: "com.geert.flauncher",
         name: "FLauncher",
-        sideloaded: false,
         hidden: false,
       )
     ]);
@@ -62,7 +62,6 @@ void main() {
       fakeApp(
         packageName: "com.geert.flauncher",
         name: "FLauncher",
-        sideloaded: true,
         hidden: false,
       )
     ]);
@@ -84,7 +83,6 @@ void main() {
       fakeApp(
         packageName: "com.geert.flauncher",
         name: "FLauncher",
-        sideloaded: false,
         hidden: true,
       )
     ]);

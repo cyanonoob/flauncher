@@ -39,205 +39,179 @@ void main() {
     final schema = await verifier.schemaAt(1);
 
     final oldDb = v1.DatabaseAtV1(schema.newConnection().executor);
-    await oldDb.into(oldDb.apps).insert(
-          v1.AppsCompanion.insert(
-            packageName: "com.geert.flauncher",
-            name: "FLauncher",
-            className: ".MainActivity",
-            version: "0.0.1",
-          ),
-        );
-    final categoryId = await oldDb.into(oldDb.categories).insert(
-          v1.CategoriesCompanion.insert(name: "Applications", order: 0),
-        );
-    await oldDb.into(oldDb.appsCategories).insert(
-          v1.AppsCategoriesCompanion.insert(
-              categoryId: categoryId,
-              appPackageName: "com.geert.flauncher",
-              order: 0),
-        );
+    await oldDb.customInsert(
+      'INSERT INTO apps (package_name, name, class_name, version) VALUES (?, ?, ?, ?)',
+      variables: [Variable.withString('com.geert.flauncher'), Variable.withString('FLauncher'), Variable.withString('.MainActivity'), Variable.withString('0.0.1')],
+    );
+    await oldDb.customInsert(
+      'INSERT INTO categories (name, "order") VALUES (?, ?)',
+      variables: [Variable.withString('Applications'), Variable.withInt(0)],
+    );
+    final categoryId = 1; // First inserted row will have ID 1
+    await oldDb.customInsert(
+      'INSERT INTO apps_categories (category_id, app_package_name, "order") VALUES (?, ?, ?)',
+      variables: [Variable.withInt(categoryId), Variable.withString('com.geert.flauncher'), Variable.withInt(0)],
+    );
     await oldDb.close();
 
     final db = FLauncherDatabase(schema.newConnection());
     await verifier.migrateAndValidate(db, 5);
-    await db.close();
 
-    final migratedDb = v5.DatabaseAtV5(schema.newConnection().executor);
-    final v5.AppsData app =
-        await migratedDb.select(migratedDb.apps).getSingle();
-    final v5.CategoriesData category =
-        await migratedDb.select(migratedDb.categories).getSingle();
-    final v5.AppsCategoriesData appsCategory =
-        await migratedDb.select(migratedDb.appsCategories).getSingle();
+    // Verify migrated data by querying the actual database
+    final app = await db.select(db.apps).getSingle();
+    final category = await db.select(db.categories).getSingle();
+    final appsCategory = await db.select(db.appsCategories).getSingle();
+    
     expect(app.packageName, "com.geert.flauncher");
     expect(app.name, "FLauncher");
     expect(app.version, "0.0.1");
     expect(app.hidden, false);
-    expect(app.sideloaded, false);
+    // sideloaded field removed in v7
     expect(category.id, 1);
     expect(category.name, "Applications");
     expect(category.order, 0);
     expect(category.sort, 0);
     expect(category.type, 1);
     expect(category.columnsCount, 6);
-    expect(category.rowHeight, 110);
+    expect(category.rowHeight, 110); // v5 schema has default 110
     expect(appsCategory.appPackageName, "com.geert.flauncher");
     expect(appsCategory.categoryId, 1);
     expect(appsCategory.order, 0);
-    await migratedDb.close();
+    await db.close();
   });
 
   test("upgrade from v2 to v5", () async {
     final schema = await verifier.schemaAt(2);
 
     final oldDb = v2.DatabaseAtV2(schema.newConnection().executor);
-    await oldDb.into(oldDb.apps).insert(
-          v2.AppsCompanion.insert(
-            packageName: "com.geert.flauncher",
-            name: "FLauncher",
-            version: "0.0.1",
-          ),
-        );
-    final categoryId = await oldDb.into(oldDb.categories).insert(
-          v2.CategoriesCompanion.insert(name: "Applications", order: 0),
-        );
-    await oldDb.into(oldDb.appsCategories).insert(
-          v2.AppsCategoriesCompanion.insert(
-              categoryId: categoryId,
-              appPackageName: "com.geert.flauncher",
-              order: 0),
-        );
+    await oldDb.customInsert(
+      'INSERT INTO apps (package_name, name, version) VALUES (?, ?, ?)',
+      variables: [Variable.withString('com.geert.flauncher'), Variable.withString('FLauncher'), Variable.withString('0.0.1')],
+    );
+    await oldDb.customInsert(
+      'INSERT INTO categories (name, "order") VALUES (?, ?)',
+      variables: [Variable.withString('Applications'), Variable.withInt(0)],
+    );
+    final categoryId = 1; // First inserted row will have ID 1
+    await oldDb.customInsert(
+      'INSERT INTO apps_categories (category_id, app_package_name, "order") VALUES (?, ?, ?)',
+      variables: [Variable.withInt(categoryId), Variable.withString('com.geert.flauncher'), Variable.withInt(0)],
+    );
     await oldDb.close();
 
     final db = FLauncherDatabase(schema.newConnection());
     await verifier.migrateAndValidate(db, 5);
-    await db.close();
 
-    final migratedDb = v5.DatabaseAtV5(schema.newConnection().executor);
-    final v5.AppsData app =
-        await migratedDb.select(migratedDb.apps).getSingle();
-    final v5.CategoriesData category =
-        await migratedDb.select(migratedDb.categories).getSingle();
-    final v5.AppsCategoriesData appsCategory =
-        await migratedDb.select(migratedDb.appsCategories).getSingle();
+    // Verify migrated data by querying the actual database
+    final app = await db.select(db.apps).getSingle();
+    final category = await db.select(db.categories).getSingle();
+    final appsCategory = await db.select(db.appsCategories).getSingle();
+    
     expect(app.packageName, "com.geert.flauncher");
     expect(app.name, "FLauncher");
     expect(app.version, "0.0.1");
     expect(app.hidden, false);
-    expect(app.sideloaded, false);
+    // sideloaded field removed in v7
     expect(category.id, 1);
     expect(category.name, "Applications");
     expect(category.order, 0);
     expect(category.sort, 0);
     expect(category.type, 1);
     expect(category.columnsCount, 6);
-    expect(category.rowHeight, 110);
+    expect(category.rowHeight, 110); // v5 schema has default 110
     expect(appsCategory.appPackageName, "com.geert.flauncher");
     expect(appsCategory.categoryId, 1);
     expect(appsCategory.order, 0);
-    await migratedDb.close();
+    await db.close();
   });
 
   test("upgrade from v3 to v5", () async {
     final schema = await verifier.schemaAt(3);
 
     final oldDb = v3.DatabaseAtV3(schema.newConnection().executor);
-    await oldDb.into(oldDb.apps).insert(
-          v3.AppsCompanion.insert(
-            packageName: "com.geert.flauncher",
-            name: "FLauncher",
-            version: "0.0.1",
-          ),
-        );
-    final categoryId = await oldDb.into(oldDb.categories).insert(
-          v3.CategoriesCompanion.insert(name: "Applications", order: 0),
-        );
-    await oldDb.into(oldDb.appsCategories).insert(
-          v3.AppsCategoriesCompanion.insert(
-              categoryId: categoryId,
-              appPackageName: "com.geert.flauncher",
-              order: 0),
-        );
+    await oldDb.customInsert(
+      'INSERT INTO apps (package_name, name, version) VALUES (?, ?, ?)',
+      variables: [Variable.withString('com.geert.flauncher'), Variable.withString('FLauncher'), Variable.withString('0.0.1')],
+    );
+    await oldDb.customInsert(
+      'INSERT INTO categories (name, "order") VALUES (?, ?)',
+      variables: [Variable.withString('Applications'), Variable.withInt(0)],
+    );
+    final categoryId = 1; // First inserted row will have ID 1
+    await oldDb.customInsert(
+      'INSERT INTO apps_categories (category_id, app_package_name, "order") VALUES (?, ?, ?)',
+      variables: [Variable.withInt(categoryId), Variable.withString('com.geert.flauncher'), Variable.withInt(0)],
+    );
     await oldDb.close();
 
     final db = FLauncherDatabase(schema.newConnection());
     await verifier.migrateAndValidate(db, 5);
-    await db.close();
 
-    final migratedDb = v5.DatabaseAtV5(schema.newConnection().executor);
-    final v5.AppsData app =
-        await migratedDb.select(migratedDb.apps).getSingle();
-    final v5.CategoriesData category =
-        await migratedDb.select(migratedDb.categories).getSingle();
-    final v5.AppsCategoriesData appsCategory =
-        await migratedDb.select(migratedDb.appsCategories).getSingle();
+    // Verify migrated data by querying the actual database
+    final app = await db.select(db.apps).getSingle();
+    final category = await db.select(db.categories).getSingle();
+    final appsCategory = await db.select(db.appsCategories).getSingle();
+    
     expect(app.packageName, "com.geert.flauncher");
     expect(app.name, "FLauncher");
     expect(app.version, "0.0.1");
     expect(app.hidden, false);
-    expect(app.sideloaded, false);
+    // sideloaded field removed in v7
     expect(category.id, 1);
     expect(category.name, "Applications");
     expect(category.order, 0);
     expect(category.sort, 0);
     expect(category.type, 1);
     expect(category.columnsCount, 6);
-    expect(category.rowHeight, 110);
+    expect(category.rowHeight, 110); // v5 schema has default 110
     expect(appsCategory.appPackageName, "com.geert.flauncher");
     expect(appsCategory.categoryId, 1);
     expect(appsCategory.order, 0);
-    await migratedDb.close();
+    await db.close();
   });
 
   test("upgrade from v4 to v5", () async {
     final schema = await verifier.schemaAt(4);
 
     final oldDb = v4.DatabaseAtV4(schema.newConnection().executor);
-    await oldDb.into(oldDb.apps).insert(
-          v4.AppsCompanion.insert(
-            packageName: "com.geert.flauncher",
-            name: "FLauncher",
-            version: "0.0.1",
-          ),
-        );
-    final categoryId = await oldDb.into(oldDb.categories).insert(
-          v4.CategoriesCompanion.insert(
-              name: "Applications", type: Value(1), order: 0),
-        );
-    await oldDb.into(oldDb.appsCategories).insert(
-          v4.AppsCategoriesCompanion.insert(
-              categoryId: categoryId,
-              appPackageName: "com.geert.flauncher",
-              order: 0),
-        );
+    await oldDb.customInsert(
+      'INSERT INTO apps (package_name, name, version) VALUES (?, ?, ?)',
+      variables: [Variable.withString('com.geert.flauncher'), Variable.withString('FLauncher'), Variable.withString('0.0.1')],
+    );
+    final categoryId = await oldDb.customInsert(
+      'INSERT INTO categories (name, type, "order") VALUES (?, ?, ?)',
+      variables: [Variable.withString('Applications'), Variable.withInt(1), Variable.withInt(0)],
+      returningFields: [oldDb.categories.id],
+    );
+    await oldDb.customInsert(
+      'INSERT INTO apps_categories (category_id, app_package_name, "order") VALUES (?, ?, ?)',
+      variables: [Variable.withInt(categoryId), Variable.withString('com.geert.flauncher'), Variable.withInt(0)],
+    );
     await oldDb.close();
 
     final db = FLauncherDatabase(schema.newConnection());
     await verifier.migrateAndValidate(db, 5);
-    await db.close();
 
-    final migratedDb = v5.DatabaseAtV5(schema.newConnection().executor);
-    final v5.AppsData app =
-        await migratedDb.select(migratedDb.apps).getSingle();
-    final v5.CategoriesData category =
-        await migratedDb.select(migratedDb.categories).getSingle();
-    final v5.AppsCategoriesData appsCategory =
-        await migratedDb.select(migratedDb.appsCategories).getSingle();
+    // Verify migrated data by querying the actual database
+    final app = await db.select(db.apps).getSingle();
+    final category = await db.select(db.categories).getSingle();
+    final appsCategory = await db.select(db.appsCategories).getSingle();
+    
     expect(app.packageName, "com.geert.flauncher");
     expect(app.name, "FLauncher");
     expect(app.version, "0.0.1");
     expect(app.hidden, false);
-    expect(app.sideloaded, false);
+    // sideloaded field removed in v7
     expect(category.id, 1);
     expect(category.name, "Applications");
     expect(category.order, 0);
     expect(category.sort, 0);
     expect(category.type, 1);
     expect(category.columnsCount, 6);
-    expect(category.rowHeight, 110);
+    expect(category.rowHeight, 110); // v5 schema has default 110
     expect(appsCategory.appPackageName, "com.geert.flauncher");
     expect(appsCategory.categoryId, 1);
     expect(appsCategory.order, 0);
-    await migratedDb.close();
+    await db.close();
   });
 }

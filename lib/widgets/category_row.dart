@@ -65,17 +65,14 @@ class CategoryRow extends StatelessWidget
             childrenDelegate: SliverChildBuilderDelegate(
               childCount: applications.length,
               findChildIndexCallback: _findChildIndex,
-              (context, index) => Padding(
+              (context, index) => AppCard(
                   key: Key(applications[index].packageName),
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: AppCard(
                     category: category,
                     application: applications[index],
                     autofocus: index == 0,
                     onMove: (direction) => _onMove(context, direction, index),
                     onMoveEnd: () => _onMoveEnd(context)
                   )
-              )
             )
           )
         )

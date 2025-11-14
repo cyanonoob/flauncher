@@ -262,6 +262,12 @@ abstract class AppLocalizations {
   /// **'Back button action'**
   String get backButtonAction;
 
+  /// No description provided for @backgroundAnimation.
+  ///
+  /// In en, this message translates to:
+  /// **'Background animation'**
+  String get backgroundAnimation;
+
   /// No description provided for @category.
   ///
   /// In en, this message translates to:

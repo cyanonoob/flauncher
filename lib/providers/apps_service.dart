@@ -596,4 +596,42 @@ class AppsService extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  List<CategoryWithApps> get categoriesWithApps {
+    return _categoriesById.values.map((category) {
+      return CategoryWithApps(category.unmodifiable(), List.unmodifiable(category.applications));
+    }).toList();
+  }
+
+  Future<void> moveCategory(int oldIndex, int newIndex) async {
+    if (oldIndex < 0 || oldIndex >= _launcherSections.length || 
+        newIndex < 0 || newIndex >= _launcherSections.length) {
+      return;
+    }
+
+    final section = _launcherSections.removeAt(oldIndex);
+    _launcherSections.insert(newIndex, section);
+
+    // Update order values
+    for (int i = 0; i < _launcherSections.length; i++) {
+      _launcherSections[i].order = i;
+      if (_launcherSections[i] is Category) {
+        await _database.updateCategory(
+            _launcherSections[i].id, CategoriesCompanion(order: Value(i)));
+      } else if (_launcherSections[i] is LauncherSpacer) {
+        await _database.updateSpacer(
+            _launcherSections[i].id, LauncherSpacersCompanion(order: Value(i)));
+      }
+    }
+
+    notifyListeners();
+  }
+}
+
+// Simple class for categories with apps
+class CategoryWithApps {
+  final Category category;
+  final List<App> applications;
+  
+  CategoryWithApps(this.category, this.applications);
 }

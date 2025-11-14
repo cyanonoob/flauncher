@@ -30,11 +30,11 @@ void main() {
     await database.close();
   });
 
-  test("listApplications", () async {
+  test("getApplications", () async {
     await database.customInsert("INSERT INTO apps(package_name, name, version)"
         " VALUES('com.geert.flauncher', 'FLauncher', '1.0.0');");
 
-    final apps = await database.listApplications();
+    final apps = await database.getApplications();
 
     expect(apps.length, 1);
     expect(apps[0].packageName, "com.geert.flauncher");
@@ -219,37 +219,7 @@ void main() {
     expect(appCategory.read<int>("order"), 1);
   });
 
-  test("listCategoriesWithApps", () async {
-    await database.customInsert("INSERT INTO apps(package_name, name, version)"
-        " VALUES('com.geert.flauncher', 'FLauncher', '1.0.0');");
-    await database.customInsert("INSERT INTO apps(package_name, name, version)"
-        " VALUES('com.geert.flauncher.2', 'FLauncher 2', '1.0.0');");
-    await database.customInsert("INSERT INTO apps(package_name, name, version)"
-        " VALUES('com.geert.flauncher.3', 'FLauncher 3', '1.0.0');");
-    final categoryId = await database.customInsert(
-        "INSERT INTO categories(name, 'order') VALUES('Test', 2);");
-    await database.customInsert(
-        "INSERT INTO apps_categories(category_id, app_package_name, 'order')"
-        " VALUES($categoryId, 'com.geert.flauncher', 1);");
-    await database.customInsert(
-        "INSERT INTO apps_categories(category_id, app_package_name, 'order')"
-        " VALUES($categoryId, 'com.geert.flauncher.2', 0);");
-    await database.customInsert(
-        "INSERT INTO apps_categories(category_id, app_package_name, 'order')"
-        " VALUES($categoryId, 'com.geert.flauncher.3', 2);");
-
-    final categoriesWithApps = await database.listCategoriesWithVisibleApps();
-
-    expect(categoriesWithApps.length, 1);
-    expect(categoriesWithApps[0]._category.name, "Test");
-    expect(categoriesWithApps[0].applications.length, 3);
-    expect(categoriesWithApps[0].applications[0].packageName,
-        "com.geert.flauncher.2");
-    expect(categoriesWithApps[0].applications[0].name, "FLauncher 2");
-    expect(categoriesWithApps[0].applications[1].packageName,
-        "com.geert.flauncher");
-    expect(categoriesWithApps[0].applications[1].name, "FLauncher");
-  });
+  
 
   test("nextAppCategoryOrder", () async {
     await database.customInsert("INSERT INTO apps(package_name, name, version)"

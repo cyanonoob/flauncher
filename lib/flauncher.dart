@@ -20,7 +20,9 @@ import 'package:flauncher/custom_traversal_policy.dart';
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/launcher_state.dart';
 import 'package:flauncher/providers/media_service.dart';
+import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
+import 'package:flauncher/widgets/animated_gradient_overlay.dart';
 import 'package:flauncher/widgets/apps_grid.dart';
 import 'package:flauncher/widgets/category_row.dart';
 import 'package:flauncher/widgets/launcher_alternative_view.dart';
@@ -42,6 +44,13 @@ class FLauncher extends StatelessWidget {
         Consumer<WallpaperService>(
             builder: (_, wallpaperService, __) =>
                 _wallpaper(context, wallpaperService)),
+        Consumer2<SettingsService, WallpaperService>(
+            builder: (_, settingsService, wallpaperService, __) {
+              if (settingsService.backgroundAnimationEnabled) {
+                return AnimatedGradientOverlay(wallpaperService: wallpaperService);
+              }
+              return const SizedBox.shrink();
+            }),
         Consumer<LauncherState>(
             builder: (_, state, child) => Visibility(
                 child: child!,

@@ -28,6 +28,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info_plus_platform_interface/package_info_data.dart';
+
+import '../../../lib/models/category.dart';
 import 'package:package_info_plus_platform_interface/package_info_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:provider/provider.dart';

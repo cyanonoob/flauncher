@@ -20,6 +20,8 @@ import 'dart:math';
 
 import 'package:flauncher/database.dart';
 import 'package:flauncher/flauncher_channel.dart';
+import 'package:flauncher/models/app.dart';
+import 'package:flauncher/models/category.dart';
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
@@ -39,19 +41,19 @@ import 'package:mockito/annotations.dart';
 ])
 void main() {}
 
+
+
 App fakeApp({
   String packageName = "com.geert.flauncher",
   String name = "FLauncher",
   String version = "1.0.0",
   bool hidden = false,
-  bool sideloaded = false,
 }) =>
     App(
       packageName: packageName,
       name: name,
       version: version,
       hidden: hidden,
-      sideloaded: sideloaded,
     );
 
 Category fakeCategory({
@@ -65,9 +67,9 @@ Category fakeCategory({
     Category(
       id: Random().nextInt(1 << 32),
       name: name,
-      sort: sort,
-      _sectionType: type,
-      _rowHeight: rowHeight,
-      columnsCount: columnsCount,
       order: order,
+      sort: sort,
+      type: type,
+      rowHeight: rowHeight,
+      columnsCount: columnsCount,
     );

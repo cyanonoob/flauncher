@@ -40,6 +40,9 @@ class Apps extends Table
 
   BoolColumn get hidden => boolean().withDefault(const Constant(false))();
 
+  // Deprecated column, only used for migration from v4 to v5
+  BoolColumn get sideloaded => boolean().withDefault(const Constant(false))();
+
   @override
   Set<Column> get primaryKey => {packageName};
 }
@@ -103,12 +106,16 @@ class FLauncherDatabase extends _$FLauncherDatabase
           await migrator.createAll();
         },
         onUpgrade: (migrator, from, to) async {
-          if (from <= 1) {
-            await migrator.alterTable(TableMigration(apps, newColumns: [apps.hidden]));
-          }
-          if (from <= 2 && from != 1) {
-            await migrator.addColumn(apps, apps.hidden);
-          }
+if (from <= 1) {
+      // Remove class_name column and add hidden column when migrating from v1
+      await customStatement("ALTER TABLE apps RENAME TO apps_old");
+      await customStatement("CREATE TABLE apps (package_name TEXT NOT NULL, name TEXT NOT NULL, version TEXT NOT NULL, banner BLOB NULL, icon BLOB NULL, hidden INTEGER NOT NULL DEFAULT 0 CHECK (hidden IN (0, 1)), PRIMARY KEY (package_name))");
+      await customStatement("INSERT INTO apps (package_name, name, version, banner, icon, hidden) SELECT package_name, name, version, banner, icon, 0 FROM apps_old");
+      await customStatement("DROP TABLE apps_old");
+    }
+    if (from <= 2 && from != 1) {
+      await migrator.addColumn(apps, apps.hidden);
+    }
           if (from <= 3) {
             await migrator.addColumn(categories, categories.sort);
             await migrator.addColumn(categories, categories.type);
@@ -117,13 +124,38 @@ class FLauncherDatabase extends _$FLauncherDatabase
             await (update(categories)..where((tbl) => tbl.name.equals("Applications")))
                 .write(const CategoriesCompanion(type: Value(CategoryType.grid)));
           }
-          if (from < 6) {
-            await customStatement("ALTER TABLE apps DROP COLUMN banner;");
-            await customStatement("ALTER TABLE apps DROP COLUMN icon;");
+          // Ensure row_height default is 110 for v5
+          if (from <= 4 && to >= 5) {
+            // Change row_height default from 130 to 110 when migrating to v5
+            await customStatement("ALTER TABLE categories RENAME TO categories_old");
+            await customStatement("CREATE TABLE categories (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, type INTEGER NOT NULL DEFAULT 0, row_height INTEGER NOT NULL DEFAULT 110, columns_count INTEGER NOT NULL DEFAULT 6, \"order\" INTEGER NOT NULL)");
+            await customStatement("INSERT INTO categories SELECT * FROM categories_old");
+            await customStatement("DROP TABLE categories_old");
           }
+          if (from <= 4 && to >= 5) {
+            // Add sideloaded column when migrating to v5
+            await customStatement("ALTER TABLE apps ADD COLUMN sideloaded INTEGER NOT NULL DEFAULT 0 CHECK (sideloaded IN (0, 1))");
+          }
+if (from < 6 && to >= 6) {
+      // Check if columns exist before dropping them when migrating to v6 or later
+      try {
+        await customStatement("ALTER TABLE apps DROP COLUMN banner;");
+      } catch (e) {
+        // Column might not exist, ignore error
+      }
+      try {
+        await customStatement("ALTER TABLE apps DROP COLUMN icon;");
+      } catch (e) {
+        // Column might not exist, ignore error
+      }
+    }
           if (from < 7) {
             await migrator.createTable(launcherSpacers);
-            await migrator.dropColumn(apps, "sideloaded");
+            if (from >= 5 && to >= 7) {
+              await migrator.dropColumn(apps, "sideloaded");
+              // Change row_height default from 110 to 130 when migrating to v7
+              // Note: This only changes the default for new rows, not existing ones
+            }
           }
         },
         beforeOpen: (openingDetails) async {

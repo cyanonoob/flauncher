@@ -59,7 +59,9 @@ void main() {
     test("throws error when no file explorer installed", () async {
       final fLauncherChannel = MockFLauncherChannel();
       when(fLauncherChannel.checkForGetContentAvailability()).thenAnswer((_) => Future.value(false));
-      final wallpaperService = WallpaperService(fLauncherChannel, MockSettingsService());
+      final settingsService = MockSettingsService();
+      when(settingsService.getInt('selected_wallpaper_option')).thenReturn(0);
+      final wallpaperService = WallpaperService(fLauncherChannel, settingsService);
       await untilCalled(pathProviderPlatform.getApplicationDocumentsPath());
 
       expect(() async => await wallpaperService.pickWallpaper(), throwsA(isInstanceOf<NoFileExplorerException>()));
@@ -70,6 +72,7 @@ void main() {
   test("setGradient", () async {
     final fLauncherChannel = MockFLauncherChannel();
     final settingsService = MockSettingsService();
+    when(settingsService.getInt('selected_wallpaper_option')).thenReturn(0);
     final wallpaperService = WallpaperService(fLauncherChannel, settingsService);
 
     await untilCalled(pathProviderPlatform.getApplicationDocumentsPath());
@@ -83,6 +86,7 @@ void main() {
     test("without uuid from settings", () async {
       final fLauncherChannel = MockFLauncherChannel();
       final settingsService = MockSettingsService();
+      when(settingsService.getInt('selected_wallpaper_option')).thenReturn(0);
       final wallpaperService = WallpaperService(fLauncherChannel, settingsService);
       when(settingsService.gradientUuid).thenReturn(null);
 
@@ -95,6 +99,7 @@ void main() {
     test("with uuid from settings", () async {
       final fLauncherChannel = MockFLauncherChannel();
       final settingsService = MockSettingsService();
+      when(settingsService.getInt('selected_wallpaper_option')).thenReturn(0);
       final wallpaperService = WallpaperService(fLauncherChannel, settingsService);
       when(settingsService.gradientUuid).thenReturn(FLauncherGradients.grassShampoo.uuid);
       await untilCalled(pathProviderPlatform.getApplicationDocumentsPath());
