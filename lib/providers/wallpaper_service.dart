@@ -108,7 +108,7 @@ class WallpaperService extends ChangeNotifier {
       Uint8List bytes = await pickedFile.readAsBytes();
       await _wallpaperFile.writeAsBytes(bytes);
 
-      _unsplash = MemoryImage(bytes);
+      _wallpaper = MemoryImage(bytes);
       notifyListeners();
     }
   }
