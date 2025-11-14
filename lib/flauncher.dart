@@ -49,7 +49,7 @@ class FLauncher extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 appBar: FocusAwareAppBar(),
                 body: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
                     child: Consumer<AppsService>(
                         builder: (context, appsService, _) {
                       if (appsService.initialized) {
