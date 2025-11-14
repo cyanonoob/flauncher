@@ -47,7 +47,7 @@ class CategoryRow extends StatelessWidget
       categoryContent = SizedBox(
         height: category.rowHeight.toDouble(),
         child: ListView.custom(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 32),
           scrollDirection: Axis.horizontal,
           childrenDelegate: SliverChildBuilderDelegate(
             childCount: applications.length,
