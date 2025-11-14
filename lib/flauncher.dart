@@ -19,11 +19,13 @@
 import 'package:flauncher/custom_traversal_policy.dart';
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/launcher_state.dart';
+import 'package:flauncher/providers/media_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flauncher/widgets/apps_grid.dart';
 import 'package:flauncher/widgets/category_row.dart';
 import 'package:flauncher/widgets/launcher_alternative_view.dart';
 import 'package:flauncher/widgets/focus_aware_app_bar.dart';
+import 'package:flauncher/widgets/media_control_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/l10n/app_localizations.dart';
@@ -54,41 +56,59 @@ class FLauncher extends StatelessWidget {
                         builder: (context, appsService, _) {
                       if (appsService.initialized) {
                         return SingleChildScrollView(
-                            child: _sections(appsService.launcherSections));
+                            child: _sectionsWithMedia(
+                                appsService.launcherSections));
                       } else {
                         return _emptyState(context);
                       }
                     }))))
       ]));
 
-  Widget _sections(List<LauncherSection> sections) => Column(
-        children: sections.map((section) {
-          final Key sectionKey = Key(section.id.toString());
-          final Widget categoryWidget;
-
-          if (section is LauncherSpacer) {
-            return SizedBox(key: sectionKey, height: section.height.toDouble());
-          }
-
-          Category category = section as Category;
-          switch (category.type) {
-            case CategoryType.row:
-              categoryWidget = CategoryRow(
-                  key: sectionKey,
-                  category: category,
-                  applications: category.applications);
-            case CategoryType.grid:
-              categoryWidget = AppsGrid(
-                  key: sectionKey,
-                  category: category,
-                  applications: category.applications);
-          }
-
-          return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: categoryWidget);
-        }).toList(),
+  Widget _sectionsWithMedia(List<LauncherSection> sections) => Column(
+        children: [
+          // Media control card at the top
+          Consumer<MediaService>(
+            builder: (context, mediaService, _) {
+              if (mediaService.hasActiveMedia) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: MediaControlCard(autofocus: true),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          ..._buildSections(sections),
+        ],
       );
+
+  List<Widget> _buildSections(List<LauncherSection> sections) =>
+      sections.map((section) {
+        final Key sectionKey = Key(section.id.toString());
+        final Widget categoryWidget;
+
+        if (section is LauncherSpacer) {
+          return SizedBox(key: sectionKey, height: section.height.toDouble());
+        }
+
+        Category category = section as Category;
+        switch (category.type) {
+          case CategoryType.row:
+            categoryWidget = CategoryRow(
+                key: sectionKey,
+                category: category,
+                applications: category.applications);
+          case CategoryType.grid:
+            categoryWidget = AppsGrid(
+                key: sectionKey,
+                category: category,
+                applications: category.applications);
+        }
+
+        return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: categoryWidget);
+      }).toList();
 
   Widget _wallpaper(BuildContext context, WallpaperService wallpaperService) {
     if (wallpaperService.selectedOption != WallpaperOption.gradient &&
