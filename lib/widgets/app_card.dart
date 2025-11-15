@@ -25,6 +25,7 @@ import 'package:flauncher/widgets/application_info_panel.dart';
 import 'package:flauncher/widgets/focus_keyboard_listener.dart';
 import 'package:flauncher/widgets/shadow_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -65,6 +66,7 @@ const int animationEndStop = 800;
 class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   bool _moving = false;
   late List<BoxShadow> _baseFocusedShadows;
+  FocusNode? _lastFocusedNode;
 
   late Future<Tuple2<AppImageType, ImageProvider>> _appImageLoadFuture;
   late final AnimationController _animation = AnimationController(
@@ -143,16 +145,39 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                               onLongPress: () =>
                                   _onLongPress(context, LogicalKeyboardKey.enter),
                               onFocusChange: (focused) {
-                                Scrollable.ensureVisible(context,
-                                    // This specific alignment value is not only
-                                    // to center the focused card in the row while
-                                    // scrolling, but to prevent the topmost category
-                                    // title to be hidden by the content above it when
-                                    // scrolling from the app bar. How it relates to this,
-                                    // I don't know
-                                    alignment: 0.5,
-                                    curve: Curves.easeOutCubic,
-                                    duration: Duration(milliseconds: 250));
+                                if (focused) {
+                                  final currentNode = Focus.of(context);
+                                  bool shouldScroll = false;
+                                  
+                                  if (_lastFocusedNode != null) {
+                                    final lastY = _lastFocusedNode!.rect.center.dy;
+                                    final currentY = currentNode.rect.center.dy;
+                                    
+                                    if ((lastY - currentY).abs() > 50) {
+                                      shouldScroll = true;
+                                    } else {
+                                      final renderObject = context.findRenderObject();
+                                      if (renderObject != null && renderObject is RenderBox) {
+                                        final viewport = RenderAbstractViewport.of(renderObject);
+                                        if (viewport != null) {
+                                          final revealedOffset = viewport.getOffsetToReveal(renderObject, 0.5);
+                                          shouldScroll = revealedOffset.offset.abs() > 10;
+                                        }
+                                      }
+                                    }
+                                  } else {
+                                    shouldScroll = true;
+                                  }
+                                  
+                                  if (shouldScroll) {
+                                    Scrollable.ensureVisible(context,
+                                        alignment: 0.5,
+                                        curve: Curves.easeOutCubic,
+                                        duration: Duration(milliseconds: 250));
+                                  }
+                                  
+                                  _lastFocusedNode = currentNode;
+                                }
                               },
                             ),
                             if (_moving) ..._arrows(),

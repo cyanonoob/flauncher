@@ -232,9 +232,9 @@ class ShadowCache extends InheritedWidget {
 - [x] 16. Update network_widget.dart
 - [x] 17. Update now_playing_widget.dart
 - [x] 18. **PAUSE** - User tests icon widgets
-- [ ] 19. AppCard focus tracking (2.1)
-- [ ] 20. AppCard visibility check (2.2)
-- [ ] 21. **PAUSE** - User tests AppCard
+- [x] 19. AppCard focus tracking (2.1)
+- [x] 20. AppCard visibility check (2.2)
+- [x] 21. **PAUSE** - User tests AppCard
 
 ### Low Priority
 
