@@ -10,3 +10,41 @@ kotlin = "1.9.0"
 "run:prod" = "adb install build/app/outputs/flutter-apk/app-production-release.apk"
 "clean:prod" = "adb uninstall com.geert.flauncher"
 "build" = "flutter build apk --flavor production"
+
+"bump" = '''
+#!/bin/bash
+set -e
+
+# Get current date
+YEAR=$(date +%Y)
+MONTH=$(date +%m)
+DAY=$(date +%d)
+
+# Read current version numbers
+source version_numbers
+
+# Check if month changed, reset build number if so
+if [ "$MONTH" -ne "$MONTH_VERSION_NUMBER" ]; then
+    BUILD_NUMBER=1
+    MONTH_VERSION_NUMBER=$MONTH
+else
+    BUILD_NUMBER=$((BUILD_NUMBER + 1))
+fi
+
+# Update version_numbers file
+cat > version_numbers << EOFILE
+MONTH_VERSION_NUMBER=$MONTH_VERSION_NUMBER
+BUILD_NUMBER=$BUILD_NUMBER
+
+EOFILE
+
+# Generate version string
+VERSION_STRING="$YEAR.$MONTH.$DAY+$BUILD_NUMBER"
+
+# Update pubspec.yaml
+sed -i.bak "s/^version: .*/version: $VERSION_STRING/" pubspec.yaml
+
+echo "Version bumped to: $VERSION_STRING"
+echo "Build number: $BUILD_NUMBER"
+echo "Month version: $MONTH_VERSION_NUMBER"
+'''

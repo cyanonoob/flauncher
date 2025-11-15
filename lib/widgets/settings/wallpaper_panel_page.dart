@@ -155,37 +155,27 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
                   Expanded(
                     child: Focus(
                       focusNode: _sliderFocusNode,
-                      child: RawKeyboardListener(
-                        focusNode: _sliderFocusNode,
-                        onKey: (RawKeyEvent event) {
-                          if (event is RawKeyDownEvent) {
-                            if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
-                                event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                              if (_justGainedFocus) {
-                                _justGainedFocus = false;
-                                return; // Let focus settle
-                              }
-                              // Handle navigation away
-                              if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                                _sliderFocusNode.previousFocus();
-                              } else {
-                                _sliderFocusNode.nextFocus();
-                              }
-                              return; // Prevent event from reaching slider
-                            }
+                      onKey: (FocusNode node, RawKeyEvent event) {
+                        if (event is RawKeyDownEvent) {
+                          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                            _sliderFocusNode.previousFocus();
+                            return KeyEventResult.handled; // Prevent event from reaching slider
+                          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                            _sliderFocusNode.nextFocus();
+                            return KeyEventResult.handled; // Prevent event from reaching slider
                           }
-                          // Let other keys (left/right) reach the slider
-                        },
-                        child: Slider(
-                        value: wallpaperService.brightness,
-                        min: 0.0,
-                        max: 2.0,
-                        divisions: 20,
-                        onChanged: (value) {
-                          wallpaperService.setBrightness(value);
-                        },
-                      ),
-                      ),
+                        }
+                        return KeyEventResult.ignored; // Let left/right reach the slider
+                      },
+                      child: Slider(
+                      value: wallpaperService.brightness,
+                      min: 0.0,
+                      max: 2.0,
+                      divisions: 20,
+                      onChanged: (value) {
+                        wallpaperService.setBrightness(value);
+                      },
+                    ),
                     ),
                   ),
                   Icon(Icons.brightness_7, size: 20),

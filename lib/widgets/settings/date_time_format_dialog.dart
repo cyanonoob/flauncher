@@ -105,6 +105,7 @@ class DateTimeFormatDialog extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (_) => FormatModel(_initialDateFormat, _initialTimeFormat),
         builder: (context, _) => SimpleDialog(
+              backgroundColor: Theme.of(context).colorScheme.background,
               insetPadding: const EdgeInsets.only(bottom: 60),
               contentPadding: const EdgeInsets.all(24),
               title: Text(localizations.dateAndTimeFormat),

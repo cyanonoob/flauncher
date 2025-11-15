@@ -31,21 +31,10 @@ class FLauncherApp extends StatelessWidget {
   static const PrioritizedIntents _backIntents =
       PrioritizedIntents(orderedIntents: [DismissIntent(), BackIntent()]);
 
-  static const MaterialColor _swatch = MaterialColor(0xFF011526, <int, Color>{
-    50: Color(0xFF4A9FFF),
-    100: Color(0xFF1A7FE8),
-    200: Color(0xFF0F5FC7),
-    300: Color(0xFF08407A),
-    400: Color(0xFF042A4F),
-    500: Color(0xFF011526),
-    600: Color(0xFF000A12),
-    700: Color(0xFF000508),
-    800: Color(0xFF000000),
-    900: Color(0xFF000000),
-  });
+  static const MaterialColor _swatch = Colors.blueGrey;
 
-  static const Color _accentColor = Color(0xFF4A9FFF);
-  static const Color _highlightColor = Color(0xFF6BB6FF);
+  static final Color _accentColor = Colors.deepPurple[400]!;
+  static final Color _highlightColor = Colors.deepPurple[300]!;
 
   const FLauncherApp();
 
@@ -78,15 +67,22 @@ class FLauncherApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
         primarySwatch: _swatch,
-        cardColor: _swatch[500],
-        canvasColor: _swatch[500],
-        dialogBackgroundColor: _swatch[500],
-        scaffoldBackgroundColor: _swatch[400],
+        cardColor: _swatch[800],
+        canvasColor: Colors.transparent,
+        dialogBackgroundColor: Colors.transparent,
+        scaffoldBackgroundColor: _swatch[900],
         colorScheme: ColorScheme.dark(
           primary: _accentColor,
           secondary: _highlightColor,
-          surface: _swatch[500]!,
-          background: _swatch[400]!,
+          surface: Colors.transparent,
+          background: _swatch[900]!,
+        ),
+        cardTheme: CardThemeData(
+          color: Colors.transparent,
+          elevation: 0,
+        ),
+        listTileTheme: ListTileThemeData(
+          tileColor: Colors.transparent,
         ),
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(foregroundColor: Colors.white)),
@@ -118,16 +114,8 @@ class FLauncherApp extends StatelessWidget {
         ),
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.white,
-          selectionColor: _swatch[200],
-          selectionHandleColor: _swatch[200],
-        ),
-        cardTheme: CardThemeData(
-          color: _swatch[500],
-          elevation: 0,
-        ),
-        listTileTheme: ListTileThemeData(
-          tileColor: _swatch[500],
-          selectedTileColor: _swatch[400],
+          selectionColor: _swatch[300],
+          selectionHandleColor: _swatch[300],
         ),
       ),
       home: Builder(

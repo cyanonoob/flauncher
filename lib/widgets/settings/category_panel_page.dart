@@ -43,12 +43,14 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
     
     if (category == null) {
       return Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(title: Text(localizations.tvSettings)),
         body: Center(child: Text('Category not found')),
       );
     }
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(title: Text(category.category.name)),
       body: ListView(
         children: [
@@ -95,6 +97,7 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text('Sort Order'),
         actions: [
           TextButton(
@@ -120,6 +123,7 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text('Category Type'),
         actions: [
           TextButton(
@@ -145,6 +149,7 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text('Columns Count'),
         actions: [3, 4, 5, 6, 7, 8].map((columns) {
           return TextButton(
@@ -163,6 +168,7 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text('Row Height'),
         actions: [100, 110, 120, 130, 140, 150].map((height) {
           return TextButton(

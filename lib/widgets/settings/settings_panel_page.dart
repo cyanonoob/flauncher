@@ -191,6 +191,7 @@ class SettingsPanelPage extends StatelessWidget {
     final newAction = await showDialog<String>(
         context: context,
         builder: (context) => SimpleDialog(
+                backgroundColor: Theme.of(context).colorScheme.background,
                 title: Text(localizations.dialogTitleBackButtonAction),
                 children: [
                   SimpleDialogOption(

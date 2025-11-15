@@ -30,7 +30,7 @@ class RightPanelDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dialog(
-        backgroundColor: const Color(0xFF011526),
+        backgroundColor: Theme.of(context).colorScheme.background,
         insetPadding: EdgeInsets.only(
           left: MediaQuery.of(context).size.width - width - 16,
           right: 16,

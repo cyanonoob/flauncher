@@ -22,7 +22,7 @@ class RoundedSwitchListTile extends StatelessWidget {
       autofocus: autofocus,
       onPressed: () => onChanged(!value),
       style: TextButton.styleFrom(
-        backgroundColor: const Color(0xFF011526),
+        backgroundColor: Colors.transparent,
       ),
       child: Container(
         constraints: BoxConstraints(maxWidth: 300),

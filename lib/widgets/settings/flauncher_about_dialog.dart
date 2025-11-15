@@ -23,6 +23,10 @@ import '/l10n/app_localizations.dart';
 class FLauncherAboutDialog extends StatelessWidget {
   final PackageInfo packageInfo;
 
+  // TODO: Fix AboutDialog background - theme override not working, dialog remains transparent
+  // Current approach with Theme() override of dialogBackgroundColor and surface doesn't affect AboutDialog
+  // Need alternative solution: either custom AlertDialog implementation or different approach
+
   FLauncherAboutDialog({
     Key? key,
     required this.packageInfo,
@@ -32,16 +36,24 @@ class FLauncherAboutDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    return AboutDialog(
-      applicationName: packageInfo.appName,
-      applicationVersion: "${packageInfo.version} (${packageInfo.buildNumber})",
-      applicationIcon: Image.asset("assets/logo.png", height: 72),
-      applicationLegalese: "© 2024 Oscar Rojas",
-      children: [
-        SizedBox(height: 24),
-        Text(localizations
-            .textAboutDialog("https://github.com/osrosal/flauncher"))
-      ],
+    return Theme(
+      data: Theme.of(context).copyWith(
+        dialogBackgroundColor: Theme.of(context).colorScheme.background,
+        colorScheme: Theme.of(context).colorScheme.copyWith(
+          surface: Theme.of(context).colorScheme.background,
+        ),
+      ),
+      child: AboutDialog(
+        applicationName: packageInfo.appName,
+        applicationVersion: "${packageInfo.version} (${packageInfo.buildNumber})",
+        applicationIcon: Image.asset("assets/logo.png", height: 72),
+        applicationLegalese: "© 2024 Oscar Rojas",
+        children: [
+          SizedBox(height: 24),
+          Text(localizations
+              .textAboutDialog("https://github.com/osrosal/flauncher"))
+        ],
+      ),
     );
   }
 }
