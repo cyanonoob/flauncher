@@ -62,7 +62,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
               onPressed: () => showDialog(
                   context: context, builder: (_) => const SettingsPanel()),
               // sometime after Flutter 3.7.5, no later than 3.16.8, the focus highlight went away
-              focusColor: Theme.of(context).primaryColor.withOpacity(0.8),
+              focusColor: Colors.white.withOpacity(0.3),
             ),
             const Padding(
               padding: EdgeInsets.only(left: 16, right: 8),
