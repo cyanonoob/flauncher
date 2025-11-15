@@ -33,6 +33,7 @@ class RightPanelDialog extends StatelessWidget {
         backgroundColor: const Color(0xFF011526),
         insetPadding: EdgeInsets.only(
           left: MediaQuery.of(context).size.width - width - 16,
+          right: 16,
           top: 16,
           bottom: 16,
         ),
