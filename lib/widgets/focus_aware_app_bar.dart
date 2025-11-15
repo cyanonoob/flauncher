@@ -14,7 +14,7 @@ class FocusAwareAppBar extends StatefulWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + 36);
 }
 
 class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
@@ -38,7 +38,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                 child: AnimatedContainer(
                     curve: Curves.decelerate,
                     duration: Duration(milliseconds: 250),
-                    height: focused ? kToolbarHeight : 0,
+                    height: focused ? kToolbarHeight + 36 : 0,
                     child: widget!),
                 onFocusChange: (hasFocus) {
                   this.setState(() {
@@ -50,7 +50,10 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
           return widget!;
         },
         child: AppBar(
-          title: Selector<
+          toolbarHeight: kToolbarHeight + 36,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 36),
+            child: Selector<
               SettingsService,
               ({
                 bool showDateInStatusBar,
@@ -65,21 +68,9 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
               timeFormat: service.timeFormat
             ),
             builder: (context, dateTimeSettings, _) {
-              return Row(mainAxisSize: MainAxisSize.min, children: [
-                if (dateTimeSettings.showTimeInStatusBar)
-                  Flexible(
-                      child: DateTimeWidget(dateTimeSettings.timeFormat,
-                          key: const ValueKey('time'),
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.85),
-                                shadows: _textShadows,
-                          ))),
-                if (dateTimeSettings.showTimeInStatusBar && dateTimeSettings.showDateInStatusBar)
-                  const SizedBox(width: 20),
+              return Padding(
+          padding: const EdgeInsets.only(left: 38),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
                 if (dateTimeSettings.showDateInStatusBar)
                   Flexible(
                       child: DateTimeWidget(
@@ -92,34 +83,60 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                       shadows: _textShadows,
                     ),
                   )),
-              ]);
+                if (dateTimeSettings.showTimeInStatusBar && dateTimeSettings.showDateInStatusBar)
+                  const SizedBox(width: 8),
+                if (dateTimeSettings.showTimeInStatusBar)
+                  Flexible(
+                      child: DateTimeWidget(dateTimeSettings.timeFormat,
+                          key: const ValueKey('time'),
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.85),
+                                shadows: _textShadows,
+                          ))),
+              ]),
+              );
             },
           ),
+          ),
           actions: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: NetworkWidget(),
-            ),
-            IconButton(
-              padding: const EdgeInsets.all(4),
-              constraints: const BoxConstraints(),
-              splashRadius: 24,
-              icon: Icon(
-                Icons.settings_outlined,
-                color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.75),
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 3,
-                    offset: Offset(0, 1),
+            Padding(
+              padding: const EdgeInsets.only(top: 36),
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: NetworkWidget(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 38),
+                    child: IconButton(
+                      padding: const EdgeInsets.all(4),
+                      constraints: const BoxConstraints(),
+                      splashRadius: 24,
+                      icon: Icon(
+                        Icons.settings_outlined,
+                        color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.75),
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 3,
+                            offset: Offset(0, 1),
+                          ),
+                        ],
+                        size: 20,
+                      ),
+                      onPressed: () => showDialog(
+                          context: context, builder: (_) => const SettingsPanel()),
+                      // sometime after Flutter 3.7.5, no later than 3.16.8, the focus highlight went away
+                      focusColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    ),
                   ),
                 ],
-                size: 20,
               ),
-              onPressed: () => showDialog(
-                  context: context, builder: (_) => const SettingsPanel()),
-              // sometime after Flutter 3.7.5, no later than 3.16.8, the focus highlight went away
-              focusColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
             ),
           ],
         ));

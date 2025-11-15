@@ -74,7 +74,7 @@ class _CategoryRowState extends State<CategoryRow> {
           ).createShader(rect),
           blendMode: BlendMode.modulate,
           child: ListView.custom(
-            padding: const EdgeInsets.only(left: 32, top: 8, right: 16, bottom: 40),
+            padding: const EdgeInsets.only(left: 32, top: 8, right: 24, bottom: 40),
             scrollDirection: Axis.horizontal,
             childrenDelegate: SliverChildBuilderDelegate(
               childCount: widget.applications.length,
