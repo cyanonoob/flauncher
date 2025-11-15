@@ -17,6 +17,9 @@ class MediaControlButton extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         constraints: const BoxConstraints(),
         splashRadius: 24,
+        style: IconButton.styleFrom(
+          overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
+        ),
         icon: Icon(
           isPlaying ? Icons.pause : Icons.play_arrow,
           color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.85),
@@ -30,7 +33,6 @@ class MediaControlButton extends StatelessWidget {
           size: 20,
         ),
         onPressed: onPressed,
-        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
       ),
     );
   }

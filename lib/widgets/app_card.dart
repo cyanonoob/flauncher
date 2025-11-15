@@ -171,7 +171,7 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
                           children: [
                             InkWell(
                               autofocus: widget.autofocus,
-                              focusColor: Colors.transparent,
+                              overlayColor: WidgetStateProperty.resolveWith<Color?>((states) => Colors.transparent),
                               child: _appImage(),
                               onTap: () =>
                                   _onPressed(context, LogicalKeyboardKey.enter),

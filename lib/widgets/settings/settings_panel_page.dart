@@ -53,7 +53,7 @@ class SettingsPanelPage extends StatelessWidget {
                   child: TextButton(
                     autofocus: true,
                     style: TextButton.styleFrom(
-                      focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     ),
                     child: Row(
                       children: [
@@ -69,7 +69,7 @@ class SettingsPanelPage extends StatelessWidget {
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
-                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   ),
                   child: Row(
                     children: [
@@ -84,7 +84,7 @@ class SettingsPanelPage extends StatelessWidget {
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
-                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   ),
                   child: Row(
                     children: [
@@ -99,7 +99,7 @@ class SettingsPanelPage extends StatelessWidget {
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
-                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   ),
                   child: Row(
                     children: [
@@ -115,7 +115,7 @@ class SettingsPanelPage extends StatelessWidget {
                 const Divider(),
                 TextButton(
                   style: TextButton.styleFrom(
-                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   ),
                   child: Row(
                     children: [
@@ -130,7 +130,7 @@ class SettingsPanelPage extends StatelessWidget {
                 const Divider(),
                 TextButton(
                   style: TextButton.styleFrom(
-                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   ),
                   child: Row(
                     children: [
@@ -144,7 +144,7 @@ class SettingsPanelPage extends StatelessWidget {
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
-                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   ),
                   child: Row(
                     children: [
@@ -183,7 +183,7 @@ class SettingsPanelPage extends StatelessWidget {
                 const Divider(),
                 TextButton(
                     style: TextButton.styleFrom(
-                      focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     ),
                     child: Row(
                       children: [

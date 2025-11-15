@@ -14,6 +14,9 @@ class NetworkIconButton extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         constraints: const BoxConstraints(),
         splashRadius: 24,
+        style: IconButton.styleFrom(
+          overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
+        ),
         icon: Icon(
           iconData,
           color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
@@ -27,7 +30,6 @@ class NetworkIconButton extends StatelessWidget {
           size: 18,
         ),
         onPressed: () => FLauncherChannel().openWifiSettings(),
-        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
       ),
     );
   }

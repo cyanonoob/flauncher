@@ -12,6 +12,9 @@ class SettingsIconButton extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         constraints: const BoxConstraints(),
         splashRadius: 24,
+        style: IconButton.styleFrom(
+          overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
+        ),
         icon: Icon(
           Icons.settings_outlined,
           color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
@@ -26,7 +29,6 @@ class SettingsIconButton extends StatelessWidget {
         ),
         onPressed: () => showDialog(
             context: context, builder: (_) => const SettingsPanel()),
-        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
       ),
     );
   }
