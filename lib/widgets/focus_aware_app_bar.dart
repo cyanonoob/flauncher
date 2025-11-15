@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flauncher/widgets/settings/settings_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,11 +23,25 @@ class FocusAwareAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
   bool focused = false;
   late List<Shadow> _textShadows;
+  Timer? _debounceTimer;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _textShadows = PremiumShadows.textShadow(context);
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  void _onFocusChange(bool hasFocus) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 50), () {
+      if (mounted) setState(() => focused = hasFocus);
+    });
   }
 
   @override
@@ -41,11 +57,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                     duration: Duration(milliseconds: 250),
                     height: focused ? kToolbarHeight + 36 : 0,
                     child: widget!),
-                onFocusChange: (hasFocus) {
-                  this.setState(() {
-                    focused = hasFocus;
-                  });
-                });
+                onFocusChange: _onFocusChange);
           }
 
           return widget!;
@@ -126,26 +138,28 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 38),
-                    child: IconButton(
-                      padding: const EdgeInsets.all(4),
-                      constraints: const BoxConstraints(),
-                      splashRadius: 24,
-                      icon: Icon(
-                        Icons.settings_outlined,
-                        color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 3,
-                            offset: Offset(0, 1),
-                          ),
-                        ],
-                        size: 20,
+                    child: RepaintBoundary(
+                      child: IconButton(
+                        padding: const EdgeInsets.all(4),
+                        constraints: const BoxConstraints(),
+                        splashRadius: 24,
+                        icon: Icon(
+                          Icons.settings_outlined,
+                          color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 3,
+                              offset: Offset(0, 1),
+                            ),
+                          ],
+                          size: 20,
+                        ),
+                        onPressed: () => showDialog(
+                            context: context, builder: (_) => const SettingsPanel()),
+                        // sometime after Flutter 3.7.5, no later than 3.16.8, the focus highlight went away
+                        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                       ),
-                      onPressed: () => showDialog(
-                          context: context, builder: (_) => const SettingsPanel()),
-                      // sometime after Flutter 3.7.5, no later than 3.16.8, the focus highlight went away
-                      focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     ),
                   ),
                 ],
