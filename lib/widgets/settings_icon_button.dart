@@ -26,7 +26,7 @@ class SettingsIconButton extends StatelessWidget {
         ),
         onPressed: () => showDialog(
             context: context, builder: (_) => const SettingsPanel()),
-        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
       ),
     );
   }

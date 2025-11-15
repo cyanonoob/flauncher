@@ -27,7 +27,7 @@ class NetworkIconButton extends StatelessWidget {
           size: 18,
         ),
         onPressed: () => FLauncherChannel().openWifiSettings(),
-        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
       ),
     );
   }

@@ -30,7 +30,7 @@ class MediaControlButton extends StatelessWidget {
           size: 20,
         ),
         onPressed: onPressed,
-        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
       ),
     );
   }
