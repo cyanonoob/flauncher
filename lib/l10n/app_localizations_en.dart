@@ -92,9 +92,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backButtonAction => 'Back button action';
 
   @override
-  String get backgroundAnimation => 'Background animation';
-
-  @override
   String get category => 'Category';
 
   @override
@@ -277,6 +274,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wallpaper => 'Wallpaper';
+
+  @override
+  String get wallpaperBrightness => 'Wallpaper brightness';
 
   @override
   String get withEllipsisAddTo => 'Add to...';

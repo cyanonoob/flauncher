@@ -39,12 +39,15 @@ class WallpaperService extends ChangeNotifier {
   late File _unsplashFile;
 
   static const String _selectedOptionKey = 'selected_wallpaper_option';
+  static const String _brightnessKey = 'wallpaper_brightness';
   WallpaperOption _selectedOption = WallpaperOption.gradient;
+  double _brightness = 1.0;
 
   ImageProvider? _wallpaper;
   ImageProvider? _unsplash;
 
   WallpaperOption get selectedOption => _selectedOption;
+  double get brightness => _brightness;
 
   ImageProvider? get wallpaper {
     switch (_selectedOption) {
@@ -60,6 +63,12 @@ class WallpaperService extends ChangeNotifier {
   void setSelectedOption(WallpaperOption option) {
     _selectedOption = option;
     _settingsService.setInt(_selectedOptionKey, option.index);
+    notifyListeners();
+  }
+
+  void setBrightness(double brightness) {
+    _brightness = brightness.clamp(0.0, 2.0);
+    _settingsService.setDouble(_brightnessKey, _brightness);
     notifyListeners();
   }
 
@@ -84,6 +93,12 @@ class WallpaperService extends ChangeNotifier {
         optionIndex >= 0 &&
         optionIndex < WallpaperOption.values.length) {
       _selectedOption = WallpaperOption.values[optionIndex];
+    }
+
+    // Restore brightness from settings
+    final savedBrightness = _settingsService.getDouble(_brightnessKey);
+    if (savedBrightness != null) {
+      _brightness = savedBrightness.clamp(0.0, 2.0);
     }
 
     if (await _wallpaperFile.exists()) {

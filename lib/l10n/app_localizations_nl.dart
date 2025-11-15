@@ -92,9 +92,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get backButtonAction => 'Actie terug-knop';
 
   @override
-  String get backgroundAnimation => 'Achtergrondanimatie';
-
-  @override
   String get category => 'Categorie';
 
   @override
@@ -277,6 +274,9 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get wallpaper => 'Achtergrond';
+
+  @override
+  String get wallpaperBrightness => 'Helderheid achtergrond';
 
   @override
   String get withEllipsisAddTo => 'Toevoegen aan...';

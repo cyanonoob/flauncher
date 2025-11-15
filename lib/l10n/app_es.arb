@@ -24,7 +24,7 @@
     "applications": "Aplicaciones",
     "autoHideAppBar": "Ocultar barra de estado automáticamente",
     "backButtonAction": "Acción del botón 'Atrás'",
-    "backgroundAnimation": "Animación de fondo",
+
     "category": "Categoría",
     "categories": "Categorías",
     "columnCount": "Cantidad de columnas",
@@ -115,6 +115,7 @@
     "typeInTheHourFormat": "Escriba el formato de hora",
     "uninstall": "Desinstalar",
     "wallpaper": "Fondo de pantalla",
+    "wallpaperBrightness": "Brillo del fondo de pantalla",
     "withEllipsisAddTo": "Añadir a...",
     "pick": "Elegir",
     "unsplashQueryLabel": "Buscar (ej. naturaleza)",

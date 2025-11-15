@@ -33,7 +33,7 @@
     "applications": "Applications",
     "autoHideAppBar": "Automatically hide status bar",
     "backButtonAction": "Back button action",
-    "backgroundAnimation": "Background animation",
+
     "category": "Category",
     "categories": "Categories",
     "columnCount": "Column count",
@@ -124,6 +124,7 @@
     "typeInTheHourFormat": "Type in the hour format",
     "uninstall": "Uninstall",
     "wallpaper": "Wallpaper",
+    "wallpaperBrightness": "Wallpaper brightness",
     "withEllipsisAddTo": "Add to...",
     "pick": "Pick",
     "apply": "Apply"

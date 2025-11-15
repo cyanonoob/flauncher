@@ -262,12 +262,6 @@ abstract class AppLocalizations {
   /// **'Back button action'**
   String get backButtonAction;
 
-  /// No description provided for @backgroundAnimation.
-  ///
-  /// In en, this message translates to:
-  /// **'Background animation'**
-  String get backgroundAnimation;
-
   /// No description provided for @category.
   ///
   /// In en, this message translates to:
@@ -609,6 +603,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wallpaper'**
   String get wallpaper;
+
+  /// No description provided for @wallpaperBrightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper brightness'**
+  String get wallpaperBrightness;
 
   /// No description provided for @withEllipsisAddTo.
   ///

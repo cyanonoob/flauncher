@@ -119,6 +119,43 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
             },
           ),
         ),
+        Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                localizations.wallpaperBrightness,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.brightness_2, size: 20),
+                  Expanded(
+                    child: Slider(
+                      value: wallpaperService.brightness,
+                      min: 0.0,
+                      max: 2.0,
+                      divisions: 20,
+                      onChanged: (value) {
+                        wallpaperService.setBrightness(value);
+                      },
+                    ),
+                  ),
+                  Icon(Icons.brightness_7, size: 20),
+                ],
+              ),
+              Center(
+                child: Text(
+                  '${(wallpaperService.brightness * 100).round()}%',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

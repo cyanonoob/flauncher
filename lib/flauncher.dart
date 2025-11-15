@@ -20,9 +20,9 @@ import 'package:flauncher/custom_traversal_policy.dart';
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/launcher_state.dart';
 import 'package:flauncher/providers/media_service.dart';
-import 'package:flauncher/providers/settings_service.dart';
+
 import 'package:flauncher/providers/wallpaper_service.dart';
-import 'package:flauncher/widgets/animated_gradient_overlay.dart';
+
 import 'package:flauncher/widgets/apps_grid.dart';
 import 'package:flauncher/widgets/category_row.dart';
 import 'package:flauncher/widgets/launcher_alternative_view.dart';
@@ -44,13 +44,7 @@ class FLauncher extends StatelessWidget {
         Consumer<WallpaperService>(
             builder: (_, wallpaperService, __) =>
                 _wallpaper(context, wallpaperService)),
-        Consumer2<SettingsService, WallpaperService>(
-            builder: (_, settingsService, wallpaperService, __) {
-              if (settingsService.backgroundAnimationEnabled) {
-                return AnimatedGradientOverlay(wallpaperService: wallpaperService);
-              }
-              return const SizedBox.shrink();
-            }),
+
         Consumer<LauncherState>(
             builder: (_, state, child) => Visibility(
                 child: child!,
@@ -123,17 +117,47 @@ class FLauncher extends StatelessWidget {
     if (wallpaperService.selectedOption != WallpaperOption.gradient &&
         wallpaperService.wallpaper != null) {
       final physicalSize = MediaQuery.sizeOf(context);
-      return Image(
+      Widget imageWidget = Image(
           image: wallpaperService.wallpaper!,
           key: const Key("background"),
           fit: BoxFit.cover,
           height: physicalSize.height,
           width: physicalSize.width);
+
+      // Apply brightness adjustment if needed
+      if (wallpaperService.brightness != 1.0) {
+        imageWidget = ColorFiltered(
+          colorFilter: ColorFilter.matrix(<double>[
+            wallpaperService.brightness, 0, 0, 0, 0,
+            0, wallpaperService.brightness, 0, 0, 0,
+            0, 0, wallpaperService.brightness, 0, 0,
+            0, 0, 0, 1, 0,
+          ]),
+          child: imageWidget,
+        );
+      }
+
+      return imageWidget;
     } else {
-      return Container(
+      Widget gradientWidget = Container(
           key: const Key("background"),
           decoration:
               BoxDecoration(gradient: wallpaperService.gradient.gradient));
+
+      // Apply brightness adjustment if needed
+      if (wallpaperService.brightness != 1.0) {
+        gradientWidget = ColorFiltered(
+          colorFilter: ColorFilter.matrix(<double>[
+            wallpaperService.brightness, 0, 0, 0, 0,
+            0, wallpaperService.brightness, 0, 0, 0,
+            0, 0, wallpaperService.brightness, 0, 0,
+            0, 0, 0, 1, 0,
+          ]),
+          child: gradientWidget,
+        );
+      }
+
+      return gradientWidget;
     }
   }
 
