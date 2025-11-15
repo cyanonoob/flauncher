@@ -245,12 +245,4 @@ flutter clean && mise run run:dev
 # Use drift_local_storage_inspector in dev builds
 ```
 
-## Release Process
-
-1. Update version in `pubspec.yaml` and `version_numbers`
-2. Test thoroughly on Android TV device
-3. Build production APK: `mise run build`
-4. Test production build
-5. Create GitHub release with signed APK
-
 This documentation should help future agents understand the codebase structure and work effectively with FLauncher.
