@@ -101,6 +101,9 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
         title: Text('Sort Order'),
         actions: [
           TextButton(
+            style: TextButton.styleFrom(
+              focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            ),
             onPressed: () {
               appsService.setCategorySort(category, CategorySort.manual);
               Navigator.pop(context);
@@ -108,6 +111,9 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
             child: Text('Manual'),
           ),
           TextButton(
+            style: TextButton.styleFrom(
+              focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            ),
             onPressed: () {
               appsService.setCategorySort(category, CategorySort.alphabetical);
               Navigator.pop(context);
@@ -127,6 +133,9 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
         title: Text('Category Type'),
         actions: [
           TextButton(
+            style: TextButton.styleFrom(
+              focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            ),
             onPressed: () {
               appsService.setCategoryType(category, CategoryType.row);
               Navigator.pop(context);
@@ -134,6 +143,9 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
             child: Text('Row'),
           ),
           TextButton(
+            style: TextButton.styleFrom(
+              focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            ),
             onPressed: () {
               appsService.setCategoryType(category, CategoryType.grid);
               Navigator.pop(context);
@@ -153,6 +165,9 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
         title: Text('Columns Count'),
         actions: [3, 4, 5, 6, 7, 8].map((columns) {
           return TextButton(
+            style: TextButton.styleFrom(
+              focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            ),
             onPressed: () {
               appsService.setCategoryColumnsCount(category, columns);
               Navigator.pop(context);
@@ -172,6 +187,9 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
         title: Text('Row Height'),
         actions: [100, 110, 120, 130, 140, 150].map((height) {
           return TextButton(
+            style: TextButton.styleFrom(
+              focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            ),
             onPressed: () {
               appsService.setCategoryRowHeight(category, height);
               Navigator.pop(context);

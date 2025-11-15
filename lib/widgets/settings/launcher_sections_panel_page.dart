@@ -56,6 +56,9 @@ class LauncherSectionsPanelPage extends StatelessWidget {
         ),
         SizedBox(height: 4, width: 0),
         TextButton.icon(
+          style: TextButton.styleFrom(
+            focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+          ),
           icon: Icon(Icons.add),
           label: Text(localizations.addSection),
           onPressed: () {

@@ -52,6 +52,9 @@ class SettingsPanelPage extends StatelessWidget {
                   alignment: 0.5,
                   child: TextButton(
                     autofocus: true,
+                    style: TextButton.styleFrom(
+                      focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    ),
                     child: Row(
                       children: [
                         const Icon(Icons.apps),
@@ -65,6 +68,9 @@ class SettingsPanelPage extends StatelessWidget {
                   ),
                 ),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                  ),
                   child: Row(
                     children: [
                       const Icon(Icons.category),
@@ -77,6 +83,9 @@ class SettingsPanelPage extends StatelessWidget {
                       .pushNamed(LauncherSectionsPanelPage.routeName),
                 ),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                  ),
                   child: Row(
                     children: [
                       const Icon(Icons.wallpaper_outlined),
@@ -89,6 +98,9 @@ class SettingsPanelPage extends StatelessWidget {
                       .pushNamed(WallpaperPanelPage.routeName),
                 ),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                  ),
                   child: Row(
                     children: [
                       const Icon(Icons.tips_and_updates),
@@ -102,6 +114,9 @@ class SettingsPanelPage extends StatelessWidget {
                 ),
                 const Divider(),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                  ),
                   child: Row(
                     children: [
                       const Icon(Icons.settings_outlined),
@@ -114,6 +129,9 @@ class SettingsPanelPage extends StatelessWidget {
                 ),
                 const Divider(),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                  ),
                   child: Row(
                     children: [
                       const Icon(Icons.date_range),
@@ -125,6 +143,9 @@ class SettingsPanelPage extends StatelessWidget {
                   onPressed: () async => await _dateTimeFormatDialog(context),
                 ),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                  ),
                   child: Row(
                     children: [
                       const Icon(Icons.arrow_back),
@@ -161,6 +182,9 @@ class SettingsPanelPage extends StatelessWidget {
                     secondary: Icon(Icons.abc)),
                 const Divider(),
                 TextButton(
+                    style: TextButton.styleFrom(
+                      focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    ),
                     child: Row(
                       children: [
                         const Icon(Icons.info_outline),
