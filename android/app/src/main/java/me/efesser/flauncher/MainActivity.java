@@ -36,6 +36,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 
@@ -73,11 +74,14 @@ public class MainActivity extends FlutterActivity
     private EventChannel.EventSink mediaEventSink;
     private MediaSessionManager.OnActiveSessionsChangedListener sessionListener;
     private MediaController.Callback mediaCallback;
+    private FlutterEngine flutterEngine;
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine)
     {
         super.configureFlutterEngine(flutterEngine);
+        
+        this.flutterEngine = flutterEngine;
 
         BinaryMessenger messenger = flutterEngine.getDartExecutor().getBinaryMessenger();
 
@@ -105,6 +109,9 @@ public class MainActivity extends FlutterActivity
                 case "sendPause" -> result.success(sendPause());
                 case "sendSkipToNext" -> result.success(sendSkipToNext());
                 case "sendSkipToPrevious" -> result.success(sendSkipToPrevious());
+                case "hasNotificationListenerPermission" -> result.success(hasNotificationListenerPermission());
+                case "openNotificationListenerSettings" -> result.success(openNotificationListenerSettings());
+                case "getMediaSessionDebugInfo" -> result.success(getMediaSessionDebugInfo());
                 default -> throw new IllegalArgumentException();
             }
         });
@@ -468,9 +475,12 @@ public class MainActivity extends FlutterActivity
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void updateActiveMediaController() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.d("MediaSession", "updateActiveMediaController: starting update");
+            
             // Unregister previous controller callback if exists
             if (activeMediaController != null) {
                 activeMediaController.unregisterCallback(mediaCallback);
+                Log.d("MediaSession", "updateActiveMediaController: unregistered previous controller");
             }
 
             // Get active sessions
@@ -479,6 +489,7 @@ public class MainActivity extends FlutterActivity
             // Try to get sessions through NotificationListenerService first
             if (MediaNotificationListenerService.isServiceEnabled()) {
                 controllers = MediaNotificationListenerService.getInstance().getActiveMediaSessions();
+                Log.d("MediaSession", "updateActiveMediaController: got sessions via NotificationListenerService");
             }
 
             // Fallback to direct access if service not available
@@ -486,12 +497,15 @@ public class MainActivity extends FlutterActivity
                 try {
                     ComponentName notificationListener = new ComponentName(this, MediaNotificationListenerService.class);
                     controllers = mediaSessionManager.getActiveSessions(notificationListener);
+                    Log.d("MediaSession", "updateActiveMediaController: got sessions via direct access with component");
                 } catch (SecurityException e) {
                     // Permission not granted, try with null component
                     try {
                         controllers = mediaSessionManager.getActiveSessions(null);
+                        Log.d("MediaSession", "updateActiveMediaController: got sessions via direct access without component");
                     } catch (SecurityException ex) {
                         controllers = new ArrayList<>();
+                        Log.d("MediaSession", "updateActiveMediaController: SecurityException - no access to sessions");
                     }
                 }
             }
@@ -500,8 +514,10 @@ public class MainActivity extends FlutterActivity
                 // Use the first active controller
                 activeMediaController = controllers.get(0);
                 activeMediaController.registerCallback(mediaCallback);
+                Log.d("MediaSession", "updateActiveMediaController: found " + controllers.size() + " sessions, using: " + activeMediaController.getPackageName());
             } else {
                 activeMediaController = null;
+                Log.d("MediaSession", "updateActiveMediaController: no active sessions found");
             }
 
             notifyMediaSessionChanged();
@@ -631,7 +647,11 @@ public class MainActivity extends FlutterActivity
 
     private void notifyMediaSessionChanged() {
         if (mediaEventSink != null) {
-            mediaEventSink.success(getCurrentMediaSession());
+            Map<String, Object> sessionData = getCurrentMediaSession();
+            Log.d("MediaSession", "notifyMediaSessionChanged: sending session data - hasActiveSession: " + sessionData.get("hasActiveSession"));
+            mediaEventSink.success(sessionData);
+        } else {
+            Log.d("MediaSession", "notifyMediaSessionChanged: mediaEventSink is null");
         }
     }
 
@@ -674,6 +694,131 @@ public class MainActivity extends FlutterActivity
                     activeMediaController.unregisterCallback(mediaCallback);
                 }
             }
+        }
+    }
+
+    // Permission and Debug Methods
+    private boolean hasNotificationListenerPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ComponentName notificationListener = new ComponentName(this, MediaNotificationListenerService.class);
+            String enabledListeners = Settings.Secure.getString(getContentResolver(), "enabled_notification_listeners");
+            return enabledListeners != null && enabledListeners.contains(notificationListener.flattenToString());
+        }
+        return false;
+    }
+
+    private boolean openNotificationListenerSettings() {
+        try {
+            Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+            startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private Map<String, Object> getMediaSessionDebugInfo() {
+        Map<String, Object> debugInfo = new HashMap<>();
+        
+        debugInfo.put("hasNotificationListenerPermission", hasNotificationListenerPermission());
+        debugInfo.put("isMediaNotificationListenerServiceEnabled", MediaNotificationListenerService.isServiceEnabled());
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            debugInfo.put("hasMediaSessionManager", mediaSessionManager != null);
+            debugInfo.put("hasActiveMediaController", activeMediaController != null);
+            
+            if (activeMediaController != null) {
+                debugInfo.put("activeControllerPackageName", activeMediaController.getPackageName());
+                PlaybackState state = activeMediaController.getPlaybackState();
+                if (state != null) {
+                    debugInfo.put("playbackState", state.getState());
+                    debugInfo.put("playbackStateString", getPlaybackStateString(state.getState()));
+                }
+                MediaMetadata metadata = activeMediaController.getMetadata();
+                if (metadata != null) {
+                    debugInfo.put("hasMetadata", true);
+                    debugInfo.put("title", metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
+                    debugInfo.put("artist", metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
+                } else {
+                    debugInfo.put("hasMetadata", false);
+                }
+            }
+            
+            // Try to get all active sessions for debugging
+            try {
+                ComponentName notificationListener = new ComponentName(this, MediaNotificationListenerService.class);
+                List<MediaController> controllers = mediaSessionManager.getActiveSessions(notificationListener);
+                debugInfo.put("totalActiveSessions", controllers.size());
+                
+                List<String> sessionPackages = new ArrayList<>();
+                for (MediaController controller : controllers) {
+                    sessionPackages.add(controller.getPackageName());
+                }
+                debugInfo.put("activeSessionPackages", sessionPackages);
+            } catch (SecurityException e) {
+                debugInfo.put("sessionAccessError", "SecurityException: " + e.getMessage());
+            } catch (Exception e) {
+                debugInfo.put("sessionAccessError", "Exception: " + e.getMessage());
+            }
+        } else {
+            debugInfo.put("apiLevel", "Below LOLLIPOP");
+        }
+        
+        return debugInfo;
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.d("MediaSession", "onWindowFocusChanged: hasFocus=" + hasFocus);
+            updateActiveMediaController();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("MediaSession", "onResume: launcher becoming visible");
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            updateActiveMediaController();
+        }
+        
+        // Notify Flutter that launcher is visible
+        if (flutterEngine != null) {
+            new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), 
+                METHOD_CHANNEL).invokeMethod("onLauncherVisible", true);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("MediaSession", "onPause: launcher becoming hidden");
+        
+        // Notify Flutter that launcher is not visible
+        if (flutterEngine != null) {
+            new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), 
+                METHOD_CHANNEL).invokeMethod("onLauncherVisible", false);
+        }
+    }
+
+    private String getPlaybackStateString(int state) {
+        switch (state) {
+            case PlaybackState.STATE_NONE: return "STATE_NONE";
+            case PlaybackState.STATE_STOPPED: return "STATE_STOPPED";
+            case PlaybackState.STATE_PAUSED: return "STATE_PAUSED";
+            case PlaybackState.STATE_PLAYING: return "STATE_PLAYING";
+            case PlaybackState.STATE_FAST_FORWARDING: return "STATE_FAST_FORWARDING";
+            case PlaybackState.STATE_REWINDING: return "STATE_REWINDING";
+            case PlaybackState.STATE_BUFFERING: return "STATE_BUFFERING";
+            case PlaybackState.STATE_ERROR: return "STATE_ERROR";
+            case PlaybackState.STATE_CONNECTING: return "STATE_CONNECTING";
+            case PlaybackState.STATE_SKIPPING_TO_PREVIOUS: return "STATE_SKIPPING_TO_PREVIOUS";
+            case PlaybackState.STATE_SKIPPING_TO_NEXT: return "STATE_SKIPPING_TO_NEXT";
+            case PlaybackState.STATE_SKIPPING_TO_QUEUE_ITEM: return "STATE_SKIPPING_TO_QUEUE_ITEM";
+            default: return "UNKNOWN_STATE_" + state;
         }
     }
 }

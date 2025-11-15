@@ -29,6 +29,8 @@ class FLauncherChannel {
   static const _mediaEventChannel =
       EventChannel('com.geert.flauncher/event_media');
 
+  void Function(bool)? _visibilityListener;
+
   Future<List<Map<dynamic, dynamic>>> getApplications() async {
     List<Map<dynamic, dynamic>>? applications =
         await _methodChannel.invokeListMethod("getApplications");
@@ -112,6 +114,19 @@ class FLauncherChannel {
   Future<void> sendSkipToPrevious() async =>
       await _methodChannel.invokeMethod("sendSkipToPrevious");
 
+  // Permission and Debug methods
+  Future<bool> hasNotificationListenerPermission() async =>
+      await _methodChannel.invokeMethod("hasNotificationListenerPermission");
+
+  Future<bool> openNotificationListenerSettings() async =>
+      await _methodChannel.invokeMethod("openNotificationListenerSettings");
+
+  Future<Map<String, dynamic>> getMediaSessionDebugInfo() async {
+    Map<dynamic, dynamic> map =
+        await _methodChannel.invokeMethod("getMediaSessionDebugInfo");
+    return map.cast<String, dynamic>();
+  }
+
   void addAppsChangedListener(void Function(Map<String, dynamic>) listener) =>
       _appsEventChannel.receiveBroadcastStream().listen((event) {
         Map<dynamic, dynamic> eventMap = event;
@@ -130,4 +145,12 @@ class FLauncherChannel {
         Map<dynamic, dynamic> eventMap = event;
         listener(eventMap.cast<String, dynamic>());
       });
+
+  void addVisibilityListener(void Function(bool) listener) {
+    _visibilityListener = listener;
+  }
+
+  void handleVisibilityChange(bool visible) {
+    _visibilityListener?.call(visible);
+  }
 }

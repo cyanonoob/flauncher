@@ -47,7 +47,7 @@ FLauncher is a Flutter-based Android TV launcher that replaces the default Andro
 - **AppsGrid**: Grid layout for applications (CategoryType.grid)
 - **CategoryRow**: Horizontal row layout (CategoryType.row)
 - **AppCard**: Individual application card with focus handling
-- **MediaControlCard**: Media playback controls
+- **NowPlayingWidget**: Compact audio playback indicator in status bar
 
 ## Key Functionality
 

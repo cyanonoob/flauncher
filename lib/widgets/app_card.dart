@@ -196,7 +196,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           boxShadow: _baseFocusedShadows.map((shadow) => BoxShadow(
-                                            color: shadow.color.withOpacity(shadow.color.opacity * _curvedAnimation.value),
+                                            color: shadow.color.withValues(alpha: shadow.color.a * _curvedAnimation.value),
                                             blurRadius: shadow.blurRadius,
                                             spreadRadius: shadow.spreadRadius,
                                             offset: shadow.offset,
@@ -352,7 +352,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
           alignment: alignment,
           child: Ink(
               decoration: ShapeDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.8),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
                   shape: CircleBorder()),
               child: SizedBox(
                   height: 36,

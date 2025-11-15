@@ -23,6 +23,7 @@ import 'package:flauncher/widgets/settings/applications_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_sections_panel_page.dart';
 import 'package:flauncher/widgets/settings/date_time_format_dialog.dart';
 import 'package:flauncher/widgets/settings/flauncher_about_dialog.dart';
+import 'package:flauncher/widgets/settings/media_session_panel_page.dart';
 import 'package:flauncher/widgets/settings/status_bar_panel_page.dart';
 import 'package:flauncher/widgets/settings/wallpaper_panel_page.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +112,18 @@ class SettingsPanelPage extends StatelessWidget {
                     ],
                   ),
                   onPressed: () => context.read<AppsService>().openSettings(),
+                ),
+                TextButton(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.music_note),
+                      Container(width: 8),
+                      Text('Media Session Debug',
+                          style: Theme.of(context).textTheme.bodyMedium),
+                    ],
+                  ),
+                  onPressed: () => Navigator.of(context)
+                      .pushNamed(MediaSessionPanelPage.routeName),
                 ),
                 const Divider(),
                 TextButton(

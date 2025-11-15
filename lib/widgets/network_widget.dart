@@ -81,10 +81,10 @@ class _NetworkWidgetState extends State<NetworkWidget> {
         splashRadius: 24,
         icon: Icon(
           iconData,
-          color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.75),
+          color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
           shadows: [
             Shadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 3,
               offset: Offset(0, 1),
             ),
@@ -92,7 +92,7 @@ class _NetworkWidgetState extends State<NetworkWidget> {
           size: 18,
         ),
         onPressed: () => FLauncherChannel().openWifiSettings(),
-        focusColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
       );
     });
   }

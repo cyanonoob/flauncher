@@ -66,10 +66,10 @@ class _CategoryRowState extends State<CategoryRow> {
             end: Alignment.centerRight,
             stops: [0.0, 0.08, 0.92, 1.0],
             colors: [
-              Colors.white.withOpacity(0.0),  // Left edge: Transparent
+              Colors.white.withValues(alpha: 0.0),  // Left edge: Transparent
               Colors.white,                    // Start content: Full opacity
               Colors.white,                    // End content: Full opacity
-              Colors.white.withOpacity(0.0),  // Right edge: Transparent
+              Colors.white.withValues(alpha: 0.0),  // Right edge: Transparent
             ],
           ).createShader(rect),
           blendMode: BlendMode.modulate,

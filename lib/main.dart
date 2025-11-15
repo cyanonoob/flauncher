@@ -27,6 +27,7 @@ import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flauncher/providers/media_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -43,6 +44,22 @@ Future<void> main() async {
   final fLauncherDatabase = FLauncherDatabase(connect());
 
   await dotenv.load(fileName: ".env");
+
+  // Set up method channel handler for platform-initiated calls
+  const methodChannel = MethodChannel('com.geert.flauncher/method');
+  methodChannel.setMethodCallHandler((call) async {
+    switch (call.method) {
+      case 'onLauncherVisible':
+        final bool visible = call.arguments ?? true;
+        fLauncherChannel.handleVisibilityChange(visible);
+        break;
+      default:
+        throw PlatformException(
+          code: 'Unimplemented',
+          details: 'Method ${call.method} is not implemented',
+        );
+    }
+  });
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(

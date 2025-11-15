@@ -1,7 +1,7 @@
 name: flauncher
 description: Flutter-based Android TV launcher.
 
-version: 2025.11.15+85
+version: 2025.11.15+89
 
 environment:
   sdk: ">=3.4.3"

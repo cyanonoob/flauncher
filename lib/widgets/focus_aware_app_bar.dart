@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/settings_service.dart';
 import 'date_time_widget.dart';
 import 'network_widget.dart';
+import 'now_playing_widget.dart';
 import 'shadow_helpers.dart';
 
 class FocusAwareAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -79,7 +80,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                     updateInterval: const Duration(minutes: 1),
                     textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.w400,
-                      color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.85),
+                      color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.85),
                       shadows: _textShadows,
                     ),
                   )),
@@ -94,7 +95,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                               .titleMedium!
                               .copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.85),
+                                color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.85),
                                 shadows: _textShadows,
                           ))),
               ]),
@@ -108,6 +109,10 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
               child: Row(
                 children: [
                   const Padding(
+                    padding: EdgeInsets.only(right: 12),
+                    child: NowPlayingWidget(),
+                  ),
+                  const Padding(
                     padding: EdgeInsets.only(left: 16),
                     child: NetworkWidget(),
                   ),
@@ -119,10 +124,10 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                       splashRadius: 24,
                       icon: Icon(
                         Icons.settings_outlined,
-                        color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.75),
+                        color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
                         shadows: [
                           Shadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withValues(alpha: 0.2),
                             blurRadius: 3,
                             offset: Offset(0, 1),
                           ),
@@ -132,7 +137,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                       onPressed: () => showDialog(
                           context: context, builder: (_) => const SettingsPanel()),
                       // sometime after Flutter 3.7.5, no later than 3.16.8, the focus highlight went away
-                      focusColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                      focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     ),
                   ),
                 ],

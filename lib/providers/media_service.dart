@@ -104,7 +104,9 @@ class MediaService extends ChangeNotifier {
 
   MediaSessionInfo _currentSession = const MediaSessionInfo();
   Timer? _positionUpdateTimer;
+  Timer? _pollingTimer;
   bool _initialized = false;
+  bool _isVisible = true;
 
   MediaSessionInfo get currentSession => _currentSession;
   bool get hasActiveMedia => _currentSession.hasActiveSession;
@@ -122,8 +124,14 @@ class MediaService extends ChangeNotifier {
       // Listen for media session changes
       _fLauncherChannel.addMediaSessionListener(_onMediaSessionChanged);
 
+      // Listen for visibility changes from platform
+      _fLauncherChannel.addVisibilityListener(setVisibility);
+
       // Start position update timer for playing media
       _startPositionUpdates();
+
+      // Start periodic polling for session detection
+      _startPolling();
 
       _initialized = true;
       notifyListeners();
@@ -136,25 +144,30 @@ class MediaService extends ChangeNotifier {
     try {
       final sessionData = await _fLauncherChannel.getCurrentMediaSession();
       if (sessionData != null) {
-        _currentSession = MediaSessionInfo.fromMap(sessionData);
+        final newSession = MediaSessionInfo.fromMap(sessionData);
+        debugPrint('MediaService: _refreshMediaSession - hasActiveSession: ${newSession.hasActiveSession}, packageName: ${newSession.packageName}, title: ${newSession.title}');
+        _currentSession = newSession;
       } else {
+        debugPrint('MediaService: _refreshMediaSession - no session data received');
         _currentSession = const MediaSessionInfo();
       }
       notifyListeners();
     } catch (e) {
-      debugPrint('Failed to refresh media session: $e');
+      debugPrint('MediaService: Failed to refresh media session: $e');
     }
   }
 
   void _onMediaSessionChanged(Map<String, dynamic> data) {
     try {
       final newSession = MediaSessionInfo.fromMap(data);
+      debugPrint('MediaService: _onMediaSessionChanged - hasActiveSession: ${newSession.hasActiveSession}, packageName: ${newSession.packageName}, title: ${newSession.title}');
 
       // Check if this is a meaningful change
       if (_currentSession.packageName != newSession.packageName ||
           _currentSession.isPlaying != newSession.isPlaying ||
           _currentSession.title != newSession.title ||
           _currentSession.hasActiveSession != newSession.hasActiveSession) {
+        debugPrint('MediaService: Session changed - updating UI');
         _currentSession = newSession;
         notifyListeners();
 
@@ -164,9 +177,11 @@ class MediaService extends ChangeNotifier {
         } else {
           _stopPositionUpdates();
         }
+      } else {
+        debugPrint('MediaService: Session unchanged - no UI update needed');
       }
     } catch (e) {
-      debugPrint('Failed to process media session change: $e');
+      debugPrint('MediaService: Failed to process media session change: $e');
     }
   }
 
@@ -193,6 +208,38 @@ class MediaService extends ChangeNotifier {
 
       _currentSession = _currentSession.copyWith(position: newPosition);
       notifyListeners();
+    }
+  }
+
+  void _startPolling() {
+    _stopPolling();
+
+    debugPrint('MediaService: Starting periodic polling for media sessions');
+    _pollingTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) {
+        if (_isVisible) {
+          _refreshMediaSession();
+        }
+      },
+    );
+  }
+
+  void _stopPolling() {
+    _pollingTimer?.cancel();
+    _pollingTimer = null;
+  }
+
+  void setVisibility(bool visible) {
+    if (_isVisible != visible) {
+      _isVisible = visible;
+      debugPrint('MediaService: Visibility changed to $visible');
+      
+      if (visible) {
+        // Immediately refresh when becoming visible
+        debugPrint('MediaService: Becoming visible - refreshing session immediately');
+        _refreshMediaSession();
+      }
     }
   }
 
@@ -260,6 +307,7 @@ class MediaService extends ChangeNotifier {
   @override
   void dispose() {
     _stopPositionUpdates();
+    _stopPolling();
     super.dispose();
   }
 }
