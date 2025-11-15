@@ -8,6 +8,7 @@ import '../providers/settings_service.dart';
 import 'date_time_widget.dart';
 import 'network_widget.dart';
 import 'now_playing_widget.dart';
+import 'settings_icon_button.dart';
 import 'shadow_helpers.dart';
 
 class FocusAwareAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -136,31 +137,9 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                     padding: EdgeInsets.only(left: 16),
                     child: NetworkWidget(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 38),
-                    child: RepaintBoundary(
-                      child: IconButton(
-                        padding: const EdgeInsets.all(4),
-                        constraints: const BoxConstraints(),
-                        splashRadius: 24,
-                        icon: Icon(
-                          Icons.settings_outlined,
-                          color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 3,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
-                          size: 20,
-                        ),
-                        onPressed: () => showDialog(
-                            context: context, builder: (_) => const SettingsPanel()),
-                        // sometime after Flutter 3.7.5, no later than 3.16.8, the focus highlight went away
-                        focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      ),
-                    ),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 38),
+                    child: SettingsIconButton(),
                   ),
                 ],
               ),

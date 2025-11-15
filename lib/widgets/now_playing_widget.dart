@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:flauncher/providers/media_service.dart';
 import 'package:flauncher/widgets/shadow_helpers.dart';
 
+import 'media_control_button.dart';
+
 class NowPlayingWidget extends StatelessWidget {
   const NowPlayingWidget({super.key});
 
@@ -35,30 +37,11 @@ class NowPlayingWidget extends StatelessWidget {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Play/Pause button
-            RepaintBoundary(
-              child: IconButton(
-                padding: const EdgeInsets.all(4),
-                constraints: const BoxConstraints(),
-                splashRadius: 24,
-                icon: Icon(
-                  session.isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.85),
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 3,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
-                  size: 20,
-                ),
-                onPressed: () => mediaService.togglePlayPause(),
-                focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-              ),
+            MediaControlButton(
+              isPlaying: session.isPlaying,
+              onPressed: () => mediaService.togglePlayPause(),
             ),
             const SizedBox(width: 8),
-            // Track info
             Flexible(
               child: Text(
                 trackInfo,

@@ -3,6 +3,8 @@ import 'package:flauncher/providers/network_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'network_icon_button.dart';
+
 class NetworkWidget extends StatefulWidget {
   const NetworkWidget({super.key});
 
@@ -76,25 +78,7 @@ class _NetworkWidgetState extends State<NetworkWidget> {
       }
 
       return RepaintBoundary(
-        child: IconButton(
-          padding: const EdgeInsets.all(4),
-          constraints: const BoxConstraints(),
-          splashRadius: 24,
-          icon: Icon(
-            iconData,
-            color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
-            shadows: [
-              Shadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 3,
-                offset: Offset(0, 1),
-              ),
-            ],
-            size: 18,
-          ),
-          onPressed: () => FLauncherChannel().openWifiSettings(),
-          focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-        ),
+        child: NetworkIconButton(iconData: iconData),
       );
     });
   }

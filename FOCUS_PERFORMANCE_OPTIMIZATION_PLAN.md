@@ -225,13 +225,13 @@ class ShadowCache extends InheritedWidget {
 
 ### Medium Priority
 
-- [ ] 12. Create settings_icon_button.dart
-- [ ] 13. Create network_icon_button.dart
-- [ ] 14. Create media_control_button.dart
-- [ ] 15. Update focus_aware_app_bar.dart
-- [ ] 16. Update network_widget.dart
-- [ ] 17. Update now_playing_widget.dart
-- [ ] 18. **PAUSE** - User tests icon widgets
+- [x] 12. Create settings_icon_button.dart
+- [x] 13. Create network_icon_button.dart
+- [x] 14. Create media_control_button.dart
+- [x] 15. Update focus_aware_app_bar.dart
+- [x] 16. Update network_widget.dart
+- [x] 17. Update now_playing_widget.dart
+- [x] 18. **PAUSE** - User tests icon widgets
 - [ ] 19. AppCard focus tracking (2.1)
 - [ ] 20. AppCard visibility check (2.2)
 - [ ] 21. **PAUSE** - User tests AppCard
