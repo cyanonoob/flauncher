@@ -16,35 +16,22 @@ class WallpaperPanelPage extends StatefulWidget {
 class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
   WallpaperService? _wallpaperService;
   final FocusNode _sliderFocusNode = FocusNode();
-  bool _ignoreSliderKeyEvent = false;
+  bool _justGainedFocus = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _sliderFocusNode.addListener(() {
+      if (_sliderFocusNode.hasFocus) {
+        _justGainedFocus = true;
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _wallpaperService ??= Provider.of<WallpaperService>(context);
-    
-    final FocusScopeNode focusScopeNode = FocusScope.of(context);
-    focusScopeNode.onKeyEvent = (node, keyEvent) {
-      if (_sliderFocusNode.hasFocus &&
-          (keyEvent.logicalKey == LogicalKeyboardKey.arrowUp ||
-              keyEvent.logicalKey == LogicalKeyboardKey.arrowDown)) {
-        if (!_ignoreSliderKeyEvent) {
-          if (keyEvent.logicalKey == LogicalKeyboardKey.arrowUp) {
-            _sliderFocusNode.previousFocus();
-          }
-          if (keyEvent.logicalKey == LogicalKeyboardKey.arrowDown) {
-            _sliderFocusNode.nextFocus();
-          }
-        }
-
-        _ignoreSliderKeyEvent = false;
-        return KeyEventResult.handled;
-      } else {
-        _ignoreSliderKeyEvent = true;
-      }
-
-      return KeyEventResult.ignored;
-    };
   }
 
   void _openOptionScreen(BuildContext context, WallpaperOption option) {
@@ -168,7 +155,28 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
                   Expanded(
                     child: Focus(
                       focusNode: _sliderFocusNode,
-                      child: Slider(
+                      child: RawKeyboardListener(
+                        focusNode: _sliderFocusNode,
+                        onKey: (RawKeyEvent event) {
+                          if (event is RawKeyDownEvent) {
+                            if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+                                event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                              if (_justGainedFocus) {
+                                _justGainedFocus = false;
+                                return; // Let focus settle
+                              }
+                              // Handle navigation away
+                              if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                                _sliderFocusNode.previousFocus();
+                              } else {
+                                _sliderFocusNode.nextFocus();
+                              }
+                              return; // Prevent event from reaching slider
+                            }
+                          }
+                          // Let other keys (left/right) reach the slider
+                        },
+                        child: Slider(
                         value: wallpaperService.brightness,
                         min: 0.0,
                         max: 2.0,
@@ -176,6 +184,7 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
                         onChanged: (value) {
                           wallpaperService.setBrightness(value);
                         },
+                      ),
                       ),
                     ),
                   ),
