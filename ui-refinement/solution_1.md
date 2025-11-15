@@ -12,80 +12,91 @@ Replace hard black shadows with a layered, theme-aware shadow system that create
 
 ### Color System
 Use existing theme colors for shadow consistency:
-- **Primary shadow**: `_swatch[700]` (blueGrey[700]) with 0.15 opacity
-- **Secondary shadow**: `_accentColor` (deepPurple[400]) with 0.08 opacity  
-- **Glow shadow**: `_accentColor` (deepPurple[300]) with 0.05 opacity
-- **Text shadow**: `_swatch[800]` (blueGrey[800]) with 0.3 opacity
+- **Card shadow**: `Theme.cardColor` (blueGrey[800]) with varying opacity
+- **Accent shadow**: `Theme.colorScheme.primary` (deepPurple[400]) for subtle color
+- **Highlight glow**: `Theme.colorScheme.secondary` (deepPurple[300]) for focused elements
 
 ### Shadow Definitions
-Create these shadow constants in a new utility file:
+Create these theme-aware shadow methods in a new utility file:
 
 ```dart
 // lib/widgets/shadow_helpers.dart
+import 'package:flutter/material.dart';
+
 class PremiumShadows {
-  static const List<Shadow> textShadow = [
+  // Text shadow for icons and labels
+  static List<Shadow> textShadow(BuildContext context) => [
     Shadow(
-      color: Color(0xFF37474F), // blueGrey[800]
-      offset: Offset(0, 1),
+      color: Theme.of(context).cardColor.withOpacity(0.7),  // blueGrey[800] at 70%
+      offset: const Offset(0, 1),
       blurRadius: 4,
     ),
     Shadow(
-      color: Color(0x1A7E57C2), // deepPurple[400] with 10% opacity
-      offset: Offset(0, 2),
+      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),  // deepPurple[400] at 10%
+      offset: const Offset(0, 2),
       blurRadius: 8,
     ),
   ];
   
-  static const List<Shadow> primaryTextShadow = [
+  // Stronger shadow for primary text like category headers
+  static List<Shadow> primaryTextShadow(BuildContext context) => [
     Shadow(
-      color: Color(0xFF37474F), // blueGrey[800]
-      offset: Offset(0, 2),
+      color: Theme.of(context).cardColor.withOpacity(0.8),  // blueGrey[800] at 80%
+      offset: const Offset(0, 2),
       blurRadius: 6,
     ),
     Shadow(
-      color: Color(0x337E57C2), // deepPurple[400] with 20% opacity
-      offset: Offset(0, 3),
+      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),  // deepPurple[400] at 20%
+      offset: const Offset(0, 3),
       blurRadius: 12,
     ),
   ];
   
-  static const List<BoxShadow> cardShadow = [
+  // Default card shadow for unfocused state
+  static List<BoxShadow> cardShadow(BuildContext context) => [
     BoxShadow(
-      color: Color(0x2637474F), // blueGrey[800] with 15% opacity
-      offset: Offset(0, 4),
+      color: Theme.of(context).cardColor.withOpacity(0.3),  // blueGrey[800] at 30%
+      offset: const Offset(0, 4),
       blurRadius: 16,
       spreadRadius: 0,
     ),
     BoxShadow(
-      color: Color(0x147E57C2), // deepPurple[400] with 8% opacity
-      offset: Offset(0, 8),
+      color: Theme.of(context).colorScheme.primary.withOpacity(0.08),  // deepPurple[400] at 8%
+      offset: const Offset(0, 8),
       blurRadius: 24,
       spreadRadius: -4,
     ),
   ];
   
-  static const List<BoxShadow> focusedCardShadow = [
+  // Enhanced shadow for focused cards (TV navigation)
+  static List<BoxShadow> focusedCardShadow(BuildContext context) => [
     BoxShadow(
-      color: Color(0x4037474F), // blueGrey[800] with 25% opacity
-      offset: Offset(0, 8),
+      color: Theme.of(context).cardColor.withOpacity(0.4),  // blueGrey[800] at 40%
+      offset: const Offset(0, 8),
       blurRadius: 24,
       spreadRadius: 0,
     ),
     BoxShadow(
-      color: Color(0x267E57C2), // deepPurple[400] with 15% opacity
-      offset: Offset(0, 16),
+      color: Theme.of(context).colorScheme.primary.withOpacity(0.15),  // deepPurple[400] at 15%
+      offset: const Offset(0, 16),
       blurRadius: 32,
       spreadRadius: -8,
     ),
     BoxShadow(
-      color: Color(0x0D9575CD), // deepPurple[300] with 5% opacity
-      offset: Offset(0, 24),
+      color: Theme.of(context).colorScheme.secondary.withOpacity(0.05),  // deepPurple[300] at 5%
+      offset: const Offset(0, 24),
       blurRadius: 48,
       spreadRadius: -16,
     ),
   ];
 }
 ```
+
+**Why Theme References?**
+- Automatically adapts if theme colors change
+- Single source of truth in `flauncher_app.dart`
+- Better maintainability and consistency
+- Negligible performance overhead (theme lookups are cached)
 
 ## File Modifications
 
@@ -111,7 +122,7 @@ icon: const Icon(
 color: Theme.of(context).textTheme.titleMedium?.color,
 icon: Icon(
   Icons.settings_outlined,
-  shadows: PremiumShadows.textShadow,
+  shadows: PremiumShadows.textShadow(context),
 ),
 ```
 
@@ -130,7 +141,7 @@ textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
 **With**:
 ```dart
 textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-  shadows: PremiumShadows.textShadow,
+  shadows: PremiumShadows.textShadow(context),
 ),
 ```
 
@@ -150,8 +161,7 @@ return Icon(iconData,
 ```dart
 return Icon(iconData,
     color: Theme.of(context).textTheme.titleMedium?.color,
-    shadows: PremiumShadows.textShadow,
-    size: 20, // Slightly smaller for premium feel
+    shadows: PremiumShadows.textShadow(context),
 );
 ```
 
@@ -174,7 +184,7 @@ child: Text(category.name,
   style: Theme.of(context)
       .textTheme
       .titleLarge!
-      .copyWith(shadows: PremiumShadows.primaryTextShadow)
+      .copyWith(shadows: PremiumShadows.primaryTextShadow(context))
 ),
 ```
 
@@ -201,8 +211,8 @@ BoxShadow(
 
 **With**:
 ```dart
-...PremiumShadows.focusedCardShadow.map((shadow) => BoxShadow(
-  color: shadow.color.withOpacity(_curvedAnimation.value),
+...PremiumShadows.focusedCardShadow(context).map((shadow) => BoxShadow(
+  color: shadow.color.withOpacity(shadow.color.opacity * _curvedAnimation.value),
   blurRadius: shadow.blurRadius,
   spreadRadius: shadow.spreadRadius,
   offset: shadow.offset,
@@ -235,6 +245,8 @@ BoxShadow(
 - [ ] Text remains readable in all conditions
 - [ ] Focus animations look premium
 - [ ] No performance degradation
+- [ ] Theme colors correctly referenced (no hardcoded values)
+- [ ] Shadows adapt if theme is modified
 
 ## Expected Outcome
 
@@ -243,3 +255,4 @@ BoxShadow(
 - Better depth perception
 - Improved readability
 - Modern, first-party appearance
+- Theme-aware shadows that adapt to color changes
