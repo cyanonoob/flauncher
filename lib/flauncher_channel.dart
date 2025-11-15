@@ -59,6 +59,9 @@ class FLauncherChannel {
   Future<void> openSettings() async =>
       await _methodChannel.invokeMethod('openSettings');
 
+  Future<void> openWifiSettings() async =>
+      await _methodChannel.invokeMethod('openWifiSettings');
+
   Future<void> openAppInfo(String packageName) async =>
       await _methodChannel.invokeMethod('openAppInfo', packageName);
 

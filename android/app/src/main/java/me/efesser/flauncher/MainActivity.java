@@ -91,6 +91,7 @@ public class MainActivity extends FlutterActivity
                 case "launchActivityFromAction" -> result.success(launchActivityFromAction(call.arguments()));
                 case "launchApp" -> result.success(launchApp(call.arguments()));
                 case "openSettings" -> result.success(openSettings());
+                case "openWifiSettings" -> result.success(openWifiSettings());
                 case "openAppInfo" -> result.success(openAppInfo(call.arguments()));
                 case "uninstallApp" -> result.success(uninstallApp(call.arguments()));
                 case "isDefaultLauncher" -> result.success(isDefaultLauncher());
@@ -336,6 +337,10 @@ public class MainActivity extends FlutterActivity
 
     private boolean openSettings() {
         return launchActivityFromAction(Settings.ACTION_SETTINGS);
+    }
+
+    private boolean openWifiSettings() {
+        return launchActivityFromAction(Settings.ACTION_WIFI_SETTINGS);
     }
 
     private boolean openAppInfo(String packageName) {

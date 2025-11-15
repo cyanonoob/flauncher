@@ -1,7 +1,7 @@
+import 'package:flauncher/flauncher_channel.dart';
 import 'package:flauncher/providers/network_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'shadow_helpers.dart';
 
 class NetworkWidget extends StatefulWidget {
   const NetworkWidget({super.key});
@@ -11,14 +11,6 @@ class NetworkWidget extends StatefulWidget {
 }
 
 class _NetworkWidgetState extends State<NetworkWidget> {
-  late List<Shadow> _textShadows;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _textShadows = PremiumShadows.textShadow(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<NetworkService>(builder: (context, networkService, _) {
@@ -83,7 +75,12 @@ class _NetworkWidgetState extends State<NetworkWidget> {
           break;
       }
 
-      return Icon(iconData,
+      return IconButton(
+        padding: const EdgeInsets.all(4),
+        constraints: const BoxConstraints(),
+        splashRadius: 24,
+        icon: Icon(
+          iconData,
           color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.75),
           shadows: [
             Shadow(
@@ -93,7 +90,10 @@ class _NetworkWidgetState extends State<NetworkWidget> {
             ),
           ],
           size: 18,
-        );
+        ),
+        onPressed: () => FLauncherChannel().openWifiSettings(),
+        focusColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+      );
     });
   }
 }
