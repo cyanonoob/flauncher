@@ -289,4 +289,35 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get apply => 'Aplicar';
+
+  @override
+  String get nowPlaying => 'Reproduciendo';
+
+  @override
+  String get mediaControls => 'Controles de Medios';
+
+  @override
+  String get showNowPlayingInStatusBar =>
+      'Mostrar Reproducción en barra de estado';
+
+  @override
+  String get mediaPermissionRequired => 'Permiso Requerido';
+
+  @override
+  String get mediaPermissionGranted => 'Permiso Concedido';
+
+  @override
+  String get mediaPermissionDescription =>
+      'FLauncher necesita el permiso de Escucha de Notificaciones para mostrar medios de otras apps (como VLC, Spotify, etc.) en la barra de estado.';
+
+  @override
+  String get mediaPermissionGrantedDescription =>
+      'FLauncher puede mostrar medios de otras apps en la barra de estado.';
+
+  @override
+  String get grantPermission => 'Conceder Permiso';
+
+  @override
+  String get mediaPermissionInstructions =>
+      'En la pantalla de configuración:\n1. Busque \"FLauncher\" en la lista\n2. Active el interruptor\n3. Regrese a FLauncher';
 }

@@ -108,9 +108,17 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
               padding: const EdgeInsets.only(top: 36),
               child: Row(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 12),
-                    child: NowPlayingWidget(),
+                  Selector<SettingsService, bool>(
+                    selector: (_, settings) => settings.showMediaInStatusBar,
+                    builder: (context, showMedia, _) {
+                      if (!showMedia) {
+                        return const SizedBox.shrink();
+                      }
+                      return const Padding(
+                        padding: EdgeInsets.only(right: 12),
+                        child: NowPlayingWidget(),
+                      );
+                    },
                   ),
                   const Padding(
                     padding: EdgeInsets.only(left: 16),

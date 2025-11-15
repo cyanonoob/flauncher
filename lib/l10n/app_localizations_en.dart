@@ -286,4 +286,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get apply => 'Apply';
+
+  @override
+  String get nowPlaying => 'Now Playing';
+
+  @override
+  String get mediaControls => 'Media Controls';
+
+  @override
+  String get showNowPlayingInStatusBar => 'Show Now Playing in status bar';
+
+  @override
+  String get mediaPermissionRequired => 'Permission Required';
+
+  @override
+  String get mediaPermissionGranted => 'Permission Granted';
+
+  @override
+  String get mediaPermissionDescription =>
+      'FLauncher needs Notification Listener permission to display media from other apps (like VLC, Spotify, etc.) in the status bar.';
+
+  @override
+  String get mediaPermissionGrantedDescription =>
+      'FLauncher can display media from other apps in the status bar.';
+
+  @override
+  String get grantPermission => 'Grant Permission';
+
+  @override
+  String get mediaPermissionInstructions =>
+      'In the settings screen:\n1. Find \"FLauncher\" in the list\n2. Enable the toggle switch\n3. Return to FLauncher';
 }

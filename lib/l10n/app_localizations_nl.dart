@@ -286,4 +286,34 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get apply => 'Toepassen';
+
+  @override
+  String get nowPlaying => 'Nu Afspelen';
+
+  @override
+  String get mediaControls => 'Mediabediening';
+
+  @override
+  String get showNowPlayingInStatusBar => 'Toon Nu Afspelen in statusbalk';
+
+  @override
+  String get mediaPermissionRequired => 'Toestemming Vereist';
+
+  @override
+  String get mediaPermissionGranted => 'Toestemming Verleend';
+
+  @override
+  String get mediaPermissionDescription =>
+      'FLauncher heeft Meldingsluisteraar-toestemming nodig om media van andere apps (zoals VLC, Spotify, etc.) in de statusbalk weer te geven.';
+
+  @override
+  String get mediaPermissionGrantedDescription =>
+      'FLauncher kan media van andere apps in de statusbalk weergeven.';
+
+  @override
+  String get grantPermission => 'Toestemming Verlenen';
+
+  @override
+  String get mediaPermissionInstructions =>
+      'In het instellingenscherm:\n1. Zoek \"FLauncher\" in de lijst\n2. Schakel de schakelaar in\n3. Keer terug naar FLauncher';
 }

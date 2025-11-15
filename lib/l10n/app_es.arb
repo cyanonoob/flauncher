@@ -127,5 +127,14 @@
             }
         }
     },
-    "apply": "Aplicar"
+    "apply": "Aplicar",
+    "nowPlaying": "Reproduciendo",
+    "mediaControls": "Controles de Medios",
+    "showNowPlayingInStatusBar": "Mostrar Reproducción en barra de estado",
+    "mediaPermissionRequired": "Permiso Requerido",
+    "mediaPermissionGranted": "Permiso Concedido",
+    "mediaPermissionDescription": "FLauncher necesita el permiso de Escucha de Notificaciones para mostrar medios de otras apps (como VLC, Spotify, etc.) en la barra de estado.",
+    "mediaPermissionGrantedDescription": "FLauncher puede mostrar medios de otras apps en la barra de estado.",
+    "grantPermission": "Conceder Permiso",
+    "mediaPermissionInstructions": "En la pantalla de configuración:\n1. Busque \"FLauncher\" en la lista\n2. Active el interruptor\n3. Regrese a FLauncher"
 }

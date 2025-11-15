@@ -136,7 +136,7 @@ class MediaService extends ChangeNotifier {
       _initialized = true;
       notifyListeners();
     } catch (e) {
-      debugPrint('Failed to initialize MediaService: $e');
+      // Initialization failed
     }
   }
 
@@ -145,29 +145,25 @@ class MediaService extends ChangeNotifier {
       final sessionData = await _fLauncherChannel.getCurrentMediaSession();
       if (sessionData != null) {
         final newSession = MediaSessionInfo.fromMap(sessionData);
-        debugPrint('MediaService: _refreshMediaSession - hasActiveSession: ${newSession.hasActiveSession}, packageName: ${newSession.packageName}, title: ${newSession.title}');
         _currentSession = newSession;
       } else {
-        debugPrint('MediaService: _refreshMediaSession - no session data received');
         _currentSession = const MediaSessionInfo();
       }
       notifyListeners();
     } catch (e) {
-      debugPrint('MediaService: Failed to refresh media session: $e');
+      // Failed to refresh media session
     }
   }
 
   void _onMediaSessionChanged(Map<String, dynamic> data) {
     try {
       final newSession = MediaSessionInfo.fromMap(data);
-      debugPrint('MediaService: _onMediaSessionChanged - hasActiveSession: ${newSession.hasActiveSession}, packageName: ${newSession.packageName}, title: ${newSession.title}');
 
       // Check if this is a meaningful change
       if (_currentSession.packageName != newSession.packageName ||
           _currentSession.isPlaying != newSession.isPlaying ||
           _currentSession.title != newSession.title ||
           _currentSession.hasActiveSession != newSession.hasActiveSession) {
-        debugPrint('MediaService: Session changed - updating UI');
         _currentSession = newSession;
         notifyListeners();
 
@@ -177,11 +173,9 @@ class MediaService extends ChangeNotifier {
         } else {
           _stopPositionUpdates();
         }
-      } else {
-        debugPrint('MediaService: Session unchanged - no UI update needed');
       }
     } catch (e) {
-      debugPrint('MediaService: Failed to process media session change: $e');
+      // Failed to process media session change
     }
   }
 
@@ -214,7 +208,6 @@ class MediaService extends ChangeNotifier {
   void _startPolling() {
     _stopPolling();
 
-    debugPrint('MediaService: Starting periodic polling for media sessions');
     _pollingTimer = Timer.periodic(
       const Duration(seconds: 5),
       (_) {
@@ -233,11 +226,9 @@ class MediaService extends ChangeNotifier {
   void setVisibility(bool visible) {
     if (_isVisible != visible) {
       _isVisible = visible;
-      debugPrint('MediaService: Visibility changed to $visible');
       
       if (visible) {
         // Immediately refresh when becoming visible
-        debugPrint('MediaService: Becoming visible - refreshing session immediately');
         _refreshMediaSession();
       }
     }
@@ -252,7 +243,7 @@ class MediaService extends ChangeNotifier {
         await play();
       }
     } catch (e) {
-      debugPrint('Failed to toggle play/pause: $e');
+      // Failed to toggle play/pause
     }
   }
 
@@ -262,7 +253,7 @@ class MediaService extends ChangeNotifier {
         await _fLauncherChannel.sendPlay();
       }
     } catch (e) {
-      debugPrint('Failed to send play command: $e');
+      // Failed to send play command
     }
   }
 
@@ -272,7 +263,7 @@ class MediaService extends ChangeNotifier {
         await _fLauncherChannel.sendPause();
       }
     } catch (e) {
-      debugPrint('Failed to send pause command: $e');
+      // Failed to send pause command
     }
   }
 
@@ -282,7 +273,7 @@ class MediaService extends ChangeNotifier {
         await _fLauncherChannel.sendSkipToNext();
       }
     } catch (e) {
-      debugPrint('Failed to send skip next command: $e');
+      // Failed to send skip next command
     }
   }
 
@@ -292,7 +283,7 @@ class MediaService extends ChangeNotifier {
         await _fLauncherChannel.sendSkipToPrevious();
       }
     } catch (e) {
-      debugPrint('Failed to send skip previous command: $e');
+      // Failed to send skip previous command
     }
   }
 
@@ -300,7 +291,7 @@ class MediaService extends ChangeNotifier {
     try {
       await _fLauncherChannel.sendMediaAction(action);
     } catch (e) {
-      debugPrint('Failed to send custom media action: $e');
+      // Failed to send custom media action
     }
   }
 

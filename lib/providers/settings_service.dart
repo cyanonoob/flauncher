@@ -31,6 +31,7 @@ const _backButtonAction = "back_button_action";
 const _dateFormat = "date_format";
 const _showCategoryTitles = "show_category_titles";
 const _showDateInStatusBar = "show_date_in_status_bar";
+const _showMediaInStatusBar = "show_media_in_status_bar";
 const _showTimeInStatusBar = "show_time_in_status_bar";
 const _timeFormat = "time_format";
 const _unsplashQueryKey = "unsplash_query";
@@ -56,6 +57,9 @@ class SettingsService extends ChangeNotifier {
 
   bool get showDateInStatusBar =>
       _sharedPreferences.getBool(_showDateInStatusBar) ?? true;
+
+  bool get showMediaInStatusBar =>
+      _sharedPreferences.getBool(_showMediaInStatusBar) ?? true;
 
   bool get showTimeInStatusBar =>
       _sharedPreferences.getBool(_showTimeInStatusBar) ?? true;
@@ -139,6 +143,10 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> setShowDateInStatusBar(bool show) async {
     return set(_showDateInStatusBar, show);
+  }
+
+  Future<void> setShowMediaInStatusBar(bool show) async {
+    return set(_showMediaInStatusBar, show);
   }
 
   Future<void> setShowTimeInStatusBar(bool show) async {

@@ -627,6 +627,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Apply'**
   String get apply;
+
+  /// No description provided for @nowPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Now Playing'**
+  String get nowPlaying;
+
+  /// No description provided for @mediaControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Media Controls'**
+  String get mediaControls;
+
+  /// No description provided for @showNowPlayingInStatusBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Now Playing in status bar'**
+  String get showNowPlayingInStatusBar;
+
+  /// No description provided for @mediaPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Required'**
+  String get mediaPermissionRequired;
+
+  /// No description provided for @mediaPermissionGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Granted'**
+  String get mediaPermissionGranted;
+
+  /// No description provided for @mediaPermissionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'FLauncher needs Notification Listener permission to display media from other apps (like VLC, Spotify, etc.) in the status bar.'**
+  String get mediaPermissionDescription;
+
+  /// No description provided for @mediaPermissionGrantedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'FLauncher can display media from other apps in the status bar.'**
+  String get mediaPermissionGrantedDescription;
+
+  /// No description provided for @grantPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Permission'**
+  String get grantPermission;
+
+  /// No description provided for @mediaPermissionInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'In the settings screen:\n1. Find \"FLauncher\" in the list\n2. Enable the toggle switch\n3. Return to FLauncher'**
+  String get mediaPermissionInstructions;
 }
 
 class _AppLocalizationsDelegate

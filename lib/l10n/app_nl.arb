@@ -127,5 +127,14 @@
             }
         }
     },
-    "apply": "Toepassen"
+    "apply": "Toepassen",
+    "nowPlaying": "Nu Afspelen",
+    "mediaControls": "Mediabediening",
+    "showNowPlayingInStatusBar": "Toon Nu Afspelen in statusbalk",
+    "mediaPermissionRequired": "Toestemming Vereist",
+    "mediaPermissionGranted": "Toestemming Verleend",
+    "mediaPermissionDescription": "FLauncher heeft Meldingsluisteraar-toestemming nodig om media van andere apps (zoals VLC, Spotify, etc.) in de statusbalk weer te geven.",
+    "mediaPermissionGrantedDescription": "FLauncher kan media van andere apps in de statusbalk weergeven.",
+    "grantPermission": "Toestemming Verlenen",
+    "mediaPermissionInstructions": "In het instellingenscherm:\n1. Zoek \"FLauncher\" in de lijst\n2. Schakel de schakelaar in\n3. Keer terug naar FLauncher"
 }

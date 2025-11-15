@@ -127,5 +127,14 @@
     "wallpaperBrightness": "Wallpaper brightness",
     "withEllipsisAddTo": "Add to...",
     "pick": "Pick",
-    "apply": "Apply"
+    "apply": "Apply",
+    "nowPlaying": "Now Playing",
+    "mediaControls": "Media Controls",
+    "showNowPlayingInStatusBar": "Show Now Playing in status bar",
+    "mediaPermissionRequired": "Permission Required",
+    "mediaPermissionGranted": "Permission Granted",
+    "mediaPermissionDescription": "FLauncher needs Notification Listener permission to display media from other apps (like VLC, Spotify, etc.) in the status bar.",
+    "mediaPermissionGrantedDescription": "FLauncher can display media from other apps in the status bar.",
+    "grantPermission": "Grant Permission",
+    "mediaPermissionInstructions": "In the settings screen:\n1. Find \"FLauncher\" in the list\n2. Enable the toggle switch\n3. Return to FLauncher"
 }

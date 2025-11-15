@@ -21,7 +21,6 @@ import 'package:flauncher/widgets/settings/applications_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_sections_panel_page.dart';
 import 'package:flauncher/widgets/settings/gradient_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_section_panel_page.dart';
-import 'package:flauncher/widgets/settings/media_session_panel_page.dart';
 import 'package:flauncher/widgets/settings/settings_panel_page.dart';
 import 'package:flauncher/widgets/settings/status_bar_panel_page.dart';
 import 'package:flauncher/widgets/settings/wallpaper_panel_page.dart';
@@ -76,9 +75,6 @@ class _SettingsPanelState extends State<SettingsPanel> {
                       return MaterialPageRoute(
                           builder: (_) => LauncherSectionPanelPage(
                               sectionIndex: settings.arguments as int?));
-                    case MediaSessionPanelPage.routeName:
-                      return MaterialPageRoute(
-                          builder: (_) => MediaSessionPanelPage());
                     default:
                       throw ArgumentError.value(settings.name, "settings.name",
                           "Route not supported.");
