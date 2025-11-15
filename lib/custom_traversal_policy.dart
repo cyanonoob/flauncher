@@ -14,7 +14,7 @@ class RowByRowTraversalPolicy extends FocusTraversalPolicy with DirectionalFocus
   @override
   bool inDirection(FocusNode currentNode, TraversalDirection direction) {
     List<FocusNode>? nodes = currentNode.nearestScope?.traversalDescendants.toList();
-    if (nodes == null) {
+    if (nodes == null || nodes.isEmpty) {
       return super.inDirection(currentNode, direction);
     }
 
@@ -22,6 +22,10 @@ class RowByRowTraversalPolicy extends FocusTraversalPolicy with DirectionalFocus
     List<CandidateNode> candidates = searcher.findCandidates(nodes, currentNode);
     if (candidates.isEmpty) {
       return super.inDirection(currentNode, direction);
+    }
+    if (candidates.length == 1) {
+      candidates.first.node.requestFocus();
+      return true;
     }
     FocusNode nextNode = searcher.findBestFocusNode(candidates, currentNode);
     nextNode.requestFocus();
@@ -36,23 +40,28 @@ class NodeSearcher {
 
   /// should be called first
   List<CandidateNode> findCandidates(List<FocusNode> nodes, FocusNode from) {
-    List<FocusNode> copy = List.from(nodes, growable: true);
+    Iterable<FocusNode> filtered;
 
     switch (directionToSearch) {
       case TraversalDirection.up:
-        copy.removeWhere((element) => element.isBelowOrEquals(from));
+        filtered = nodes.where((element) => !element.isBelowOrEquals(from));
         break;
       case TraversalDirection.down:
-        copy.removeWhere((element) => element.isAboveOrEquals(from));
+        filtered = nodes.where((element) => !element.isAboveOrEquals(from));
         break;
       case TraversalDirection.right:
-        copy.removeWhere((element) => element.isLeftToOrEquals(from) || !element.isOnTheSameRow(from));
+        filtered = nodes.where((element) => !element.isLeftToOrEquals(from) && element.isOnTheSameRow(from));
         break;
       case TraversalDirection.left:
-        copy.removeWhere((element) => element.isRightToOrEquals(from) || !element.isOnTheSameRow(from));
+        filtered = nodes.where((element) => !element.isRightToOrEquals(from) && element.isOnTheSameRow(from));
         break;
     }
-    return toCandidateNodes(copy);
+    
+    if (filtered.isEmpty) {
+      return [];
+    }
+    
+    return toCandidateNodes(filtered.toList());
   }
 
   FocusNode findBestFocusNode(List<CandidateNode> nodes, FocusNode from) {

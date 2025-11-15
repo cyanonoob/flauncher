@@ -219,9 +219,9 @@ class ShadowCache extends InheritedWidget {
 - [x] 6. **PAUSE** - User tests RepaintBoundary
 - [x] 7. Debounce AppBar in focus_aware_app_bar.dart
 - [x] 8. **PAUSE** - User tests debounce
-- [ ] 9. Optimize RowByRowTraversalPolicy - early exits
-- [ ] 10. NodeSearcher.findCandidates - use where()
-- [ ] 11. **PAUSE** - User tests traversal policy
+- [x] 9. Optimize RowByRowTraversalPolicy - early exits
+- [x] 10. NodeSearcher.findCandidates - use where()
+- [x] 11. **PAUSE** - User tests traversal policy
 
 ### Medium Priority
 
