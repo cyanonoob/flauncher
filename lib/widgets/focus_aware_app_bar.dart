@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/settings_service.dart';
 import 'date_time_widget.dart';
 import 'network_widget.dart';
+import 'shadow_helpers.dart';
 
 class FocusAwareAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -18,6 +19,13 @@ class FocusAwareAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
   bool focused = false;
+  late List<Shadow> _textShadows;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _textShadows = PremiumShadows.textShadow(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +56,11 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
               constraints: const BoxConstraints(),
               splashRadius: 20,
               color:
-                  Theme.of(context).textTheme.titleMedium?.color ?? Colors.white,
+                  Theme.of(context).textTheme.titleMedium?.color,
 
-              icon: const Icon(
+              icon: Icon(
                 Icons.settings_outlined,
-                shadows: [
-                  Shadow(
-                      color: Colors.black54,
-                      blurRadius: 8,
-                      offset: Offset(0, 2))
-                ],
+                shadows: PremiumShadows.textShadow(context),
               ),
               onPressed: () => showDialog(
                   context: context, builder: (_) => const SettingsPanel()),
@@ -94,12 +97,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                         updateInterval: const Duration(minutes: 1),
                         textStyle:
                             Theme.of(context).textTheme.titleMedium!.copyWith(
-                          shadows: [
-                            const Shadow(
-                                color: Colors.black54,
-                                offset: Offset(0, 2),
-                                blurRadius: 8)
-                          ],
+shadows: _textShadows,
                         ),
                       )),
                     if (dateTimeSettings.showDateInStatusBar &&
@@ -113,12 +111,7 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
                                   .textTheme
                                   .titleMedium!
                                   .copyWith(
-                                shadows: [
-                                  const Shadow(
-                                      color: Colors.black54,
-                                      offset: Offset(0, 2),
-                                      blurRadius: 8)
-                                ],
+shadows: _textShadows,
                               )))
                   ]);
                 },

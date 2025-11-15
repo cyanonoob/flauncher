@@ -23,6 +23,7 @@ import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/widgets/application_info_panel.dart';
 import 'package:flauncher/widgets/focus_keyboard_listener.dart';
+import 'package:flauncher/widgets/shadow_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +64,7 @@ const int animationEndStop = 800;
 
 class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   bool _moving = false;
+  late List<BoxShadow> _baseFocusedShadows;
 
   late Future<Tuple2<AppImageType, ImageProvider>> _appImageLoadFuture;
   late final AnimationController _animation = AnimationController(
@@ -86,6 +88,13 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
     FocusManager.instance.addHighlightModeListener(_focusHighlightModeChanged);
     _appImageLoadFuture =
         _loadAppBannerOrIcon(Provider.of<AppsService>(context, listen: false));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Pre-compute shadows once when theme changes
+    _baseFocusedShadows = PremiumShadows.focusedCardShadow(context);
   }
 
   @override
@@ -186,22 +195,12 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                     builder: (context, child) => IgnorePointer(
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withAlpha(
-                                                  (_curvedAnimation.value * 30)
-                                                      .round()),
-                                              blurRadius: 20,
-                                              spreadRadius: 1,
-                                            ),
-                                            BoxShadow(
-                                              color: Theme.of(context).primaryColor.withAlpha(
-                                                  (_curvedAnimation.value * 15)
-                                                      .round()),
-                                              blurRadius: 10,
-                                              spreadRadius: 0,
-                                            ),
-                                          ],
+                                          boxShadow: _baseFocusedShadows.map((shadow) => BoxShadow(
+                                            color: shadow.color.withOpacity(shadow.color.opacity * _curvedAnimation.value),
+                                            blurRadius: shadow.blurRadius,
+                                            spreadRadius: shadow.spreadRadius,
+                                            offset: shadow.offset,
+                                          )).toList(),
                                           borderRadius: BorderRadius.circular(12),
                                           gradient: LinearGradient(
                                             begin: Alignment.topLeft,

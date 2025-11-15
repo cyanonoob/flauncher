@@ -25,8 +25,9 @@ import 'package:provider/provider.dart';
 import '../models/app.dart';
 import '../models/category.dart';
 import '../providers/settings_service.dart';
+import 'shadow_helpers.dart';
 
-class CategoryRow extends StatelessWidget
+class CategoryRow extends StatefulWidget
 {
   final Category category;
   final List<App> applications;
@@ -38,14 +39,27 @@ class CategoryRow extends StatelessWidget
   }) : super(key: key);
 
   @override
+  State<CategoryRow> createState() => _CategoryRowState();
+}
+
+class _CategoryRowState extends State<CategoryRow> {
+  late List<Shadow> _primaryTextShadows;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _primaryTextShadows = PremiumShadows.primaryTextShadow(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget categoryContent;
-    if (applications.isEmpty) {
+    if (widget.applications.isEmpty) {
       categoryContent = categoryContainerEmptyState(context);
     }
     else {
       categoryContent = SizedBox(
-        height: category.rowHeight.toDouble(),
+        height: widget.category.rowHeight.toDouble(),
         child: ShaderMask(
           shaderCallback: (rect) => LinearGradient(
             begin: Alignment.centerLeft,
@@ -63,12 +77,12 @@ class CategoryRow extends StatelessWidget
             padding: const EdgeInsets.only(left: 32, top: 8, right: 16, bottom: 40),
             scrollDirection: Axis.horizontal,
             childrenDelegate: SliverChildBuilderDelegate(
-              childCount: applications.length,
+              childCount: widget.applications.length,
               findChildIndexCallback: _findChildIndex,
               (context, index) => AppCard(
-                  key: Key(applications[index].packageName),
-                    category: category,
-                    application: applications[index],
+                  key: Key(widget.applications[index].packageName),
+                    category: widget.category,
+                    application: widget.applications[index],
                     autofocus: index == 0,
                     onMove: (direction) => _onMove(context, direction, index),
                     onMoveEnd: () => _onMoveEnd(context)
@@ -88,11 +102,11 @@ class CategoryRow extends StatelessWidget
             if (showCategoriesTitle) {
               return Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 8),
-                child: Text(category.name,
+                child: Text(widget.category.name,
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!
-                      .copyWith(shadows: [const Shadow(color: Colors.black54, offset: Offset(1, 1), blurRadius: 8)])
+                      .copyWith(shadows: _primaryTextShadows)
                 ),
               );
             }
@@ -106,12 +120,12 @@ class CategoryRow extends StatelessWidget
   }
 
   int _findChildIndex(Key key) =>
-      applications.indexWhere((app) => app.packageName == (key as ValueKey<String>).value);
+      widget.applications.indexWhere((app) => app.packageName == (key as ValueKey<String>).value);
 
   void _onMove(BuildContext context, AxisDirection direction, int index) {
     int newIndex = 0;
 
-    if (direction == AxisDirection.right && index < applications.length - 1) {
+    if (direction == AxisDirection.right && index < widget.applications.length - 1) {
       newIndex = index + 1;
     } else if (direction == AxisDirection.left && index > 0) {
       newIndex = index - 1;
@@ -120,11 +134,11 @@ class CategoryRow extends StatelessWidget
     }
 
     final appsService = context.read<AppsService>();
-    appsService.reorderApplication(category, index, newIndex);
+    appsService.reorderApplication(widget.category, index, newIndex);
   }
 
   void _onMoveEnd(BuildContext context) {
     final appsService = context.read<AppsService>();
-    appsService.saveApplicationOrderInCategory(category);
+    appsService.saveApplicationOrderInCategory(widget.category);
   }
 }

@@ -1,9 +1,23 @@
 import 'package:flauncher/providers/network_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'shadow_helpers.dart';
 
-class NetworkWidget extends StatelessWidget {
+class NetworkWidget extends StatefulWidget {
   const NetworkWidget({super.key});
+
+  @override
+  State<NetworkWidget> createState() => _NetworkWidgetState();
+}
+
+class _NetworkWidgetState extends State<NetworkWidget> {
+  late List<Shadow> _textShadows;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _textShadows = PremiumShadows.textShadow(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +84,9 @@ class NetworkWidget extends StatelessWidget {
       }
 
       return Icon(iconData,
-          color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.white,
-          shadows: const [
-            Shadow(color: Colors.black54, offset: Offset(0, 2), blurRadius: 8)
-          ]);
+          color: Theme.of(context).textTheme.titleMedium?.color,
+          shadows: _textShadows,
+        );
     });
   }
 }
