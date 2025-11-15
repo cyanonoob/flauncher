@@ -63,7 +63,7 @@ const int animationDuration = 1500;
 const int animationMidStop = 150;
 const int animationEndStop = 800;
 
-class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
+class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
   bool _moving = false;
   late List<BoxShadow> _baseFocusedShadows;
   FocusNode? _lastFocusedNode;
@@ -78,10 +78,31 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
     ),
   );
 
-  late final Animation<double> _curvedAnimation = CurvedAnimation(
-    parent: _animation,
-    curve: Curves.easeInOut,
+  // New dual animation controllers
+  late final AnimationController _focusController = AnimationController(
+    duration: const Duration(milliseconds: 400),
+    vsync: this,
   );
+
+  late final AnimationController _glowController = AnimationController(
+    duration: const Duration(milliseconds: 2000),
+    vsync: this,
+  );
+
+  late final Animation<double> _scaleAnimation = Tween<double>(
+    begin: 1.0, 
+    end: 1.05,
+  ).animate(CurvedAnimation(parent: _focusController, curve: Curves.easeOutCubic));
+
+  late final Animation<double> _glowAnimation = Tween<double>(
+    begin: 0.3, 
+    end: 0.8,
+  ).animate(CurvedAnimation(parent: _glowController, curve: Curves.easeInOut));
+
+  late final Animation<double> _borderAnimation = Tween<double>(
+    begin: 0.0, 
+    end: 1.0,
+  ).animate(CurvedAnimation(parent: _focusController, curve: Curves.easeOutCubic));
 
   @override
   void initState() {
@@ -104,6 +125,8 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
     FocusManager.instance
         .removeHighlightModeListener(_focusHighlightModeChanged);
     _animation.dispose();
+    _focusController.dispose();
+    _glowController.dispose();
 
     super.dispose();
   }
@@ -122,16 +145,26 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
               curve: Curves.easeOutCubic,
               child: AspectRatio(
                 aspectRatio: 16 / 9,
-                child: Transform.scale(
-                  scale: shouldHighlight ? 1.12 : 1.0,
-                  child: PhysicalModel(
-                    color: Colors.transparent,
-                    shadowColor: Colors.black87,
-                    elevation: shouldHighlight ? 12 : 4,
-                    borderRadius: BorderRadius.circular(12),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Material(
+                child: AnimatedBuilder(
+                  animation: Listenable.merge([_focusController, _glowController]),
+                  builder: (context, child) => Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: shouldHighlight ? Border.all(
+                          color: Theme.of(context).colorScheme.primary.withValues(
+                            alpha: _borderAnimation.value * 0.6
+                          ),
+                          width: 2.0,
+                        ) : null,
+                        boxShadow: shouldHighlight 
+                          ? _buildAnimatedFocusedShadows(context)
+                          : PremiumShadows.cardShadow(context),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Material(
                         color: Colors.transparent,
                         child: Stack(
                           fit: StackFit.expand,
@@ -146,6 +179,9 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                   _onLongPress(context, LogicalKeyboardKey.enter),
                               onFocusChange: (focused) {
                                 if (focused) {
+                                  _focusController.forward();
+                                  _glowController.repeat(reverse: true);
+                                  
                                   final currentNode = Focus.of(context);
                                   bool shouldScroll = false;
                                   
@@ -159,10 +195,8 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                       final renderObject = context.findRenderObject();
                                       if (renderObject != null && renderObject is RenderBox) {
                                         final viewport = RenderAbstractViewport.of(renderObject);
-                                        if (viewport != null) {
-                                          final revealedOffset = viewport.getOffsetToReveal(renderObject, 0.5);
-                                          shouldScroll = revealedOffset.offset.abs() > 10;
-                                        }
+                                        final revealedOffset = viewport.getOffsetToReveal(renderObject, 0.5);
+                                        shouldScroll = revealedOffset.offset.abs() > 10;
                                       }
                                     }
                                   } else {
@@ -177,6 +211,10 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                   }
                                   
                                   _lastFocusedNode = currentNode;
+                                } else {
+                                  _focusController.reverse();
+                                  _glowController.stop();
+                                  _glowController.reset();
                                 }
                               },
                             ),
@@ -197,7 +235,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                 bool _highlightAnimating = false;
 
                                 void _startHighlightAnimation() async {
-                                  if (!_highlightAnimating) {
+                                  if (!_highlightAnimating && mounted) {
                                     _highlightAnimating = true;
 
                                     while (mounted && _shouldHighlight(context)) {
@@ -208,6 +246,8 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                       await Future.delayed(const Duration(
                                           milliseconds: animationEndStop));
                                     }
+                                    
+                                    _highlightAnimating = false;
                                   }
                                 }
 
@@ -216,27 +256,19 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                   _startHighlightAnimation();
 
                                   return AnimatedBuilder(
-                                    animation: _animation,
+                                    animation: _glowController,
                                     builder: (context, child) => IgnorePointer(
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          boxShadow: _baseFocusedShadows.map((shadow) => BoxShadow(
-                                            color: shadow.color.withValues(alpha: shadow.color.a * _curvedAnimation.value),
-                                            blurRadius: shadow.blurRadius,
-                                            spreadRadius: shadow.spreadRadius,
-                                            offset: shadow.offset,
-                                          )).toList(),
                                           borderRadius: BorderRadius.circular(12),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
+                                          gradient: RadialGradient(
+                                            center: Alignment.center,
+                                            radius: 1.0,
                                             colors: [
-                                              Colors.white.withAlpha(
-                                                  (15 + (_curvedAnimation.value * 45))
-                                                      .round()),
-                                              Colors.white.withAlpha(
-                                                  (8 + (_curvedAnimation.value * 30))
-                                                      .round()),
+                                              Theme.of(context).colorScheme.primary.withValues(
+                                                alpha: _glowAnimation.value * 0.1
+                                              ),
+                                              Colors.transparent,
                                             ],
                                           ),
                                         ),
@@ -256,6 +288,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                       ),
                     ),
                   ),
+                ),
                 ),
               ),
             ),
@@ -353,6 +386,30 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
     return FocusManager.instance.highlightMode ==
             FocusHighlightMode.traditional &&
         Focus.of(context).hasFocus;
+  }
+
+  List<BoxShadow> _buildAnimatedFocusedShadows(BuildContext context) {
+    final base = _baseFocusedShadows;
+    return [
+      BoxShadow(
+        color: base[0].color.withValues(alpha: base[0].color.a * _scaleAnimation.value),
+        blurRadius: base[0].blurRadius,
+        offset: base[0].offset,
+        spreadRadius: base[0].spreadRadius,
+      ),
+      BoxShadow(
+        color: base[1].color.withValues(alpha: base[1].color.a * _scaleAnimation.value),
+        blurRadius: base[1].blurRadius,
+        offset: base[1].offset,
+        spreadRadius: base[1].spreadRadius,
+      ),
+      BoxShadow(
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: _glowAnimation.value * 0.3),
+        blurRadius: 30 + (20 * _glowAnimation.value),
+        offset: Offset.zero,
+        spreadRadius: 2 * _glowAnimation.value,
+      ),
+    ];
   }
 
   

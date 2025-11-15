@@ -3,203 +3,76 @@
 ## Overview
 Refine app card focus animations to be more subtle and premium. Current implementation uses aggressive 1.12 scale and simple elevation. Target: gentle 1.05 scale with multi-layered glow effects and animated borders.
 
-## Current State
+## ✅ COMPLETION STATUS: 85% Complete (6/7 tasks done)
 
-### ✅ Already Working Well
+### ✅ COMPLETED IMPLEMENTATIONS
+- **Core Animation Refactor**: Dual controllers, gentler scale (1.05), animated borders ✅
+- **Shadow System**: PhysicalModel → BoxShadow with 3-layer animated shadows ✅ 
+- **Radial Glow**: Linear → Radial gradient with pulsing animation ✅
+- **Focus Lifecycle**: Proper controller management on focus/unfocus ✅
+- **Version**: Bumped to 2025.11.16+104, ready for testing ✅
+
+### ❌ REMAINING TASKS
+- **Settings Panel Focus Consistency**: Add focusColor to TextButtons (9 files) ❌
+- **Testing**: Complete testing checklist ❌
+- **Commit**: Stage and commit all changes ❌
+
+## Previous Implementation (COMPLETED ✅)
+
+### ✅ Already Working Well  
 - Smart scroll behavior with viewport awareness
 - Animated gradient overlay on focus  
 - Premium shadow system cached for performance
 - Smooth `Curves.easeOutCubic` transitions
 - Consistent focus colors (0.4 alpha) across UI
 
-### ❌ Needs Improvement
-- Scale too aggressive: 1.0 → 1.12 (jarring on TV)
-- Simple PhysicalModel elevation instead of layered shadows
-- Single animation controller (no separate glow pulse)
-- Missing animated accent border on focus
-- Linear gradient instead of radial center glow
+### ✅ Fixed Issues (DONE)
+- ~~Scale too aggressive: 1.0 → 1.12 (jarring on TV)~~ → **Fixed: 1.05 scale**
+- ~~Simple PhysicalModel elevation instead of layered shadows~~ → **Fixed: 3-layer BoxShadow**
+- ~~Single animation controller (no separate glow pulse)~~ → **Fixed: Dual controllers**
+- ~~Missing animated accent border on focus~~ → **Fixed: 2px animated border**
+- ~~Linear gradient instead of radial center glow~~ → **Fixed: RadialGradient**
 
-## Changes Required
+## REMAINING TASKS FOR FUTURE AGENT
 
-### 1. Gentler Scale Animation
-**Change**: `app_card.dart:126`  
-**From**: `scale: shouldHighlight ? 1.12 : 1.0`  
-**To**: `scale: shouldHighlight ? 1.05 : 1.0`
+### Task 1: Settings Panel Focus Consistency ❌
+**Status**: Not started  
+**Priority**: High (consistency across UI)
 
-### 2. Dual Animation Controllers
-**Change**: `app_card.dart:66` - Update mixin to `TickerProviderStateMixin`  
-**Add**: Two controllers instead of one
-- **Focus controller** (400ms): Scale, border, shadows
-- **Glow controller** (2000ms): Continuous pulse effect
-
-```dart
-late final AnimationController _focusController = AnimationController(
-  duration: const Duration(milliseconds: 400),
-  vsync: this,
-);
-
-late final AnimationController _glowController = AnimationController(
-  duration: const Duration(milliseconds: 2000),
-  vsync: this,
-);
-
-late final Animation<double> _scaleAnimation = Tween<double>(
-  begin: 1.0, end: 1.05,
-).animate(CurvedAnimation(parent: _focusController, curve: Curves.easeOutCubic));
-
-late final Animation<double> _glowAnimation = Tween<double>(
-  begin: 0.3, end: 0.8,
-).animate(CurvedAnimation(parent: _glowController, curve: Curves.easeInOut));
-
-late final Animation<double> _borderAnimation = Tween<double>(
-  begin: 0.0, end: 1.0,
-).animate(CurvedAnimation(parent: _focusController, curve: Curves.easeOutCubic));
+**Required Files** (add focusColor to all TextButton widgets):
+```
+lib/widgets/settings/settings_panel_page.dart
+lib/widgets/settings/applications_panel_page.dart  
+lib/widgets/settings/wallpaper_panel_page.dart
+lib/widgets/settings/launcher_sections_panel_page.dart
+lib/widgets/settings/launcher_section_panel_page.dart
+lib/widgets/settings/category_panel_page.dart
+lib/widgets/settings/gradient_panel_page.dart
+lib/widgets/settings/unsplash_panel_page.dart
+lib/widgets/settings/status_bar_panel_page.dart
 ```
 
-### 3. Animated Border Glow
-**Add**: 2px accent-colored border that fades in on focus
-
+**Pattern to Add**:
 ```dart
-border: shouldHighlight ? Border.all(
-  color: Theme.of(context).colorScheme.primary.withValues(
-    alpha: _borderAnimation.value * 0.6
-  ),
-  width: 2.0,
-) : null,
-```
-
-### 4. Replace PhysicalModel with BoxShadow System
-**Change**: `app_card.dart:127-131`  
-**Remove**: `PhysicalModel(elevation: shouldHighlight ? 12 : 4)`  
-**Replace with**: Container using `PremiumShadows` + animated accent glow
-
-```dart
-Container(
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(12),
-    border: /* animated border from #3 */,
-    boxShadow: shouldHighlight 
-      ? _buildAnimatedFocusedShadows(context)
-      : PremiumShadows.cardShadow(context),
-  ),
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(12),
-    child: /* existing Material stack */,
-  ),
-)
-```
-
-**Add helper method**:
-```dart
-List<BoxShadow> _buildAnimatedFocusedShadows(BuildContext context) {
-  final base = _baseFocusedShadows;
-  return [
-    BoxShadow(
-      color: base[0].color.withValues(alpha: base[0].color.a * _scaleAnimation.value),
-      blurRadius: base[0].blurRadius,
-      offset: base[0].offset,
-      spreadRadius: base[0].spreadRadius,
-    ),
-    BoxShadow(
-      color: base[1].color.withValues(alpha: base[1].color.a * _scaleAnimation.value),
-      blurRadius: base[1].blurRadius,
-      offset: base[1].offset,
-      spreadRadius: base[1].spreadRadius,
-    ),
-    BoxShadow(
-      color: Theme.of(context).colorScheme.primary.withValues(alpha: _glowAnimation.value * 0.3),
-      blurRadius: 30 + (20 * _glowAnimation.value),
-      offset: Offset.zero,
-      spreadRadius: 2 * _glowAnimation.value,
-    ),
-  ];
-}
-```
-
-### 5. Radial Glow Overlay
-**Change**: `app_card.dart:230-240`  
-**Replace**: Linear gradient with radial gradient from center
-
-```dart
-if (shouldHighlight && settingsService.appHighlightAnimationEnabled)
-  AnimatedBuilder(
-    animation: _glowController,
-    builder: (context, _) => IgnorePointer(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          gradient: RadialGradient(
-            center: Alignment.center,
-            radius: 1.0,
-            colors: [
-              Theme.of(context).colorScheme.primary.withValues(
-                alpha: _glowAnimation.value * 0.1
-              ),
-              Colors.transparent,
-            ],
-          ),
-        ),
-      ),
-    ),
-  ),
-```
-
-### 6. Focus Change Handler
-**Update**: `app_card.dart:147` onFocusChange callback  
-**Add controller management**:
-
-```dart
-onFocusChange: (focused) {
-  if (focused) {
-    _focusController.forward();
-    _glowController.repeat(reverse: true);
-    
-    // ... existing scroll logic ...
-  } else {
-    _focusController.reverse();
-    _glowController.stop();
-    _glowController.reset();
-  }
-},
-```
-
-**Update dispose**:
-```dart
-@override
-void dispose() {
-  FocusManager.instance.removeHighlightModeListener(_focusHighlightModeChanged);
-  _animation.dispose();
-  _focusController.dispose();
-  _glowController.dispose();
-  super.dispose();
-}
-```
-
-### 7. Settings Panel Focus Consistency
-**Files**: `lib/widgets/settings/*.dart` (all settings pages)  
-**Add**: Consistent focusColor to TextButtons
-
-```dart
+// Find all TextButton widgets and update style
 TextButton(
   style: TextButton.styleFrom(
     focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
   ),
-  child: /* existing */,
-  onPressed: /* existing */,
+  child: /* existing child */,
+  onPressed: /* existing onPressed */,
 )
 ```
 
-## Files to Modify
-- `lib/widgets/app_card.dart` - Main animation refactor
-- `lib/widgets/settings/settings_panel_page.dart` - Add focusColor
-- `lib/widgets/settings/applications_panel_page.dart` - Add focusColor
-- `lib/widgets/settings/wallpaper_panel_page.dart` - Add focusColor
-- `lib/widgets/settings/launcher_sections_panel_page.dart` - Add focusColor
-- All other settings panel files - Add focusColor
+**Search Command**: `grep -r "TextButton(" lib/widgets/settings/`
 
-## Testing Checklist
+### Task 2: Testing Checklist ❌
+**Status**: Not started  
+**Priority**: High (quality assurance)
+
+**Manual Testing Required**:
 - [ ] Scale is 1.05 (subtle, not jarring)
-- [ ] Border glow fades in smoothly
+- [ ] Border glow fades in smoothly  
 - [ ] Radial glow pulses continuously when focused
 - [ ] Shadow depth increases with multiple layers
 - [ ] D-pad navigation smooth
@@ -208,19 +81,65 @@ TextButton(
 - [ ] No animation conflicts on rapid focus changes
 - [ ] Settings panels have consistent focus styling
 
-## Expected Results
-- Gentler, more premium focus feedback
-- Multi-layered depth with accent glow
-- Continuous pulsing animation keeps UI alive
-- Subtle animated border draws attention
-- Consistent focus language across entire app
-- Professional polish matching first-party TV launchers
+**Test Command**: `flutter run --profile` (test on Android TV device if available)
 
-## Model Recommendation
-**Use: claude-3.7-sonnet** for implementation
-- Complex animation refactoring with multiple controllers
-- Requires careful integration with existing animation system
-- Need to preserve smart scroll logic and performance optimizations
-- Multi-file consistency updates across settings panels
+### Task 3: Commit Changes ❌
+**Status**: Ready for commit (all implementation complete)  
+**Priority**: High (preserve work)
 
-Alternative: **grok-2-1212** if sonnet unavailable (good with Flutter animations)
+**Git Commands**:
+```bash
+git add lib/widgets/app_card.dart pubspec.yaml version_numbers
+git add lib/widgets/settings/  # after Task 1 complete
+git commit -m "Implement premium focus animations with dual controllers
+
+- Add gentler 1.05 scale animation (was 1.12)  
+- Replace PhysicalModel with 3-layer BoxShadow system
+- Add animated accent border with theme colors
+- Implement dual animation controllers (focus + glow)
+- Change linear to radial gradient for center glow
+- Add consistent focusColor across settings panels
+- Maintain smart scroll and performance optimizations"
+```
+
+## COMPLETED IMPLEMENTATION REFERENCE
+
+### ✅ 1. Gentler Scale Animation (DONE)
+**Status**: ✅ Implemented via `_scaleAnimation` (1.0 → 1.05)
+
+### ✅ 2. Dual Animation Controllers (DONE)  
+**Status**: ✅ Added `_focusController` (400ms) + `_glowController` (2000ms)
+
+### ✅ 3. Animated Border Glow (DONE)
+**Status**: ✅ 2px primary-colored border with `_borderAnimation.value * 0.6` alpha
+
+### ✅ 4. PhysicalModel → BoxShadow System (DONE)
+**Status**: ✅ Container + BoxDecoration with `_buildAnimatedFocusedShadows()` method
+
+### ✅ 5. Radial Glow Overlay (DONE) 
+**Status**: ✅ LinearGradient → RadialGradient with center focus and `_glowAnimation`
+
+### ✅ 6. Focus Change Handler (DONE)
+**Status**: ✅ Controller lifecycle management on focus/unfocus events
+
+## Expected Results ✅
+**Status**: Main goals achieved, minor consistency work remains
+
+- ✅ **Gentler, more premium focus feedback** - 1.05 scale implemented
+- ✅ **Multi-layered depth with accent glow** - 3-layer BoxShadow system  
+- ✅ **Continuous pulsing animation keeps UI alive** - Dual controller system
+- ✅ **Subtle animated border draws attention** - 2px primary border with fade
+- ❌ **Consistent focus language across entire app** - Settings panels pending
+- ✅ **Professional polish matching first-party TV launchers** - Core animations complete
+
+## Agent Instructions for Completion
+
+**Next Agent Should:**
+1. Run `grep -r "TextButton(" lib/widgets/settings/` to find all TextButtons
+2. Add `focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)` to each TextButton's styleFrom
+3. Test with `flutter run --profile` and complete testing checklist  
+4. Commit all changes with provided commit message
+
+**Estimated Time:** 15-20 minutes for an experienced Flutter agent
+
+**Model Recommendation:** Any model (simple find/replace + testing)
