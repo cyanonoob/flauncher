@@ -17,8 +17,13 @@ class MediaControlButton extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         constraints: const BoxConstraints(),
         splashRadius: 24,
-        style: IconButton.styleFrom(
-          overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(WidgetState.focused)) {
+              return Theme.of(context).colorScheme.primary.withValues(alpha: 0.4);
+            }
+            return null;
+          }),
         ),
         icon: Icon(
           isPlaying ? Icons.pause : Icons.play_arrow,
