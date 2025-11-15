@@ -106,7 +106,10 @@ class _CategoryRowState extends State<CategoryRow> {
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!
-                      .copyWith(shadows: _primaryTextShadows)
+                      .copyWith(
+                        fontWeight: FontWeight.w500,
+                        shadows: _primaryTextShadows
+                      )
                 ),
               );
             }

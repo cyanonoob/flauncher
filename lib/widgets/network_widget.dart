@@ -84,8 +84,15 @@ class _NetworkWidgetState extends State<NetworkWidget> {
       }
 
       return Icon(iconData,
-          color: Theme.of(context).textTheme.titleMedium?.color,
-          shadows: _textShadows,
+          color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.75),
+          shadows: [
+            Shadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 3,
+              offset: Offset(0, 1),
+            ),
+          ],
+          size: 18,
         );
     });
   }

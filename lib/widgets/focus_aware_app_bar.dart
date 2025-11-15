@@ -50,72 +50,76 @@ class _FocusAwareAppBarState extends State<FocusAwareAppBar> {
           return widget!;
         },
         child: AppBar(
+          title: Selector<
+              SettingsService,
+              ({
+                bool showDateInStatusBar,
+                bool showTimeInStatusBar,
+                String dateFormat,
+                String timeFormat
+              })>(
+            selector: (context, service) => (
+              showDateInStatusBar: service.showDateInStatusBar,
+              showTimeInStatusBar: service.showTimeInStatusBar,
+              dateFormat: service.dateFormat,
+              timeFormat: service.timeFormat
+            ),
+            builder: (context, dateTimeSettings, _) {
+              return Row(mainAxisSize: MainAxisSize.min, children: [
+                if (dateTimeSettings.showTimeInStatusBar)
+                  Flexible(
+                      child: DateTimeWidget(dateTimeSettings.timeFormat,
+                          key: const ValueKey('time'),
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.85),
+                                shadows: _textShadows,
+                          ))),
+                if (dateTimeSettings.showTimeInStatusBar && dateTimeSettings.showDateInStatusBar)
+                  const SizedBox(width: 20),
+                if (dateTimeSettings.showDateInStatusBar)
+                  Flexible(
+                      child: DateTimeWidget(
+                    dateTimeSettings.dateFormat,
+                    key: const ValueKey('date'),
+                    updateInterval: const Duration(minutes: 1),
+                    textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.w400,
+                      color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.85),
+                      shadows: _textShadows,
+                    ),
+                  )),
+              ]);
+            },
+          ),
           actions: [
+            const Padding(
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: NetworkWidget(),
+            ),
             IconButton(
-              padding: const EdgeInsets.all(2),
+              padding: const EdgeInsets.all(4),
               constraints: const BoxConstraints(),
-              splashRadius: 20,
-              color:
-                  Theme.of(context).textTheme.titleMedium?.color,
-
+              splashRadius: 24,
               icon: Icon(
                 Icons.settings_outlined,
-                shadows: PremiumShadows.textShadow(context),
+                color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.75),
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 3,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+                size: 20,
               ),
               onPressed: () => showDialog(
                   context: context, builder: (_) => const SettingsPanel()),
               // sometime after Flutter 3.7.5, no later than 3.16.8, the focus highlight went away
-              focusColor: Colors.white.withOpacity(0.3),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 16, right: 8),
-              child: NetworkWidget(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 32),
-              child: Selector<
-                  SettingsService,
-                  ({
-                    bool showDateInStatusBar,
-                    bool showTimeInStatusBar,
-                    String dateFormat,
-                    String timeFormat
-                  })>(
-                selector: (context, service) => (
-                  showDateInStatusBar: service.showDateInStatusBar,
-                  showTimeInStatusBar: service.showTimeInStatusBar,
-                  dateFormat: service.dateFormat,
-                  timeFormat: service.timeFormat
-                ),
-                builder: (context, dateTimeSettings, _) {
-                  return Row(mainAxisSize: MainAxisSize.min, children: [
-                    if (dateTimeSettings.showDateInStatusBar)
-                      Flexible(
-                          child: DateTimeWidget(
-                        dateTimeSettings.dateFormat,
-                        key: const ValueKey('date'),
-                        updateInterval: const Duration(minutes: 1),
-                        textStyle:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-shadows: _textShadows,
-                        ),
-                      )),
-                    if (dateTimeSettings.showDateInStatusBar &&
-                        dateTimeSettings.showTimeInStatusBar)
-                      const SizedBox(width: 16),
-                    if (dateTimeSettings.showTimeInStatusBar)
-                      Flexible(
-                          child: DateTimeWidget(dateTimeSettings.timeFormat,
-                              key: const ValueKey('time'),
-                              textStyle: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
-shadows: _textShadows,
-                              )))
-                  ]);
-                },
-              ),
+              focusColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
             ),
           ],
         ));
