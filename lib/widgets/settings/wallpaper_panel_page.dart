@@ -16,16 +16,11 @@ class WallpaperPanelPage extends StatefulWidget {
 class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
   WallpaperService? _wallpaperService;
   final FocusNode _sliderFocusNode = FocusNode();
-  bool _justGainedFocus = false;
+  bool _ignoreSliderKeyEvent = false;
 
   @override
   void initState() {
     super.initState();
-    _sliderFocusNode.addListener(() {
-      if (_sliderFocusNode.hasFocus) {
-        _justGainedFocus = true;
-      }
-    });
   }
 
   @override
@@ -156,16 +151,24 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
                     child: Focus(
                       focusNode: _sliderFocusNode,
                       onKey: (FocusNode node, RawKeyEvent event) {
-                        if (event is RawKeyDownEvent) {
-                          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                            _sliderFocusNode.previousFocus();
-                            return KeyEventResult.handled; // Prevent event from reaching slider
-                          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                            _sliderFocusNode.nextFocus();
-                            return KeyEventResult.handled; // Prevent event from reaching slider
+                        if (_sliderFocusNode.hasFocus &&
+                            (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+                                event.logicalKey == LogicalKeyboardKey.arrowDown)) {
+                          if (!_ignoreSliderKeyEvent) {
+                            if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                              _sliderFocusNode.previousFocus();
+                            }
+                            if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                              _sliderFocusNode.nextFocus();
+                            }
                           }
+
+                          _ignoreSliderKeyEvent = false;
+                        } else {
+                          _ignoreSliderKeyEvent = true;
                         }
-                        return KeyEventResult.ignored; // Let left/right reach the slider
+
+                        return KeyEventResult.ignored;
                       },
                       child: Slider(
                       value: wallpaperService.brightness,
