@@ -147,9 +147,6 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      style: TextButton.styleFrom(
-                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      ),
                       onPressed: () {
                         appsService.setCategorySort(category, CategorySort.manual);
                         Navigator.pop(context);
@@ -158,9 +155,6 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
                     ),
                     const SizedBox(width: 8),
                     TextButton(
-                      style: TextButton.styleFrom(
-                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      ),
                       onPressed: () {
                         appsService.setCategorySort(category, CategorySort.alphabetical);
                         Navigator.pop(context);
@@ -228,9 +222,6 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      style: TextButton.styleFrom(
-                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      ),
                       onPressed: () {
                         appsService.setCategoryType(category, CategoryType.row);
                         Navigator.pop(context);
@@ -239,9 +230,6 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
                     ),
                     const SizedBox(width: 8),
                     TextButton(
-                      style: TextButton.styleFrom(
-                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      ),
                       onPressed: () {
                         appsService.setCategoryType(category, CategoryType.grid);
                         Navigator.pop(context);
@@ -311,9 +299,6 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
                   alignment: WrapAlignment.end,
                   children: [3, 4, 5, 6, 7, 8].map((columns) {
                     return TextButton(
-                      style: TextButton.styleFrom(
-                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      ),
                       onPressed: () {
                         appsService.setCategoryColumnsCount(category, columns);
                         Navigator.pop(context);
@@ -383,9 +368,6 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
                   alignment: WrapAlignment.end,
                   children: [100, 110, 120, 130, 140, 150].map((height) {
                     return TextButton(
-                      style: TextButton.styleFrom(
-                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      ),
                       onPressed: () {
                         appsService.setCategoryRowHeight(category, height);
                         Navigator.pop(context);
