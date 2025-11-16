@@ -1,6 +1,7 @@
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flauncher/widgets/settings/gradient_panel_page.dart';
 import 'package:flauncher/widgets/settings/unsplash_panel_page.dart';
+import 'package:flauncher/widgets/tv_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,22 +17,13 @@ class WallpaperPanelPage extends StatefulWidget {
 class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
   WallpaperService? _wallpaperService;
   final FocusNode _sliderFocusNode = FocusNode();
-  bool _justGainedFocus = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _sliderFocusNode.addListener(() {
-      if (_sliderFocusNode.hasFocus) {
-        _justGainedFocus = true;
-      }
-    });
-  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _wallpaperService ??= Provider.of<WallpaperService>(context);
+
+
   }
 
   void _openOptionScreen(BuildContext context, WallpaperOption option) {
@@ -153,21 +145,8 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
                 children: [
                   Icon(Icons.brightness_2, size: 20),
                   Expanded(
-                    child: Focus(
+                    child: TVSlider(
                       focusNode: _sliderFocusNode,
-                      onKey: (FocusNode node, RawKeyEvent event) {
-                        if (event is RawKeyDownEvent) {
-                          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                            _sliderFocusNode.previousFocus();
-                            return KeyEventResult.handled; // Prevent event from reaching slider
-                          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                            _sliderFocusNode.nextFocus();
-                            return KeyEventResult.handled; // Prevent event from reaching slider
-                          }
-                        }
-                        return KeyEventResult.ignored; // Let left/right reach the slider
-                      },
-                      child: Slider(
                       value: wallpaperService.brightness,
                       min: 0.0,
                       max: 2.0,
@@ -175,7 +154,6 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
                       onChanged: (value) {
                         wallpaperService.setBrightness(value);
                       },
-                    ),
                     ),
                   ),
                   Icon(Icons.brightness_7, size: 20),
@@ -194,3 +172,5 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
     );
   }
 }
+
+
