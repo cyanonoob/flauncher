@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/widgets/color_helpers.dart';
 import 'package:flauncher/widgets/right_panel_dialog.dart';
 import 'package:flauncher/widgets/settings/applications_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_sections_panel_page.dart';
@@ -25,6 +27,7 @@ import 'package:flauncher/widgets/settings/settings_panel_page.dart';
 import 'package:flauncher/widgets/settings/status_bar_panel_page.dart';
 import 'package:flauncher/widgets/settings/wallpaper_panel_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPanel extends StatefulWidget {
   final String? initialRoute;
@@ -39,12 +42,27 @@ class _SettingsPanelState extends State<SettingsPanel> {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-        onWillPop: () async => !await _navigatorKey.currentState!.maybePop(),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
+  Widget build(BuildContext context) {
+    final settings = context.watch<SettingsService>();
+    final transparencyEnabled = settings.panelTransparencyEnabled;
+    
+    return WillPopScope(
+      onWillPop: () async => !await _navigatorKey.currentState!.maybePop(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Dialog(
+            backgroundColor: transparencyEnabled
+                ? Colors.transparent
+                : resolvePanelSurfaceColor(Theme.of(context).colorScheme),
+            insetPadding: EdgeInsets.only(
+              left: MediaQuery.of(context).size.width - 350 - 16,
+              right: 16,
+              top: 16,
+              bottom: 16,
+            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
             child: RightPanelDialog(
               width: 350,
               child: Navigator(
@@ -84,5 +102,7 @@ class _SettingsPanelState extends State<SettingsPanel> {
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }

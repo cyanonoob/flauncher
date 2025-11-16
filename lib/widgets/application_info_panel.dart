@@ -17,6 +17,8 @@
  */
 
 import 'package:flauncher/providers/apps_service.dart';
+import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/widgets/color_helpers.dart';
 import 'package:flauncher/widgets/right_panel_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,8 +39,21 @@ class ApplicationInfoPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
+    final settings = context.watch<SettingsService>();
+    final transparencyEnabled = settings.panelTransparencyEnabled;
 
-    return RightPanelDialog(
+    return Dialog(
+      backgroundColor: transparencyEnabled
+          ? Colors.transparent
+          : resolvePanelSurfaceColor(Theme.of(context).colorScheme),
+      insetPadding: EdgeInsets.only(
+        left: MediaQuery.of(context).size.width - 250 - 16,
+        right: 16,
+        top: 16,
+        bottom: 16,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      child: RightPanelDialog(
         child:
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Row(
@@ -170,7 +185,8 @@ class ApplicationInfoPanel extends StatelessWidget {
           },
         )
       ])))
-    ]));
+    ])),
+    );
   }
 }
 

@@ -17,6 +17,7 @@
  */
 
 import 'package:flauncher/providers/apps_service.dart';
+import 'package:flauncher/widgets/animated_list_item.dart';
 import 'package:flauncher/widgets/app_card.dart';
 import 'package:flauncher/widgets/category_container_common.dart';
 import 'package:flutter/material.dart';
@@ -79,14 +80,18 @@ class _CategoryRowState extends State<CategoryRow> {
             childrenDelegate: SliverChildBuilderDelegate(
               childCount: widget.applications.length,
               findChildIndexCallback: _findChildIndex,
-              (context, index) => AppCard(
+              (context, index) => AnimatedListItem(
+                index: index,
+                delay: const Duration(milliseconds: 30),
+                child: AppCard(
                   key: Key(widget.applications[index].packageName),
-                    category: widget.category,
-                    application: widget.applications[index],
-                    autofocus: index == 0,
-                    onMove: (direction) => _onMove(context, direction, index),
-                    onMoveEnd: () => _onMoveEnd(context)
-                  )
+                  category: widget.category,
+                  application: widget.applications[index],
+                  autofocus: index == 0,
+                  onMove: (direction) => _onMove(context, direction, index),
+                  onMoveEnd: () => _onMoveEnd(context)
+                ),
+              )
             )
           )
         )

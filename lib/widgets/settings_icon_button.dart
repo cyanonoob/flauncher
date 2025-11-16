@@ -1,3 +1,4 @@
+import 'package:flauncher/widgets/premium_button.dart';
 import 'package:flutter/material.dart';
 
 import 'settings/settings_panel.dart';
@@ -8,19 +9,12 @@ class SettingsIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: IconButton(
-        padding: const EdgeInsets.all(4),
-        constraints: const BoxConstraints(),
-        splashRadius: 24,
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-            if (states.contains(WidgetState.focused)) {
-              return Theme.of(context).colorScheme.primary.withValues(alpha: 0.4);
-            }
-            return null;
-          }),
-        ),
-        icon: Icon(
+      child: PremiumButton(
+        padding: const EdgeInsets.all(8),
+        borderRadius: BorderRadius.circular(24),
+        onPressed: () => showDialog(
+            context: context, builder: (_) => const SettingsPanel()),
+        child: Icon(
           Icons.settings_outlined,
           color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.75),
           shadows: [
@@ -32,8 +26,6 @@ class SettingsIconButton extends StatelessWidget {
           ],
           size: 20,
         ),
-        onPressed: () => showDialog(
-            context: context, builder: (_) => const SettingsPanel()),
       ),
     );
   }

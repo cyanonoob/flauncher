@@ -1,3 +1,4 @@
+import 'package:flauncher/widgets/premium_button.dart';
 import 'package:flutter/material.dart';
 
 class MediaControlButton extends StatelessWidget {
@@ -13,19 +14,11 @@ class MediaControlButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: IconButton(
-        padding: const EdgeInsets.all(4),
-        constraints: const BoxConstraints(),
-        splashRadius: 24,
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-            if (states.contains(WidgetState.focused)) {
-              return Theme.of(context).colorScheme.primary.withValues(alpha: 0.4);
-            }
-            return null;
-          }),
-        ),
-        icon: Icon(
+      child: PremiumButton(
+        padding: const EdgeInsets.all(8),
+        borderRadius: BorderRadius.circular(24),
+        onPressed: onPressed,
+        child: Icon(
           isPlaying ? Icons.pause : Icons.play_arrow,
           color: Theme.of(context).textTheme.titleMedium?.color?.withValues(alpha: 0.85),
           shadows: [
@@ -37,7 +30,6 @@ class MediaControlButton extends StatelessWidget {
           ],
           size: 20,
         ),
-        onPressed: onPressed,
       ),
     );
   }

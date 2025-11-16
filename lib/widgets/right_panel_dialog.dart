@@ -18,6 +18,7 @@
 
 import 'package:flauncher/actions.dart';
 import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/widgets/animation_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'color_helpers.dart';
@@ -38,54 +39,56 @@ class RightPanelDialog extends StatelessWidget {
     final transparencyEnabled = settings.panelTransparencyEnabled;
     final glassEnabled = settings.glassEffectsEnabled;
     
-    return Dialog(
-        backgroundColor: transparencyEnabled
-            ? Colors.transparent
-            : resolvePanelSurfaceColor(Theme.of(context).colorScheme),
-        insetPadding: EdgeInsets.only(
-          left: MediaQuery.of(context).size.width - width - 16,
-          right: 16,
-          top: 16,
-          bottom: 16,
-        ),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-        child: GlassContainer(
-          blur: 12.0,
-          opacity: 0.48,
-          borderRadius: BorderRadius.circular(16),
-          padding: EdgeInsets.zero,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
-              Colors.transparent,
-            ],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 30,
-              offset: const Offset(0, 12),
-            ),
-            if (glassEnabled)
-              BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                blurRadius: 20,
-                offset: const Offset(0, 6),
+    return TweenAnimationBuilder<double>(
+      duration: PremiumAnimations.medium,
+      tween: Tween(begin: 0.0, end: 1.0),
+      curve: PremiumAnimations.easeOut,
+      builder: (context, value, child) {
+        return Transform.scale(
+          scale: 0.9 + (0.1 * value),
+          alignment: Alignment.centerRight,
+          child: Opacity(
+            opacity: value,
+            child: GlassContainer(
+              blur: 12.0,
+              opacity: 0.48,
+              borderRadius: BorderRadius.circular(16),
+              padding: EdgeInsets.zero,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                  Colors.transparent,
+                ],
               ),
-          ],
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              padding: EdgeInsets.all(16),
-              child: Actions(
-                  actions: {BackIntent: BackAction(context)}, child: child),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 30,
+                  offset: const Offset(0, 12),
+                ),
+                if (glassEnabled)
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+              ],
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  child: Actions(
+                      actions: {BackIntent: BackAction(context)}, child: child!),
+                ),
+              ),
             ),
           ),
-        ),
-      );
+        );
+      },
+      child: child,
+    );
   }
 }

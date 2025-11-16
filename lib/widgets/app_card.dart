@@ -21,6 +21,7 @@ import 'dart:async';
 import 'package:flauncher/app_image_type.dart';
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/widgets/animation_helpers.dart';
 import 'package:flauncher/widgets/application_info_panel.dart';
 import 'package:flauncher/widgets/focus_keyboard_listener.dart';
 import 'package:flauncher/widgets/shadow_helpers.dart';
@@ -78,46 +79,24 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
     ),
   );
 
-  // New dual animation controllers
-  late final AnimationController _focusController = AnimationController(
-    duration: const Duration(milliseconds: 400),
-    vsync: this,
-  );
-
-  late final AnimationController _glowController = AnimationController(
-    duration: const Duration(milliseconds: 2000),
-    vsync: this,
-  );
+  // Micro-interaction controller for premium animations
+  late final MicroInteractionController _interactionController;
 
   late final AnimationController _pressController = AnimationController(
-    duration: const Duration(milliseconds: 150),
+    duration: PremiumAnimations.fast,
     vsync: this,
   );
-
-  late final Animation<double> _scaleAnimation = Tween<double>(
-    begin: 1.0, 
-    end: 1.05,
-  ).animate(CurvedAnimation(parent: _focusController, curve: Curves.easeOutCubic));
-
-  late final Animation<double> _glowAnimation = Tween<double>(
-    begin: 0.3, 
-    end: 0.8,
-  ).animate(CurvedAnimation(parent: _glowController, curve: Curves.easeInOut));
-
-  late final Animation<double> _borderAnimation = Tween<double>(
-    begin: 0.0, 
-    end: 1.0,
-  ).animate(CurvedAnimation(parent: _focusController, curve: Curves.easeOutCubic));
 
   late final Animation<double> _pressScaleAnimation = Tween<double>(
     begin: 1.0, 
     end: 0.95,
-  ).animate(CurvedAnimation(parent: _pressController, curve: Curves.easeInOut));
+  ).animate(CurvedAnimation(parent: _pressController, curve: PremiumAnimations.easeInOut));
 
   @override
   void initState() {
     super.initState();
 
+    _interactionController = MicroInteractionController(this);
     FocusManager.instance.addHighlightModeListener(_focusHighlightModeChanged);
     _appImageLoadFuture =
         _loadAppBannerOrIcon(Provider.of<AppsService>(context, listen: false));
@@ -135,8 +114,7 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
     FocusManager.instance
         .removeHighlightModeListener(_focusHighlightModeChanged);
     _animation.dispose();
-    _focusController.dispose();
-    _glowController.dispose();
+    _interactionController.dispose();
     _pressController.dispose();
 
     super.dispose();
@@ -157,15 +135,15 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: AnimatedBuilder(
-                  animation: Listenable.merge([_focusController, _glowController, _pressController]),
+                  animation: Listenable.merge([_interactionController.scaleController, _interactionController.glowController, _pressController]),
                   builder: (context, child) => Transform.scale(
-                    scale: _scaleAnimation.value * _pressScaleAnimation.value,
+                    scale: _interactionController.scaleAnimation.value * _pressScaleAnimation.value,
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: shouldHighlight ? Border.all(
                           color: Theme.of(context).colorScheme.primary.withValues(
-                            alpha: _borderAnimation.value * 0.6
+                            alpha: _interactionController.scaleAnimation.value * 0.6
                           ),
                           width: 2.0,
                         ) : null,
@@ -190,8 +168,7 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
                                   _onLongPress(context, LogicalKeyboardKey.enter),
                               onFocusChange: (focused) {
                                 if (focused) {
-                                  _focusController.forward();
-                                  _glowController.repeat(reverse: true);
+                                  _interactionController.animateFocus();
                                   
                                   final currentNode = Focus.of(context);
                                   bool shouldScroll = false;
@@ -217,26 +194,24 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
                                   if (shouldScroll) {
                                     Scrollable.ensureVisible(context,
                                         alignment: 0.5,
-                                        curve: Curves.easeOutCubic,
-                                        duration: Duration(milliseconds: 250));
+                                        curve: PremiumAnimations.easeOut,
+                                        duration: PremiumAnimations.medium);
                                   }
                                   
                                   _lastFocusedNode = currentNode;
                                 } else {
-                                  _focusController.reverse();
-                                  _glowController.stop();
-                                  _glowController.reset();
+                                  _interactionController.animateUnfocus();
                                 }
                               },
                             ),
                             // Brightness overlay for focused card
                             IgnorePointer(
                               child: AnimatedBuilder(
-                                animation: _focusController,
+                                animation: _interactionController.scaleController,
                                 builder: (context, child) => AnimatedOpacity(
-                                  duration: const Duration(milliseconds: 250),
-                                  curve: Curves.easeOutCubic,
-                                  opacity: shouldHighlight ? _borderAnimation.value * 0.08 : 0,
+                                  duration: PremiumAnimations.medium,
+                                  curve: PremiumAnimations.easeOut,
+                                  opacity: shouldHighlight ? _interactionController.scaleAnimation.value * 0.08 : 0,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
@@ -284,7 +259,7 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
                                   _startHighlightAnimation();
 
                                   return AnimatedBuilder(
-                                    animation: _glowController,
+                                    animation: _interactionController.glowController,
                                     builder: (context, child) => IgnorePointer(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -294,7 +269,7 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
                                             radius: 1.0,
                                             colors: [
                                               Theme.of(context).colorScheme.primary.withValues(
-                                                alpha: _glowAnimation.value * 0.1
+                                                alpha: _interactionController.glowAnimation.value * 0.1
                                               ),
                                               Colors.transparent,
                                             ],
@@ -420,22 +395,22 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
     final base = _baseFocusedShadows;
     return [
       BoxShadow(
-        color: base[0].color.withValues(alpha: base[0].color.a * _scaleAnimation.value),
+        color: base[0].color.withValues(alpha: base[0].color.a * _interactionController.scaleAnimation.value),
         blurRadius: base[0].blurRadius,
         offset: base[0].offset,
         spreadRadius: base[0].spreadRadius,
       ),
       BoxShadow(
-        color: base[1].color.withValues(alpha: base[1].color.a * _scaleAnimation.value),
+        color: base[1].color.withValues(alpha: base[1].color.a * _interactionController.scaleAnimation.value),
         blurRadius: base[1].blurRadius,
         offset: base[1].offset,
         spreadRadius: base[1].spreadRadius,
       ),
       BoxShadow(
-        color: Theme.of(context).colorScheme.primary.withValues(alpha: _glowAnimation.value * 0.3),
-        blurRadius: 30 + (20 * _glowAnimation.value),
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: _interactionController.glowAnimation.value * 0.3),
+        blurRadius: 30 + (20 * _interactionController.glowAnimation.value),
         offset: Offset.zero,
-        spreadRadius: 2 * _glowAnimation.value,
+        spreadRadius: 2 * _interactionController.glowAnimation.value,
       ),
     ];
   }
@@ -506,6 +481,9 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
   Future<void> _launchAppWithAnimation(BuildContext context) async {
     // Trigger press animation
     await _pressController.forward();
+    
+    // Add haptic feedback
+    HapticFeedback.mediumImpact();
     
     // Launch the app
     if (mounted) {
