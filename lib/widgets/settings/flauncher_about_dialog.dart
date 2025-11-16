@@ -18,7 +18,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import '/l10n/app_localizations.dart';
+import '../color_helpers.dart';
+import '/providers/settings_service.dart';
 import '/widgets/glass_container.dart';
 
 class FLauncherAboutDialog extends StatelessWidget {

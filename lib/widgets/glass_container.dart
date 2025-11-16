@@ -19,6 +19,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:provider/provider.dart';
+import 'color_helpers.dart';
 import '../providers/settings_service.dart';
 
 class GlassContainer extends StatelessWidget {
@@ -47,52 +48,91 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check performance settings
     final settings = context.watch<SettingsService>();
-    final useBlur = enableBlur && settings.glassEffectsEnabled;
+    final colorScheme = Theme.of(context).colorScheme;
+    final panelSurfaceColor = resolvePanelSurfaceColor(colorScheme);
+    final transparencyEnabled = settings.panelTransparencyEnabled;
+    final useBlur =
+        enableBlur && settings.glassEffectsEnabled && transparencyEnabled;
     final effectiveBlur = settings.highQualityEffects ? blur : blur * 0.6;
-    
-    return RepaintBoundary( // Cache this expensive widget
+    final Gradient? effectiveGradient = settings.glassEffectsEnabled
+        ? (gradient ?? _defaultGradient(context))
+        : null;
+
+    final decoration = BoxDecoration(
+      borderRadius: borderRadius,
+      border: border ?? _defaultBorder(context),
+      boxShadow: boxShadow ?? _defaultShadow(context),
+    );
+
+    final content = Padding(
+      padding: padding,
+      child: child,
+    );
+
+    if (!transparencyEnabled) {
+      return RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: borderRadius,
+          child: Container(
+            decoration: decoration.copyWith(
+              color: panelSurfaceColor,
+              gradient: null,
+            ),
+            child: content,
+          ),
+        ),
+      );
+    }
+
+    final double clampedOpacity = opacity.clamp(0.0, 1.0);
+    final double translucentOpacity =
+        useBlur ? clampedOpacity : (clampedOpacity + 0.3).clamp(0.0, 1.0);
+    final Color translucentColor =
+        panelSurfaceColor.withValues(alpha: translucentOpacity);
+
+    return RepaintBoundary(
       child: ClipRRect(
         borderRadius: borderRadius,
         child: Container(
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            border: border ?? _defaultBorder(context),
-            boxShadow: boxShadow ?? _defaultShadow(context),
-          ),
+          decoration: decoration,
           child: Stack(
             children: [
-              // Background blur layer - ONLY if enabled
               if (useBlur)
-                BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: effectiveBlur, 
-                    sigmaY: effectiveBlur,
-                    tileMode: TileMode.clamp, // Prevent edge artifacts
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: borderRadius,
-                      color: Theme.of(context).colorScheme.background.withValues(alpha: opacity),
-                      gradient: gradient ?? _defaultGradient(context),
+                Positioned.fill(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: effectiveBlur,
+                      sigmaY: effectiveBlur,
+                      tileMode: TileMode.clamp,
+                    ),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: borderRadius,
+                        color: translucentColor,
+                      ),
                     ),
                   ),
                 )
               else
-                // Solid fallback when blur disabled
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: borderRadius,
-                    color: Theme.of(context).colorScheme.background.withValues(alpha: 0.90),
-                    gradient: gradient ?? _defaultGradient(context),
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: borderRadius,
+                      color: translucentColor,
+                    ),
                   ),
                 ),
-              // Content
-              Padding(
-                padding: padding,
-                child: child,
-              ),
+              if (effectiveGradient != null)
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: borderRadius,
+                      gradient: effectiveGradient,
+                    ),
+                  ),
+                ),
+              content,
             ],
           ),
         ),

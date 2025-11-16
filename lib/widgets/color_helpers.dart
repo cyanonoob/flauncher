@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 Color computeBorderColor(double tick, Color defaultColor) {
   assert(tick >= 0.0 && tick <= 1.0, 'Tick must be between 0.0 and 1.0');
@@ -16,4 +17,18 @@ Color computeBorderColor(double tick, Color defaultColor) {
   final newLightness = hslColor.lightness * lightnessFactor;
   
   return hslColor.withLightness(newLightness.clamp(0.0, 1.0)).toColor();
+}
+
+Color resolvePanelSurfaceColor(ColorScheme colorScheme) {
+  final Color primarySurface = colorScheme.surfaceContainerHigh;
+  if (primarySurface.alpha != 0) {
+    return primarySurface;
+  }
+
+  final Color secondarySurface = colorScheme.surface;
+  if (secondarySurface.alpha != 0) {
+    return secondarySurface;
+  }
+
+  return colorScheme.background.withValues(alpha: 0.95);
 }

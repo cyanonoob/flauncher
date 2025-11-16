@@ -18,9 +18,11 @@
 
 import 'package:flauncher/models/category.dart';
 import 'package:flauncher/providers/apps_service.dart';
+import 'package:flauncher/providers/settings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/l10n/app_localizations.dart';
+import '../color_helpers.dart';
 import '/widgets/glass_container.dart';
 
 class CategoryPanelPage extends StatefulWidget {

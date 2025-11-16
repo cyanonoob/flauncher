@@ -18,11 +18,13 @@
 
 import 'dart:io';
 
+import 'package:flauncher/providers/settings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import '/l10n/app_localizations.dart';
+import '../color_helpers.dart';
 import '/widgets/glass_container.dart';
 
 // Localized format specifiers
@@ -105,7 +107,8 @@ class DateTimeFormatDialog extends StatelessWidget {
 
     return ChangeNotifierProvider(
         create: (_) => FormatModel(_initialDateFormat, _initialTimeFormat),
-        builder: (context, _) => Dialog(
+        builder: (context, _) {
+          return Dialog(
               backgroundColor: Colors.transparent,
               insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
               child: Align(
@@ -262,7 +265,8 @@ class DateTimeFormatDialog extends StatelessWidget {
                   ),
                 ),
               ),
-            ));
+            );
+        });
   }
 
   void dateFormatStringChanged(BuildContext context, String formatString) {

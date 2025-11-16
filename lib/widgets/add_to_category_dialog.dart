@@ -17,12 +17,14 @@
  */
 
 import 'package:flauncher/providers/apps_service.dart';
+import 'package:flauncher/providers/settings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/l10n/app_localizations.dart';
 import '../models/app.dart';
 import '../models/category.dart';
 import 'dart:ui';
+import 'color_helpers.dart';
 
 class AddToCategoryDialog extends StatelessWidget {
   final App selectedApplication;
@@ -37,6 +39,11 @@ class AddToCategoryDialog extends StatelessWidget {
             .toList(),
         builder: (context, categories, _) {
           AppLocalizations localizations = AppLocalizations.of(context)!;
+          final settings = context.watch<SettingsService>();
+          final transparencyEnabled = settings.panelTransparencyEnabled;
+          final useBlur = settings.glassEffectsEnabled && transparencyEnabled;
+          final colorScheme = Theme.of(context).colorScheme;
+          final panelSurfaceColor = resolvePanelSurfaceColor(colorScheme);
 
           return Dialog(
             backgroundColor: Colors.transparent,
@@ -45,56 +52,64 @@ class AddToCategoryDialog extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.65),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
-                      width: 1.0,
+              child: Stack(
+                children: [
+                  if (useBlur)
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(),
                     ),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, bottom: 16),
-                        child: Text(
-                          localizations.withEllipsisAddTo,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: transparencyEnabled
+                          ? panelSurfaceColor.withValues(alpha: 0.65)
+                          : panelSurfaceColor,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: colorScheme.primary.withValues(alpha: 0.25),
+                        width: 1.0,
                       ),
-                      ...categories
-                          .map(
-                            (category) => Container(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                                  width: 1.0,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, bottom: 16),
+                          child: Text(
+                            localizations.withEllipsisAddTo,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                        ...categories
+                            .map(
+                              (category) => Container(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                decoration: BoxDecoration(
+                                  color: panelSurfaceColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: colorScheme.primary.withValues(alpha: 0.2),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: ListTile(
+                                  onTap: () async {
+                                    await context
+                                        .read<AppsService>()
+                                        .addToCategory(selectedApplication, category);
+                                    Navigator.of(context).pop();
+                                  },
+                                  title: Text(category.name),
                                 ),
                               ),
-                              child: ListTile(
-                                onTap: () async {
-                                  await context
-                                      .read<AppsService>()
-                                      .addToCategory(selectedApplication, category);
-                                  Navigator.of(context).pop();
-                                },
-                                title: Text(category.name),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ],
+                            )
+                            .toList(),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           );

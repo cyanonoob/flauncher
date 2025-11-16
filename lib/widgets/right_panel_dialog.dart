@@ -17,7 +17,10 @@
  */
 
 import 'package:flauncher/actions.dart';
+import 'package:flauncher/providers/settings_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'color_helpers.dart';
 import 'glass_container.dart';
 
 class RightPanelDialog extends StatelessWidget {
@@ -30,8 +33,14 @@ class RightPanelDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Dialog(
-        backgroundColor: Colors.transparent,
+  Widget build(BuildContext context) {
+    final settings = context.watch<SettingsService>();
+    final transparencyEnabled = settings.panelTransparencyEnabled;
+    
+    return Dialog(
+        backgroundColor: transparencyEnabled
+            ? Colors.transparent
+            : resolvePanelSurfaceColor(Theme.of(context).colorScheme),
         insetPadding: EdgeInsets.only(
           left: MediaQuery.of(context).size.width - width - 16,
           right: 16,
@@ -80,4 +89,5 @@ class RightPanelDialog extends StatelessWidget {
           ),
         ),
       );
+  }
 }

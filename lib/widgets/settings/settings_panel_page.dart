@@ -31,6 +31,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import '/l10n/app_localizations.dart';
+import '../color_helpers.dart';
 import '../rounded_switch_list_tile.dart';
 import 'back_button_actions.dart';
 
@@ -182,14 +183,24 @@ class SettingsPanelPage extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyMedium),
                     secondary: Icon(Icons.abc)),
                 RoundedSwitchListTile(
-                  value: settingsService.glassEffectsEnabled,
+                  value: settingsService.panelTransparencyEnabled,
                   onChanged: (value) =>
-                      settingsService.setGlassEffectsEnabled(value),
-                  title: Text('Glass Effects',
+                      settingsService.setPanelTransparencyEnabled(value),
+                  title: Text('Panel Transparency',
                       style: Theme.of(context).textTheme.bodyMedium),
-                  secondary: Icon(Icons.blur_on),
+                  secondary: Icon(Icons.layers),
                 ),
-                if (settingsService.glassEffectsEnabled)
+                if (settingsService.panelTransparencyEnabled)
+                  RoundedSwitchListTile(
+                    value: settingsService.glassEffectsEnabled,
+                    onChanged: (value) =>
+                        settingsService.setGlassEffectsEnabled(value),
+                    title: Text('Glass Effects',
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    secondary: Icon(Icons.blur_on),
+                  ),
+                if (settingsService.panelTransparencyEnabled && 
+                    settingsService.glassEffectsEnabled)
                   RoundedSwitchListTile(
                     value: settingsService.highQualityEffects,
                     onChanged: (value) =>
@@ -274,46 +285,47 @@ class SettingsPanelPage extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                localizations.dialogTitleBackButtonAction,
-                                style: Theme.of(context).textTheme.titleLarge,
+                          children: [
+                            Text(
+                              localizations.dialogTitleBackButtonAction,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 16),
+                            TextButton(
+                              autofocus: true,
+                              style: TextButton.styleFrom(
+                                alignment: Alignment.centerLeft,
+                                overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                               ),
-                              const SizedBox(height: 16),
-                              InkWell(
-                                onTap: () => Navigator.pop(context, ""),
-                                borderRadius: BorderRadius.circular(8),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  child: Text(
-                                    localizations.dialogOptionBackButtonActionDoNothing,
-                                    style: Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                ),
+                              onPressed: () => Navigator.pop(context, ""),
+                              child: Text(
+                                localizations.dialogOptionBackButtonActionDoNothing,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
-                              InkWell(
-                                onTap: () => Navigator.pop(context, BACK_BUTTON_ACTION_CLOCK),
-                                borderRadius: BorderRadius.circular(8),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  child: Text(
-                                    localizations.dialogOptionBackButtonActionShowClock,
-                                    style: Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                ),
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                alignment: Alignment.centerLeft,
+                                overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                               ),
-                              InkWell(
-                                onTap: () => Navigator.pop(context, BACK_BUTTON_ACTION_SCREENSAVER),
-                                borderRadius: BorderRadius.circular(8),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  child: Text(
-                                    localizations.dialogOptionBackButtonActionShowScreensaver,
-                                    style: Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                ),
+                              onPressed: () => Navigator.pop(context, BACK_BUTTON_ACTION_CLOCK),
+                              child: Text(
+                                localizations.dialogOptionBackButtonActionShowClock,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
-                            ],
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                alignment: Alignment.centerLeft,
+                                overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                              ),
+                              onPressed: () => Navigator.pop(context, BACK_BUTTON_ACTION_SCREENSAVER),
+                              child: Text(
+                                localizations.dialogOptionBackButtonActionShowScreensaver,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ),
+                          ],
                           ),
                         ),
                       ),

@@ -16,8 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:flauncher/providers/settings_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '/l10n/app_localizations.dart';
+import 'color_helpers.dart';
 import '/widgets/glass_container.dart';
 
 class AddCategoryDialog extends StatelessWidget {
