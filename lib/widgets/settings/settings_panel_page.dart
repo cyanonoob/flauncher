@@ -19,6 +19,7 @@
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/widgets/ensure_visible.dart';
+import 'package:flauncher/widgets/glass_container.dart';
 import 'package:flauncher/widgets/settings/applications_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_sections_panel_page.dart';
 import 'package:flauncher/widgets/settings/date_time_format_dialog.dart';
@@ -231,28 +232,88 @@ class SettingsPanelPage extends StatelessWidget {
 
     final newAction = await showDialog<String>(
         context: context,
-        builder: (context) => SimpleDialog(
-                backgroundColor: Theme.of(context).colorScheme.background,
-                title: Text(localizations.dialogTitleBackButtonAction),
-                children: [
-                  SimpleDialogOption(
-                    child: Text(
-                        localizations.dialogOptionBackButtonActionDoNothing),
-                    onPressed: () => Navigator.pop(context, ""),
+        builder: (context) => Dialog(
+                backgroundColor: Colors.transparent,
+                insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 400),
+                  child: GlassContainer(
+                    blur: 12.0,
+                    opacity: 0.65,
+                    borderRadius: BorderRadius.circular(16),
+                    padding: const EdgeInsets.all(24),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                        Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                        Colors.transparent,
+                      ],
+                    ),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                      width: 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 30,
+                        offset: const Offset(0, 12),
+                      ),
+                      BoxShadow(
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                        blurRadius: 20,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localizations.dialogTitleBackButtonAction,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 16),
+                        InkWell(
+                          onTap: () => Navigator.pop(context, ""),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            child: Text(
+                              localizations.dialogOptionBackButtonActionDoNothing,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () => Navigator.pop(context, BACK_BUTTON_ACTION_CLOCK),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            child: Text(
+                              localizations.dialogOptionBackButtonActionShowClock,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () => Navigator.pop(context, BACK_BUTTON_ACTION_SCREENSAVER),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            child: Text(
+                              localizations.dialogOptionBackButtonActionShowScreensaver,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  SimpleDialogOption(
-                    child: Text(
-                        localizations.dialogOptionBackButtonActionShowClock),
-                    onPressed: () =>
-                        Navigator.pop(context, BACK_BUTTON_ACTION_CLOCK),
-                  ),
-                  SimpleDialogOption(
-                    child: Text(localizations
-                        .dialogOptionBackButtonActionShowScreensaver),
-                    onPressed: () =>
-                        Navigator.pop(context, BACK_BUTTON_ACTION_SCREENSAVER),
-                  )
-                ]));
+                ),
+              ));
 
     if (newAction != null) {
       await service.setBackButtonAction(newAction);

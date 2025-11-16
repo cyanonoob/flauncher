@@ -49,7 +49,7 @@ class AddToCategoryDialog extends StatelessWidget {
                 filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.2),
+                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.65),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),

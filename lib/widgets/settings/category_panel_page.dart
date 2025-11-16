@@ -21,6 +21,7 @@ import 'package:flauncher/providers/apps_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/l10n/app_localizations.dart';
+import '/widgets/glass_container.dart';
 
 class CategoryPanelPage extends StatefulWidget {
   final int categoryId;
@@ -44,7 +45,7 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
     if (category == null) {
       return Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(title: Text(localizations.tvSettings)),
+        appBar: AppBar(title: Text(localizations.category)),
         body: Center(child: Text('Category not found')),
       );
     }
@@ -96,31 +97,80 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
   void _showSortOptions(BuildContext context, AppsService appsService, Category category) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text('Sort Order'),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 350),
+          child: GlassContainer(
+            blur: 12.0,
+            opacity: 0.65,
+            borderRadius: BorderRadius.circular(16),
+            padding: const EdgeInsets.all(24),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                Colors.transparent,
+              ],
             ),
-            onPressed: () {
-              appsService.setCategorySort(category, CategorySort.manual);
-              Navigator.pop(context);
-            },
-            child: Text('Manual'),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+              width: 1.0,
             ),
-            onPressed: () {
-              appsService.setCategorySort(category, CategorySort.alphabetical);
-              Navigator.pop(context);
-            },
-            child: Text('Alphabetical'),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 30,
+                offset: const Offset(0, 12),
+              ),
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+            ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sort Order',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      ),
+                      onPressed: () {
+                        appsService.setCategorySort(category, CategorySort.manual);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Manual'),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      ),
+                      onPressed: () {
+                        appsService.setCategorySort(category, CategorySort.alphabetical);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Alphabetical'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -128,41 +178,80 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
   void _showTypeOptions(BuildContext context, AppsService appsService, Category category) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text('Category Type'),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 350),
+          child: GlassContainer(
+            blur: 12.0,
+            opacity: 0.65,
+            borderRadius: BorderRadius.circular(16),
+            padding: const EdgeInsets.all(24),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                Colors.transparent,
+              ],
             ),
-            onPressed: () {
-              appsService.setCategoryType(category, CategoryType.row);
-              Navigator.pop(context);
-            },
-            child: Text('Row'),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+              width: 1.0,
             ),
-            onPressed: () {
-              appsService.setCategoryType(category, CategoryType.row);
-              Navigator.pop(context);
-            },
-            child: Text('Row'),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              focusColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 30,
+                offset: const Offset(0, 12),
+              ),
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+            ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Category Type',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      ),
+                      onPressed: () {
+                        appsService.setCategoryType(category, CategoryType.row);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Row'),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      ),
+                      onPressed: () {
+                        appsService.setCategoryType(category, CategoryType.grid);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Grid'),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            onPressed: () {
-              appsService.setCategoryType(category, CategoryType.grid);
-              Navigator.pop(context);
-            },
-            child: Text('Grid'),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -170,21 +259,71 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
   void _showColumnsOptions(BuildContext context, AppsService appsService, Category category) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text('Columns Count'),
-        actions: [3, 4, 5, 6, 7, 8].map((columns) {
-          return TextButton(
-            style: TextButton.styleFrom(
-              overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: GlassContainer(
+            blur: 12.0,
+            opacity: 0.65,
+            borderRadius: BorderRadius.circular(16),
+            padding: const EdgeInsets.all(24),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                Colors.transparent,
+              ],
             ),
-            onPressed: () {
-              appsService.setCategoryColumnsCount(category, columns);
-              Navigator.pop(context);
-            },
-            child: Text('$columns'),
-          );
-        }).toList(),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+              width: 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 30,
+                offset: const Offset(0, 12),
+              ),
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+            ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Columns Count',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.end,
+                  children: [3, 4, 5, 6, 7, 8].map((columns) {
+                    return TextButton(
+                      style: TextButton.styleFrom(
+                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      ),
+                      onPressed: () {
+                        appsService.setCategoryColumnsCount(category, columns);
+                        Navigator.pop(context);
+                      },
+                      child: Text('$columns'),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -192,21 +331,71 @@ class _CategoryPanelPageState extends State<CategoryPanelPage> {
   void _showRowHeightOptions(BuildContext context, AppsService appsService, Category category) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text('Row Height'),
-        actions: [100, 110, 120, 130, 140, 150].map((height) {
-          return TextButton(
-            style: TextButton.styleFrom(
-              overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: GlassContainer(
+            blur: 12.0,
+            opacity: 0.65,
+            borderRadius: BorderRadius.circular(16),
+            padding: const EdgeInsets.all(24),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                Colors.transparent,
+              ],
             ),
-            onPressed: () {
-              appsService.setCategoryRowHeight(category, height);
-              Navigator.pop(context);
-            },
-            child: Text('$height'),
-          );
-        }).toList(),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+              width: 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 30,
+                offset: const Offset(0, 12),
+              ),
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+            ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Row Height',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.end,
+                  children: [100, 110, 120, 130, 140, 150].map((height) {
+                    return TextButton(
+                      style: TextButton.styleFrom(
+                        overlayColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      ),
+                      onPressed: () {
+                        appsService.setCategoryRowHeight(category, height);
+                        Navigator.pop(context);
+                      },
+                      child: Text('$height'),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

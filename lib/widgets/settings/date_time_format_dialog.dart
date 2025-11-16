@@ -23,6 +23,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import '/l10n/app_localizations.dart';
+import '/widgets/glass_container.dart';
 
 // Localized format specifiers
 List<Tuple2<String, String>> getDateFormatSpecifiers(
@@ -104,12 +105,50 @@ class DateTimeFormatDialog extends StatelessWidget {
 
     return ChangeNotifierProvider(
         create: (_) => FormatModel(_initialDateFormat, _initialTimeFormat),
-        builder: (context, _) => SimpleDialog(
-              backgroundColor: Theme.of(context).colorScheme.background,
-              insetPadding: const EdgeInsets.only(bottom: 60),
-              contentPadding: const EdgeInsets.all(24),
-              title: Text(localizations.dateAndTimeFormat),
-              children: [
+        builder: (context, _) => Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 500),
+                child: GlassContainer(
+                blur: 12.0,
+                opacity: 0.65,
+                borderRadius: BorderRadius.circular(16),
+                padding: const EdgeInsets.all(24),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                    Colors.transparent,
+                  ],
+                ),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                  width: 1.0,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    blurRadius: 30,
+                    offset: const Offset(0, 12),
+                  ),
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.dateAndTimeFormat,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 16),
                 Consumer<FormatModel>(builder: (_, model, __) {
                   String text;
 
@@ -211,8 +250,11 @@ class DateTimeFormatDialog extends StatelessWidget {
                               context, dateFormatFieldController.text);
                         }
                       }
-                    })
-              ],
+                    }),
+                  ],
+                ),
+                ),
+              ),
             ));
   }
 

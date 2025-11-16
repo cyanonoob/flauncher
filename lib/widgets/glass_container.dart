@@ -74,7 +74,7 @@ class GlassContainer extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: borderRadius,
-                      color: Colors.white.withValues(alpha: opacity),
+                      color: Theme.of(context).colorScheme.background.withValues(alpha: opacity),
                       gradient: gradient ?? _defaultGradient(context),
                     ),
                   ),
@@ -84,7 +84,7 @@ class GlassContainer extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: borderRadius,
-                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.85),
+                    color: Theme.of(context).colorScheme.background.withValues(alpha: 0.90),
                     gradient: gradient ?? _defaultGradient(context),
                   ),
                 ),

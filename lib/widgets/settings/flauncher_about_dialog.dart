@@ -19,13 +19,10 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '/l10n/app_localizations.dart';
+import '/widgets/glass_container.dart';
 
 class FLauncherAboutDialog extends StatelessWidget {
   final PackageInfo packageInfo;
-
-  // TODO: Fix AboutDialog background - theme override not working, dialog remains transparent
-  // Current approach with Theme() override of dialogBackgroundColor and surface doesn't affect AboutDialog
-  // Need alternative solution: either custom AlertDialog implementation or different approach
 
   FLauncherAboutDialog({
     Key? key,
@@ -36,23 +33,72 @@ class FLauncherAboutDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    return Theme(
-      data: Theme.of(context).copyWith(
-        dialogBackgroundColor: Theme.of(context).colorScheme.background,
-        colorScheme: Theme.of(context).colorScheme.copyWith(
-          surface: Theme.of(context).colorScheme.background,
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 450),
+        child: GlassContainer(
+        blur: 12.0,
+        opacity: 0.65,
+        borderRadius: BorderRadius.circular(16),
+        padding: const EdgeInsets.all(24),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+            Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+            Colors.transparent,
+          ],
         ),
-      ),
-      child: AboutDialog(
-        applicationName: packageInfo.appName,
-        applicationVersion: "${packageInfo.version} (${packageInfo.buildNumber})",
-        applicationIcon: Image.asset("assets/logo.png", height: 72),
-        applicationLegalese: "© 2024 Oscar Rojas",
-        children: [
-          SizedBox(height: 24),
-          Text(localizations
-              .textAboutDialog("https://github.com/osrosal/flauncher"))
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+          width: 1.0,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 30,
+            offset: const Offset(0, 12),
+          ),
+          BoxShadow(
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+            blurRadius: 20,
+            offset: const Offset(0, 6),
+          ),
         ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset("assets/logo.png", height: 72),
+              const SizedBox(height: 16),
+              Text(
+                packageInfo.appName,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "${packageInfo.version} (${packageInfo.buildNumber})",
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "© 2024 Oscar Rojas",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                localizations.textAboutDialog("https://github.com/osrosal/flauncher"),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        ),
       ),
     );
   }
