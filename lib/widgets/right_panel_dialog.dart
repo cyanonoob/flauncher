@@ -36,6 +36,7 @@ class RightPanelDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsService>();
     final transparencyEnabled = settings.panelTransparencyEnabled;
+    final glassEnabled = settings.glassEffectsEnabled;
     
     return Dialog(
         backgroundColor: transparencyEnabled
@@ -63,21 +64,18 @@ class RightPanelDialog extends StatelessWidget {
               Colors.transparent,
             ],
           ),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-            width: 1.0,
-          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 30,
               offset: const Offset(0, 12),
             ),
-            BoxShadow(
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-              blurRadius: 20,
-              offset: const Offset(0, 6),
-            ),
+            if (glassEnabled)
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
           ],
           child: Align(
             alignment: Alignment.centerRight,

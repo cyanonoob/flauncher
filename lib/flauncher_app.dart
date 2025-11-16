@@ -68,7 +68,7 @@ class FLauncherApp extends StatelessWidget {
         brightness: Brightness.dark,
         primarySwatch: _swatch,
         cardColor: _swatch[800],
-        canvasColor: Colors.transparent,
+        canvasColor: _swatch[800]!.withValues(alpha: 0.85),
         dialogBackgroundColor: Colors.transparent,
         scaffoldBackgroundColor: _swatch[900],
         colorScheme: ColorScheme.dark(
@@ -90,22 +90,22 @@ class FLauncherApp extends StatelessWidget {
             elevation: 0, backgroundColor: Colors.transparent),
         typography: Typography.material2018().copyWith(
           white: Typography.material2018().white.copyWith(
-            displayLarge: const TextStyle(fontFamily: 'Poppins'),
-            displayMedium: const TextStyle(fontFamily: 'Poppins'),
-            displaySmall: const TextStyle(fontFamily: 'Poppins'),
-            headlineLarge: const TextStyle(fontFamily: 'Poppins'),
-            headlineMedium: const TextStyle(fontFamily: 'Poppins'),
-            headlineSmall: const TextStyle(fontFamily: 'Poppins'),
-            titleLarge: const TextStyle(fontFamily: 'Poppins'),
-            titleMedium: const TextStyle(fontFamily: 'Poppins'),
-            titleSmall: const TextStyle(fontFamily: 'Poppins'),
-            bodyLarge: const TextStyle(fontFamily: 'Poppins'),
-            bodyMedium: const TextStyle(fontFamily: 'Poppins'),
-            bodySmall: const TextStyle(fontFamily: 'Poppins'),
-            labelLarge: const TextStyle(fontFamily: 'Poppins'),
-            labelMedium: const TextStyle(fontFamily: 'Poppins'),
-            labelSmall: const TextStyle(fontFamily: 'Poppins'),
-          ),
+                displayLarge: const TextStyle(fontFamily: 'Poppins'),
+                displayMedium: const TextStyle(fontFamily: 'Poppins'),
+                displaySmall: const TextStyle(fontFamily: 'Poppins'),
+                headlineLarge: const TextStyle(fontFamily: 'Poppins'),
+                headlineMedium: const TextStyle(fontFamily: 'Poppins'),
+                headlineSmall: const TextStyle(fontFamily: 'Poppins'),
+                titleLarge: const TextStyle(fontFamily: 'Poppins'),
+                titleMedium: const TextStyle(fontFamily: 'Poppins'),
+                titleSmall: const TextStyle(fontFamily: 'Poppins'),
+                bodyLarge: const TextStyle(fontFamily: 'Poppins'),
+                bodyMedium: const TextStyle(fontFamily: 'Poppins'),
+                bodySmall: const TextStyle(fontFamily: 'Poppins'),
+                labelLarge: const TextStyle(fontFamily: 'Poppins'),
+                labelMedium: const TextStyle(fontFamily: 'Poppins'),
+                labelSmall: const TextStyle(fontFamily: 'Poppins'),
+              ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusedBorder: const UnderlineInputBorder(
@@ -116,6 +116,35 @@ class FLauncherApp extends StatelessWidget {
           cursorColor: Colors.white,
           selectionColor: _swatch[300],
           selectionHandleColor: _swatch[300],
+        ),
+        dropdownMenuTheme: DropdownMenuThemeData(
+          menuStyle: MenuStyle(
+            backgroundColor: WidgetStateProperty.all(
+              _swatch[800]!.withValues(alpha: 0.95),
+            ),
+            surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
+            elevation: WidgetStateProperty.all(8),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(
+                  color: _accentColor.withValues(alpha: 0.3),
+                  width: 1,
+                ),
+              ),
+            ),
+          ),
+        ),
+        popupMenuTheme: PopupMenuThemeData(
+          color: _swatch[800]!.withValues(alpha: 0.95),
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(
+              color: _accentColor.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
         ),
       ),
       home: Builder(

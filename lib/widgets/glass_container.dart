@@ -61,7 +61,7 @@ class GlassContainer extends StatelessWidget {
 
     final decoration = BoxDecoration(
       borderRadius: borderRadius,
-      border: border ?? _defaultBorder(context),
+      border: border ?? _defaultBorder(context, settings),
       boxShadow: boxShadow ?? _defaultShadow(context),
     );
 
@@ -87,7 +87,7 @@ class GlassContainer extends StatelessWidget {
 
     final double clampedOpacity = opacity.clamp(0.0, 1.0);
     final double translucentOpacity =
-        useBlur ? clampedOpacity : (clampedOpacity + 0.3).clamp(0.0, 1.0);
+        useBlur ? clampedOpacity : (clampedOpacity + 0.15).clamp(0.0, 1.0);
     final Color translucentColor =
         panelSurfaceColor.withValues(alpha: translucentOpacity);
 
@@ -140,7 +140,10 @@ class GlassContainer extends StatelessWidget {
     );
   }
 
-  Border _defaultBorder(BuildContext context) {
+  Border? _defaultBorder(BuildContext context, SettingsService settings) {
+    if (!settings.glassEffectsEnabled) {
+      return null;
+    }
     return Border.all(
       color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
       width: 1.0,
