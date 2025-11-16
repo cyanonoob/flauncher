@@ -36,6 +36,10 @@ const _showTimeInStatusBar = "show_time_in_status_bar";
 const _timeFormat = "time_format";
 const _unsplashQueryKey = "unsplash_query";
 
+// Glass effects settings
+const _glassEffectsEnabledKey = "glass_effects_enabled";
+const _highQualityEffectsKey = "high_quality_effects";
+
 class SettingsService extends ChangeNotifier {
   static final defaultDateFormat = "EEEE d MMMM";
   static final defaultTimeFormat = "H:mm";
@@ -63,6 +67,12 @@ class SettingsService extends ChangeNotifier {
 
   bool get showTimeInStatusBar =>
       _sharedPreferences.getBool(_showTimeInStatusBar) ?? true;
+
+  bool get glassEffectsEnabled =>
+      _sharedPreferences.getBool(_glassEffectsEnabledKey) ?? true;
+
+  bool get highQualityEffects =>
+      _sharedPreferences.getBool(_highQualityEffectsKey) ?? false;
 
   String? get gradientUuid => _sharedPreferences.getString(_gradientUuidKey);
 
@@ -151,5 +161,15 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> setShowTimeInStatusBar(bool show) async {
     return set(_showTimeInStatusBar, show);
+  }
+
+  Future<void> setGlassEffectsEnabled(bool enabled) async {
+    await _sharedPreferences.setBool(_glassEffectsEnabledKey, enabled);
+    notifyListeners();
+  }
+
+  Future<void> setHighQualityEffects(bool enabled) async {
+    await _sharedPreferences.setBool(_highQualityEffectsKey, enabled);
+    notifyListeners();
   }
 }

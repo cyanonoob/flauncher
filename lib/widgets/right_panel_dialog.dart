@@ -18,6 +18,7 @@
 
 import 'package:flauncher/actions.dart';
 import 'package:flutter/material.dart';
+import 'glass_container.dart';
 
 class RightPanelDialog extends StatelessWidget {
   final Widget child;
@@ -30,7 +31,7 @@ class RightPanelDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dialog(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Colors.transparent,
         insetPadding: EdgeInsets.only(
           left: MediaQuery.of(context).size.width - width - 16,
           right: 16,
@@ -39,12 +40,43 @@ class RightPanelDialog extends StatelessWidget {
         ),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            padding: EdgeInsets.all(16),
-            child: Actions(
-                actions: {BackIntent: BackAction(context)}, child: child),
+        child: GlassContainer(
+          blur: 10.0,
+          opacity: 0.18,
+          borderRadius: BorderRadius.circular(16),
+          padding: EdgeInsets.zero,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.04),
+              Colors.transparent,
+            ],
+          ),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
+            width: 1.0,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 30,
+              offset: const Offset(0, 12),
+            ),
+            BoxShadow(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 6),
+            ),
+          ],
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Actions(
+                  actions: {BackIntent: BackAction(context)}, child: child),
+            ),
           ),
         ),
       );

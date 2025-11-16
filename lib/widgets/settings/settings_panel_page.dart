@@ -180,6 +180,23 @@ class SettingsPanelPage extends StatelessWidget {
                     title: Text(localizations.showCategoryTitles,
                         style: Theme.of(context).textTheme.bodyMedium),
                     secondary: Icon(Icons.abc)),
+                RoundedSwitchListTile(
+                  value: settingsService.glassEffectsEnabled,
+                  onChanged: (value) =>
+                      settingsService.setGlassEffectsEnabled(value),
+                  title: Text('Glass Effects',
+                      style: Theme.of(context).textTheme.bodyMedium),
+                  secondary: Icon(Icons.blur_on),
+                ),
+                if (settingsService.glassEffectsEnabled)
+                  RoundedSwitchListTile(
+                    value: settingsService.highQualityEffects,
+                    onChanged: (value) =>
+                        settingsService.setHighQualityEffects(value),
+                    title: Text('High Quality Effects',
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    secondary: Icon(Icons.high_quality),
+                  ),
                 const Divider(),
                 TextButton(
                     style: TextButton.styleFrom(

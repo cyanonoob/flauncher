@@ -22,6 +22,7 @@ import 'package:provider/provider.dart';
 import '/l10n/app_localizations.dart';
 import '../models/app.dart';
 import '../models/category.dart';
+import 'dart:ui';
 
 class AddToCategoryDialog extends StatelessWidget {
   final App selectedApplication;
@@ -37,27 +38,65 @@ class AddToCategoryDialog extends StatelessWidget {
         builder: (context, categories, _) {
           AppLocalizations localizations = AppLocalizations.of(context)!;
 
-          return SimpleDialog(
-            title: Text(localizations.withEllipsisAddTo),
-            contentPadding: EdgeInsets.all(16),
-            children: categories
-                .map(
-                  (category) => Card(
-                    clipBehavior: Clip.antiAlias,
-                    color: Theme.of(context).cardColor,
-                    elevation: 0,
-                    child: ListTile(
-                      onTap: () async {
-                        await context
-                            .read<AppsService>()
-                            .addToCategory(selectedApplication, category);
-                        Navigator.of(context).pop();
-                      },
-                      title: Text(category.name),
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
+                      width: 1.0,
                     ),
                   ),
-                )
-                .toList(),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, bottom: 16),
+                        child: Text(
+                          localizations.withEllipsisAddTo,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                      ...categories
+                          .map(
+                            (category) => Container(
+                              margin: const EdgeInsets.only(bottom: 8),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: ListTile(
+                                onTap: () async {
+                                  await context
+                                      .read<AppsService>()
+                                      .addToCategory(selectedApplication, category);
+                                  Navigator.of(context).pop();
+                                },
+                                title: Text(category.name),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           );
         },
       );
