@@ -5,6 +5,10 @@ A customizable, open-source Android TV launcher built with Flutter.
 **Original project**: https://gitlab.com/flauncher/flauncher by [etienn01](https://github.com/etienn01)  
 **This fork**: Enhanced with modern Flutter, improved UI/UX, and additional features.
 
+## ⚠️ Disclaimer
+
+**This fork is intended for private use only.** It is provided as-is with no guarantees, warranties, or support. Use at your own risk. Your mileage may vary (YMMV). The maintainer assumes no responsibility for any issues, damage, or malfunctions that may occur from using this software. Always backup your data and device settings before installation.
+
 ## Features
 
 - **Customizable Categories**: Organize apps into rows or grids with custom names and layouts
