@@ -89,6 +89,11 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
     vsync: this,
   );
 
+  late final AnimationController _pressController = AnimationController(
+    duration: const Duration(milliseconds: 150),
+    vsync: this,
+  );
+
   late final Animation<double> _scaleAnimation = Tween<double>(
     begin: 1.0, 
     end: 1.05,
@@ -103,6 +108,11 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
     begin: 0.0, 
     end: 1.0,
   ).animate(CurvedAnimation(parent: _focusController, curve: Curves.easeOutCubic));
+
+  late final Animation<double> _pressScaleAnimation = Tween<double>(
+    begin: 1.0, 
+    end: 0.95,
+  ).animate(CurvedAnimation(parent: _pressController, curve: Curves.easeInOut));
 
   @override
   void initState() {
@@ -127,6 +137,7 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
     _animation.dispose();
     _focusController.dispose();
     _glowController.dispose();
+    _pressController.dispose();
 
     super.dispose();
   }
@@ -146,9 +157,9 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: AnimatedBuilder(
-                  animation: Listenable.merge([_focusController, _glowController]),
+                  animation: Listenable.merge([_focusController, _glowController, _pressController]),
                   builder: (context, child) => Transform.scale(
-                    scale: _scaleAnimation.value,
+                    scale: _scaleAnimation.value * _pressScaleAnimation.value,
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -217,6 +228,23 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
                                   _glowController.reset();
                                 }
                               },
+                            ),
+                            // Brightness overlay for focused card
+                            IgnorePointer(
+                              child: AnimatedBuilder(
+                                animation: _focusController,
+                                builder: (context, child) => AnimatedOpacity(
+                                  duration: const Duration(milliseconds: 250),
+                                  curve: Curves.easeOutCubic,
+                                  opacity: shouldHighlight ? _borderAnimation.value * 0.08 : 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             if (_moving) ..._arrows(),
                             IgnorePointer(
@@ -469,10 +497,23 @@ class _AppCardState extends State<AppCard> with TickerProviderStateMixin {
 
       return KeyEventResult.handled;
     } else if (_validationKeys.contains(key)) {
-      context.read<AppsService>().launchApp(widget.application);
+      _launchAppWithAnimation(context);
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
+  }
+
+  Future<void> _launchAppWithAnimation(BuildContext context) async {
+    // Trigger press animation
+    await _pressController.forward();
+    
+    // Launch the app
+    if (mounted) {
+      context.read<AppsService>().launchApp(widget.application);
+    }
+    
+    // Bounce back
+    await _pressController.reverse();
   }
 
   KeyEventResult _onLongPress(BuildContext context, LogicalKeyboardKey? key) {
