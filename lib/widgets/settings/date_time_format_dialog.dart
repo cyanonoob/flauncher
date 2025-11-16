@@ -107,152 +107,159 @@ class DateTimeFormatDialog extends StatelessWidget {
         create: (_) => FormatModel(_initialDateFormat, _initialTimeFormat),
         builder: (context, _) => Dialog(
               backgroundColor: Colors.transparent,
-              insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 500),
-                child: GlassContainer(
-                blur: 12.0,
-                opacity: 0.65,
-                borderRadius: BorderRadius.circular(16),
-                padding: const EdgeInsets.all(24),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                    Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
-                    Colors.transparent,
-                  ],
-                ),
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                  width: 1.0,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
-                    blurRadius: 30,
-                    offset: const Offset(0, 12),
-                  ),
-                  BoxShadow(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                    blurRadius: 20,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      localizations.dateAndTimeFormat,
-                      style: Theme.of(context).textTheme.titleLarge,
+              insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+              child: Align(
+                alignment: Alignment.center,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 450),
+                  child: IntrinsicHeight(
+                    child: IntrinsicWidth(
+                      child: GlassContainer(
+                        blur: 12.0,
+                        opacity: 0.65,
+                        borderRadius: BorderRadius.circular(16),
+                        padding: const EdgeInsets.all(24),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                            Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                            Colors.transparent,
+                          ],
+                        ),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                          width: 1.0,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 30,
+                            offset: const Offset(0, 12),
+                          ),
+                          BoxShadow(
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                            blurRadius: 20,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              localizations.dateAndTimeFormat,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 16),
+                            Consumer<FormatModel>(builder: (_, model, __) {
+                              String text;
+
+                              if (model.dateFormatString.isEmpty) {
+                                text = localizations.noDateFormatSpecified;
+                              } else {
+                                DateFormat dateFormat =
+                                    DateFormat(model.dateFormatString, Platform.localeName);
+                                text = localizations
+                                    .formattedDate(dateFormat.format(DateTime.now()));
+                              }
+
+                              if (model.timeFormatString.isEmpty) {
+                                text += "\n${localizations.noTimeFormatSpecified}";
+                              } else {
+                                DateFormat dateFormat =
+                                    DateFormat(model.timeFormatString, Platform.localeName);
+                                text +=
+                                    "\n${localizations.formattedTime(dateFormat.format(DateTime.now()))}";
+                              }
+
+                              return Text(text);
+                            }),
+                            const SizedBox(height: 24),
+                            TextFormField(
+                              autovalidateMode: AutovalidateMode.always,
+                              controller: dateFormatFieldController,
+                              decoration: InputDecoration(
+                                  labelText: localizations.typeInTheDateFormat),
+                              keyboardType: TextInputType.text,
+                              onChanged: (value) => dateFormatStringChanged(context, value),
+                              onFieldSubmitted: (value) {
+                                returnFromDialog(
+                                    context, value, timeFormatFieldController.text);
+                              },
+                              validator: (value) {
+                                String? result;
+
+                                if (value != null) {
+                                  value = value.trim();
+
+                                  if (value.isEmpty) {
+                                    result = localizations.mustNotBeEmpty;
+                                  }
+                                }
+
+                                return result;
+                              },
+                            ),
+                            TextFormField(
+                              autovalidateMode: AutovalidateMode.always,
+                              controller: timeFormatFieldController,
+                              decoration: InputDecoration(
+                                  labelText: localizations.typeInTheHourFormat),
+                              keyboardType: TextInputType.text,
+                              onChanged: (value) => timeFormatStringChanged(context, value),
+                              onFieldSubmitted: (value) {
+                                returnFromDialog(
+                                    context, dateFormatFieldController.text, value);
+                              },
+                              validator: (value) {
+                                String? result;
+
+                                if (value != null) {
+                                  value = value.trim();
+
+                                  if (value.isEmpty) {
+                                    result = localizations.mustNotBeEmpty;
+                                  }
+                                }
+
+                                return result;
+                              },
+                            ),
+                            const SizedBox(height: 24),
+                            Text(localizations.orSelectFormatSpecifiers),
+                            const SizedBox(height: 12),
+                            DropdownMenu<String>(
+                                dropdownMenuEntries: menuEntries,
+                                onSelected: (selectedValue) {
+                                  if (selectedValue != null) {
+                                    bool isTimeFormat = false;
+
+                                    for (Tuple2<String, String> tuple
+                                        in timeFormatSpecifiers) {
+                                      if (tuple.item1 == selectedValue) {
+                                        isTimeFormat = true;
+                                        break;
+                                      }
+                                    }
+
+                                    if (isTimeFormat) {
+                                      timeFormatFieldController.text += selectedValue;
+                                      timeFormatStringChanged(
+                                          context, timeFormatFieldController.text);
+                                    } else {
+                                      dateFormatFieldController.text += selectedValue;
+                                      dateFormatStringChanged(
+                                          context, dateFormatFieldController.text);
+                                    }
+                                  }
+                                }),
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 16),
-                Consumer<FormatModel>(builder: (_, model, __) {
-                  String text;
-
-                  if (model.dateFormatString.isEmpty) {
-                    text = localizations.noDateFormatSpecified;
-                  } else {
-                    DateFormat dateFormat =
-                        DateFormat(model.dateFormatString, Platform.localeName);
-                    text = localizations
-                        .formattedDate(dateFormat.format(DateTime.now()));
-                  }
-
-                  if (model.timeFormatString.isEmpty) {
-                    text += "\n${localizations.noTimeFormatSpecified}";
-                  } else {
-                    DateFormat dateFormat =
-                        DateFormat(model.timeFormatString, Platform.localeName);
-                    text +=
-                        "\n${localizations.formattedTime(dateFormat.format(DateTime.now()))}";
-                  }
-
-                  return Text(text);
-                }),
-                const SizedBox(height: 24),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.always,
-                  controller: dateFormatFieldController,
-                  decoration: InputDecoration(
-                      labelText: localizations.typeInTheDateFormat),
-                  keyboardType: TextInputType.text,
-                  onChanged: (value) => dateFormatStringChanged(context, value),
-                  onFieldSubmitted: (value) {
-                    returnFromDialog(
-                        context, value, timeFormatFieldController.text);
-                  },
-                  validator: (value) {
-                    String? result;
-
-                    if (value != null) {
-                      value = value.trim();
-
-                      if (value.isEmpty) {
-                        result = localizations.mustNotBeEmpty;
-                      }
-                    }
-
-                    return result;
-                  },
-                ),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.always,
-                  controller: timeFormatFieldController,
-                  decoration: InputDecoration(
-                      labelText: localizations.typeInTheHourFormat),
-                  keyboardType: TextInputType.text,
-                  onChanged: (value) => timeFormatStringChanged(context, value),
-                  onFieldSubmitted: (value) {
-                    returnFromDialog(
-                        context, dateFormatFieldController.text, value);
-                  },
-                  validator: (value) {
-                    String? result;
-
-                    if (value != null) {
-                      value = value.trim();
-
-                      if (value.isEmpty) {
-                        result = localizations.mustNotBeEmpty;
-                      }
-                    }
-
-                    return result;
-                  },
-                ),
-                const SizedBox(height: 24),
-                Text(localizations.orSelectFormatSpecifiers),
-                const SizedBox(height: 12),
-                DropdownMenu<String>(
-                    dropdownMenuEntries: menuEntries,
-                    onSelected: (selectedValue) {
-                      if (selectedValue != null) {
-                        bool isTimeFormat = false;
-
-                        for (Tuple2<String, String> tuple
-                            in timeFormatSpecifiers) {
-                          if (tuple.item1 == selectedValue) {
-                            isTimeFormat = true;
-                            break;
-                          }
-                        }
-
-                        if (isTimeFormat) {
-                          timeFormatFieldController.text += selectedValue;
-                          timeFormatStringChanged(
-                              context, timeFormatFieldController.text);
-                        } else {
-                          dateFormatFieldController.text += selectedValue;
-                          dateFormatStringChanged(
-                              context, dateFormatFieldController.text);
-                        }
-                      }
-                    }),
-                  ],
-                ),
+                  ),
                 ),
               ),
             ));
