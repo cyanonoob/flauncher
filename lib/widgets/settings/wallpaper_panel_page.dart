@@ -21,12 +21,42 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
   @override
   void initState() {
     super.initState();
+    _sliderFocusNode.addListener(() {
+      if (_sliderFocusNode.hasFocus) {
+        _ignoreSliderKeyEvent = true; // Ignore first up/down event
+      }
+    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _wallpaperService ??= Provider.of<WallpaperService>(context);
+
+    final FocusScopeNode focusScopeNode = FocusScope.of(context);
+    focusScopeNode.onKeyEvent = (node, keyEvent) {
+      if (_sliderFocusNode.hasFocus &&
+          (keyEvent.logicalKey == LogicalKeyboardKey.arrowUp ||
+              keyEvent.logicalKey == LogicalKeyboardKey.arrowDown)) {
+        
+        if (!_ignoreSliderKeyEvent) {
+          // Move focus away for subsequent up/down events
+          if (keyEvent.logicalKey == LogicalKeyboardKey.arrowUp) {
+            _sliderFocusNode.previousFocus();
+          }
+          if (keyEvent.logicalKey == LogicalKeyboardKey.arrowDown) {
+            _sliderFocusNode.nextFocus();
+          }
+        }
+        
+        _ignoreSliderKeyEvent = false;
+        return KeyEventResult.handled; // Prevent slider from receiving the event
+      } else {
+        _ignoreSliderKeyEvent = true;
+      }
+      
+      return KeyEventResult.ignored;
+    };
   }
 
   void _openOptionScreen(BuildContext context, WallpaperOption option) {
@@ -150,26 +180,6 @@ class _WallpaperPanelPageState extends State<WallpaperPanelPage> {
                   Expanded(
                     child: Focus(
                       focusNode: _sliderFocusNode,
-                      onKey: (FocusNode node, RawKeyEvent event) {
-                        if (_sliderFocusNode.hasFocus &&
-                            (event.logicalKey == LogicalKeyboardKey.arrowUp ||
-                                event.logicalKey == LogicalKeyboardKey.arrowDown)) {
-                          if (!_ignoreSliderKeyEvent) {
-                            if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                              _sliderFocusNode.previousFocus();
-                            }
-                            if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                              _sliderFocusNode.nextFocus();
-                            }
-                          }
-
-                          _ignoreSliderKeyEvent = false;
-                        } else {
-                          _ignoreSliderKeyEvent = true;
-                        }
-
-                        return KeyEventResult.ignored;
-                      },
                       child: Slider(
                       value: wallpaperService.brightness,
                       min: 0.0,
